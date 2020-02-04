@@ -20,3 +20,17 @@
         </div>
     </div>
 </div>
+
+<script src="/assets/codemirror-5.51.0/lib/codemirror.js"></script>
+<script>
+    const snippet = document.getElementById('body')
+    const editor = CodeMirror.fromTextArea(snippet, {
+        theme: 'dracula',
+        lineNumbers: true,
+        extraKeys: {
+            "Tab": function(cm){
+                cm.replaceSelection("  " , "end");
+            }
+        }
+    })
+</script>
