@@ -21,6 +21,7 @@
     </div>
 </div>
 
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
 <script src="/assets/codemirror-5.51.0/lib/codemirror.js"></script>
 <script>
     const snippet = document.getElementById('body')
@@ -29,8 +30,16 @@
         lineNumbers: true,
         extraKeys: {
             "Tab": function(cm){
-                cm.replaceSelection("  " , "end");
+                cm.replaceSelection("  " , "end")
             }
         }
+    })
+    document.querySelectorAll('.CodeMirror-line').forEach((line) => {
+        hljs.highlightBlock(line)
+    })
+    editor.on('change', function(e) {
+        document.querySelectorAll('.CodeMirror-line').forEach((line) => {
+            hljs.highlightBlock(line)
+        })
     })
 </script>
