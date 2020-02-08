@@ -9,3 +9,5 @@ Route::get('/snippets/{snippet}/forks/create', 'SnippetsForksController@create')
 Route::post('/snippets/{snippet}/forks/', 'SnippetsForksController@store')->name('snippets.forks.store');
 
 Auth::routes();
+
+Route::get('/user/{user}/snippets', 'UserSnippetsController@index')->name('user.snippets');

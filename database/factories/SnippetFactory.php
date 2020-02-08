@@ -11,10 +11,12 @@ $factory->define(Snippet::class, function (Faker $faker) {
         'local' => [
             'title' => $faker->text(30),
             'body' => $faker->randomHtml(1, 3),
+            'user_id' => 1,
         ],
         'testing' => [
             'title' => 'example snippet title',
             'body' => 'const example = "example peace of code";',
+            'user_id' => 1,
         ]
     ];
 

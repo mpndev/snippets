@@ -33,7 +33,7 @@
                         </div>
                         <div class="dropdown-menu" id="dropdown-menu" role="menu">
                             <div class="dropdown-content">
-                                <a class="dropdown-item">
+                                <a href="{{ route('user.snippets', ['user' => auth()->id()]) }}" class="dropdown-item">
                                     My snippets
                                 </a>
                                 <a href="#" class="dropdown-item">

@@ -4,7 +4,7 @@
             <article>
                 <h4 class="title is-3 is-flex">
                     <a href="{{ route('snippets.show', ['snippet' => $snippet->id]) }}" class="flex">
-                        {{ $snippet->title }} <span class="title is-size-7 has-text-grey">({{ $snippet->created_at->diffForHumans() }} by you.)</span>
+                        {{ $snippet->title }} <span class="title is-size-7 has-text-grey">({{ $snippet->created_at->diffForHumans() }} by {{ (auth()->check() && $snippet->user->id === auth()->id()) ? 'you' : $snippet->user->name }}.)</span>
                     </a>
 
                     <a class="button is-primary" href="{{ route('snippets.forks.create', ['snippet' => $snippet->id]) }}" title="fork this snippet">Fork Me</a>
@@ -30,7 +30,7 @@
                             @foreach($snippet->forks as $iteration => $fork)
                                 <li>
                                     &nbsp;- <a href="{{ route('snippets.show', ['snippet' => $fork->id]) }}">
-                                        {{ $fork->title }} <span class="title is-7">({{ $snippet->created_at->diffForHumans() }} from you.)</span>
+                                        {{ $fork->title }} <span class="title is-7">({{ $snippet->created_at->diffForHumans() }} from {{ (auth()->check() && $snippet->user->id === auth()->id()) ? 'you' : $snippet->user->name }}.)</span>
                                     </a>
                                 </li>
                             @endforeach

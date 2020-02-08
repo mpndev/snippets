@@ -25,7 +25,6 @@ class SnippetsController extends Controller
 
     public function store()
     {
-
         $this->validate(request(), [
             'title' => 'required',
             'body' => 'required',
@@ -34,6 +33,7 @@ class SnippetsController extends Controller
         Snippet::create([
             'title' => request('title'),
             'body' => request('body'),
+            'user_id' => auth()->id(),
         ]);
 
         return redirect(route('snippets.index'));

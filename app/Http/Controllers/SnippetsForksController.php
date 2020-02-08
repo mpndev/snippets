@@ -22,6 +22,7 @@ class SnippetsForksController extends Controller
             'title' => request('title'),
             'body' => request('body'),
             'fork_id' => $snippet->id,
+            'user_id' => auth()->id(),
         ]);
 
         return redirect(route('snippets.index'));

@@ -14,6 +14,7 @@ class HomePageTest extends TestCase
     /** @test */
     public function see_minimum_text()
     {
+        factory(User::class)->create();
         $snippet = factory(Snippet::class)->create();
 
         $response = $this->get('/');
@@ -28,6 +29,7 @@ class HomePageTest extends TestCase
     /** @test */
     public function pagination_is_available()
     {
+        factory(User::class)->create();
         $snippets = factory(Snippet::class, 100)->create();
 
         $this->get('/')

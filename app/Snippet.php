@@ -23,4 +23,9 @@ class Snippet extends Model
     {
         return !! $this->parent;
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

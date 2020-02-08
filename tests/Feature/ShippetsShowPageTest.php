@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Snippet;
@@ -13,6 +14,7 @@ class ShippetsShowPageTest extends TestCase
     /** @test */
     public function snippet_can_have_forks()
     {
+        factory(User::class)->create();
         $parent_snippet = factory(Snippet::class)->create();
         $first_fork = factory(Snippet::class)->create([
             'fork_id' => $parent_snippet->id,
@@ -35,6 +37,7 @@ class ShippetsShowPageTest extends TestCase
     /** @test */
     public function snippet_can_have_parent()
     {
+        factory(User::class)->create();
         $parent_snippet = factory(Snippet::class)->create([
             'title' => 'Title-1',
         ]);
