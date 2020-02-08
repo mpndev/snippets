@@ -1,0 +1,13 @@
+pre {
+    background-color: none;
+    writing-mode: none;
+    padding: 0;
+}
+
+.flex {
+    flex: 1;
+}
+
+.fa-clipboard {
+    margin-left: 1rem;
+}
