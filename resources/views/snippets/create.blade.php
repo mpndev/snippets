@@ -12,9 +12,4 @@
         @component('components.snippets.create')
         @endcomponent
     </form>
-
-    <div class="section">
-        @component('components.navigation')
-        @endcomponent
-    </div>
 @endsection

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Snippet;
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -39,4 +40,13 @@ class HomePageTest extends TestCase
             ->assertSee('>3</a>');
     }
 
+    /** @test */
+    public function see_user_name_when_he_is_logged_in()
+    {
+        $user = factory(User::class)->create(['name' => 'John Doe']);
+
+        $response = $this->actingAs($user)->get('/');
+
+        $response->assertSee('John Doe');
+    }
 }
