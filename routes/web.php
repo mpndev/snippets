@@ -12,3 +12,6 @@ Auth::routes();
 
 Route::get('/{user}/snippets', 'UserSnippetsController@index')->name('user.snippets');
 Route::get('/{user}/forked-snippets', 'UserForkedSnippetsController@index')->name('user.forked-snippets');
+
+Route::post('/{user}/favorite-snippets/{snippet}', 'UserFavoriteSnippetsController@store')->name('favorite-snippets.store');
+Route::delete('/{user}/favorite-snippets/{snippet}', 'UserFavoriteSnippetsController@destroy')->name('favorite-snippets.destroy');

@@ -38,4 +38,22 @@ class User extends Authenticatable
     {
         return 'name';
     }
+
+    public function addToFavoriteSnippets($snippet)
+    {
+        $this->favoriteSnippets()->attach($snippet->id);
+        return $snippet;
+    }
+
+    public function removeFromFavoriteSnippets($snippet)
+    {
+        $this->favoriteSnippets()->detach($snippet->id);
+        return $snippet;
+    }
+
+    public function favoriteSnippets()
+    {
+        return $this->belongsToMany(Snippet::class, 'favorite_snippets')->withTimestamps();
+    }
+
 }
