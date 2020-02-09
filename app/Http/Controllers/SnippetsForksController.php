@@ -6,6 +6,14 @@ use App\Snippet;
 
 class SnippetsForksController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->only([
+            'create',
+            'store',
+        ]);
+    }
+
     public function create(Snippet $snippet)
     {
         return view('snippets.forks.create', compact('snippet'));

@@ -10,7 +10,12 @@
                         Let`s collect snippets folks...
                     </h2>
                     <p>
-                        <a href="{{route('snippets.create')}}" class="button">Create Snippet</a>
+                        @guest
+                            <span>To create snippet you must be </span><a href="{{ route('login') }}">logged in</a>
+                        @endguest
+                        @auth
+                            <a href="{{route('snippets.create')}}" class="button">Create Snippet</a>
+                        @endauth
                     </p>
                 </div>
                 @guest
@@ -33,11 +38,14 @@
                         </div>
                         <div class="dropdown-menu" id="dropdown-menu" role="menu">
                             <div class="dropdown-content">
-                                <a href="{{ route('user.snippets', ['user' => auth()->id()]) }}" class="dropdown-item">
-                                    My snippets
+                                <a href="{{ route('user.snippets', ['user' => auth()->user()->name]) }}" class="dropdown-item">
+                                    My snippets ({{ auth()->user()->snippets()->count() }})
                                 </a>
                                 <a href="#" class="dropdown-item">
-                                    Favorite snippets
+                                    My collection
+                                </a>
+                                <a href="{{ route('user.forked-snippets', ['user' => auth()->user()->name]) }}" class="dropdown-item">
+                                    My forked snippets ({{ auth()->user()->paginatedForkedSnippets()->count() }})
                                 </a>
                                 <a class="dropdown-item">
                                     Settings

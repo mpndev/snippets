@@ -7,7 +7,7 @@
                         {{ $snippet->title }} <span class="title is-size-7 has-text-grey">({{ $snippet->created_at->diffForHumans() }} by {{ (auth()->check() && $snippet->user->id === auth()->id()) ? 'you' : $snippet->user->name }}.)</span>
                     </a>
 
-                    <a class="button is-primary" href="{{ route('snippets.forks.create', ['snippet' => $snippet->id]) }}" title="fork this snippet">Fork Me</a>
+                    <a class="button is-primary" @auth href="{{ route('snippets.forks.create', ['snippet' => $snippet->id]) }}" @endauth title="fork this snippet" @guest disabled @endguest >Fork Me</a>
                     <span onclick="copyToClipboard('snippet-{{ $snippet->id }}')" title="copy to clipboard"><i class="fas fa-clipboard title is-size-3 has-text-info"></i></span>
                 </h4>
 

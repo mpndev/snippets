@@ -6,10 +6,17 @@ use App\Snippet;
 
 class SnippetsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->only([
+            'create',
+            'store',
+        ]);
+    }
+
     public function index()
     {
         $snippets = Snippet::latest()->paginate(5);
-
         return view('snippets.index', compact('snippets'));
     }
 

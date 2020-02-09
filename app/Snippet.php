@@ -24,6 +24,11 @@ class Snippet extends Model
         return !! $this->parent;
     }
 
+    public function haveForks()
+    {
+        return !! $this->forks->count();
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

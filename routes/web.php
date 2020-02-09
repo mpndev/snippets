@@ -10,4 +10,5 @@ Route::post('/snippets/{snippet}/forks/', 'SnippetsForksController@store')->name
 
 Auth::routes();
 
-Route::get('/user/{user}/snippets', 'UserSnippetsController@index')->name('user.snippets');
+Route::get('/{user}/snippets', 'UserSnippetsController@index')->name('user.snippets');
+Route::get('/{user}/forked-snippets', 'UserForkedSnippetsController@index')->name('user.forked-snippets');

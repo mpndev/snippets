@@ -24,4 +24,18 @@ class User extends Authenticatable
     {
         return $this->hasMany(Snippet::class);
     }
+
+    public function paginatedForkedSnippets($perPage = 5)
+    {
+        $paginator = $this->snippets()->latest()->paginate($perPage);
+        $paginator->setCollection($paginator->getCollection()->filter(function($snippet) {
+            return $snippet->haveForks();
+        }));
+        return $paginator;
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'name';
+    }
 }

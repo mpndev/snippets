@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    @foreach($snippets as $snippet_index => $snippet)
+    @foreach($snippets as $snippet)
         @component('components.snippets.show', ['snippet' => $snippet])
         @endcomponent
     @endforeach

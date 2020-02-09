@@ -2,9 +2,10 @@
 
 namespace Tests\Unit;
 
+use App\User;
 use App\Snippet;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class SnippetTest extends TestCase
 {
@@ -34,4 +35,34 @@ class SnippetTest extends TestCase
 
         $this->assertEquals($snippet->id, $parent->id);
     }
+
+    /** @test */
+    public function snippet_can_check_is_a_fork_or_not()
+    {
+        $snippet = factory(Snippet::class)->create();
+        $fork = factory(Snippet::class)->create(['fork_id' => $snippet->id]);
+
+        $this->assertTrue($fork->isAFork());
+        $this->assertFalse($snippet->isAFork());
+    }
+
+    /** @test */
+    public function snippet_can_check_is_a_parent_or_not()
+    {
+        $snippet = factory(Snippet::class)->create();
+        $fork = factory(Snippet::class)->create(['fork_id' => $snippet->id]);
+
+        $this->assertTrue($snippet->haveForks());
+        $this->assertFalse($fork->haveForks());
+    }
+
+    /** @test */
+    public function snippet_can_get_creator()
+    {
+        $user = factory(User::class)->create();
+        $snippet = $user->snippets()->save(factory(Snippet::class)->create());
+
+        $this->assertEquals($snippet->user->name, $user->name);
+    }
+
 }
