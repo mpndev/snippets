@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 
 class UserFavoriteSnippetsController extends Controller
 {
+    public function index(User $user)
+    {
+        $snippets = $user->paginatedFavoriteSnippets();
+        return view('user.snippets.index', compact('snippets'));
+    }
+
     public function store(User $user, Snippet $snippet)
     {
         $user->addToFavoriteSnippets($snippet);

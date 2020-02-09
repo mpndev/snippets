@@ -56,4 +56,9 @@ class User extends Authenticatable
         return $this->belongsToMany(Snippet::class, 'favorite_snippets')->withTimestamps();
     }
 
+    public function paginatedFavoriteSnippets($perPage = 5)
+    {
+        return $this->favoriteSnippets()->latest()->paginate($perPage);
+    }
+
 }

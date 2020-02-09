@@ -29,7 +29,6 @@ class FavoriteSnippetsPageTest extends TestCase
     /** @test */
     public function user_can_remove_snippet_from_favorite_snippets_page()
     {
-        $this->withoutExceptionHandling();
         $user = factory(User::class)->create();
         $snippet = $user->snippets()->save(factory(Snippet::class)->create());
         $user->addToFavoriteSnippets($snippet);
@@ -42,5 +41,20 @@ class FavoriteSnippetsPageTest extends TestCase
 
         $response->assertStatus(302);
         $this->assertDatabaseMissing('favorite_snippets', ['user_id' => $user->id, 'snippet_id' => $snippet->id]);
+    }
+
+    /** @test */
+    public function user_can_see_favorite_snippets_page()
+    {
+        $this->withoutExceptionHandling();
+        $user = factory(User::class)->create();
+        $snippet = $user->snippets()->save(factory(Snippet::class)->create());
+        $user->addToFavoriteSnippets($snippet);
+
+        $response = $this->actingAs($user)->get(route('favorite-snippets', ['user' => $user->name]));
+
+        $response->assertStatus(200);
+        $response->assertSee($snippet->title);
+        $response->assertSee(htmlspecialchars($snippet->body));
     }
 }

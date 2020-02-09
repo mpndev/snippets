@@ -41,8 +41,8 @@
                                 <a href="{{ route('user.snippets', ['user' => auth()->user()->name]) }}" class="dropdown-item">
                                     My snippets ({{ auth()->user()->snippets()->count() }})
                                 </a>
-                                <a href="#" class="dropdown-item">
-                                    My collection
+                                <a href="{{ route('favorite-snippets', ['user' => auth()->user()->name]) }}" class="dropdown-item">
+                                    My collection ({{ auth()->user()->paginatedFavoriteSnippets()->count() }})
                                 </a>
                                 <a href="{{ route('user.forked-snippets', ['user' => auth()->user()->name]) }}" class="dropdown-item">
                                     My forked snippets ({{ auth()->user()->paginatedForkedSnippets()->count() }})
