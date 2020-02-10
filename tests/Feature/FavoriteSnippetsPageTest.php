@@ -22,7 +22,7 @@ class FavoriteSnippetsPageTest extends TestCase
             'snippet' => $snippet->id,
         ]));
 
-        $response->assertStatus(302);
+        $response->assertStatus(200);
         $this->assertDatabaseHas('favorite_snippets', ['user_id' => $user->id, 'snippet_id' => $user->favoriteSnippets->first()->id]);
     }
 
@@ -39,14 +39,13 @@ class FavoriteSnippetsPageTest extends TestCase
             'snippet' => $snippet->id,
         ]));
 
-        $response->assertStatus(302);
+        $response->assertStatus(200);
         $this->assertDatabaseMissing('favorite_snippets', ['user_id' => $user->id, 'snippet_id' => $snippet->id]);
     }
 
     /** @test */
     public function user_can_see_favorite_snippets_page()
     {
-        $this->withoutExceptionHandling();
         $user = factory(User::class)->create();
         $snippet = $user->snippets()->save(factory(Snippet::class)->create());
         $user->addToFavoriteSnippets($snippet);

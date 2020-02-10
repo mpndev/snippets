@@ -61,4 +61,9 @@ class User extends Authenticatable
         return $this->favoriteSnippets()->latest()->paginate($perPage);
     }
 
+    public function isSnippetFavorite($snippet)
+    {
+        return !! $this->favoriteSnippets()->where('snippet_id', $snippet->id)->first();
+    }
+
 }

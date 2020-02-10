@@ -49,6 +49,7 @@ class HomePageTest extends TestCase
     /** @test */
     public function pagination_is_available()
     {
+        $this->withoutExceptionHandling();
         factory(User::class)->create();
         $snippets = factory(Snippet::class, 100)->create();
 

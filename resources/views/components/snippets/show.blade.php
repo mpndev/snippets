@@ -7,9 +7,15 @@
                         {{ $snippet->title }} <span class="title is-size-7 has-text-grey">({{ $snippet->created_at->diffForHumans() }} by {{ (auth()->check() && $snippet->user->id === auth()->id()) ? 'you' : $snippet->user->name }}.)</span>
                     </a>
 
-                    <a style="margin-right: 20px;" class="button" title='add to "my collection"'><i class="fa fa-star has-text-dark is-size-4"></i></a>
+                    <a style="margin-right: 20px;" class="button favorite-snipet-{{ $snippet->id }}" title='add to "my collection"' onclick="toggleFavorite({{ $snippet->id }})">
+                    <i class="fa fa-star
+                    @if(auth()->check() && auth()->user()->isSnippetFavorite($snippet)) has-text-warning @else has-text-dark @endif is-size-4"></i>
+                    </a>
 
-                    <a class="button is-primary" @auth href="{{ route('snippets.forks.create', ['snippet' => $snippet->id]) }}" @endauth title="fork this snippet" @guest disabled @endguest >Fork Me</a>
+                    <a class="button is-primary" @auth href="{{ route('snippets.forks.create', ['snippet' => $snippet->id]) }}" @endauth title="fork this snippet" @guest disabled @endguest >
+                        Fork Me
+                    </a>
+
                     <span onclick="copyToClipboard('snippet-{{ $snippet->id }}')" title="copy to clipboard"><i class="fas fa-clipboard title is-size-3 has-text-info"></i></span>
                 </h4>
 

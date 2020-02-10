@@ -34,4 +34,15 @@ class UserTest extends TestCase
         $this->assertEquals(2, $user->paginatedForkedSnippets()->count());
         $this->assertEquals(12, $user->snippets->count());
     }
+
+    /** @test */
+    public function user_can_check_is_snippet_favorite()
+    {
+        $user = factory(User::class)->create();
+        $snippet = $user->snippets()->save(factory(Snippet::class)->make());
+        $this->assertFalse($user->isSnippetFavorite($snippet));
+
+        $user->addToFavoriteSnippets($snippet);
+        $this->assertTrue($user->isSnippetFavorite($snippet));
+    }
 }
