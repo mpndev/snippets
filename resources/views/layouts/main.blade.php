@@ -50,6 +50,10 @@
                 }
             })
         }
+        @else
+        function toggleFavorite() {
+            window.location = '/login'
+        }
         @endauth
 
         function copyToClipboard(id) {
