@@ -25,6 +25,7 @@ class UserSnippetsTest extends TestCase
         $response = $this->actingAs($user)->get(route('user.snippets', ['user' => $user->name]));
 
         $response->assertStatus(200);
+        $response->assertSee('My snippets');
         $response->assertSee($snippets[0]->title);
         $response->assertSee($snippets[1]->title);
         $response->assertSee($snippets[2]->title);

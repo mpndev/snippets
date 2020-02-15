@@ -25,6 +25,7 @@ class UserForkedSnippetsTest extends TestCase
         $response = $this->actingAs($user1)->get(route('user.forked-snippets', ['user' => $user1->name]));
 
         $response->assertStatus(200);
+        $response->assertSee('My snippets that was forked');
         $response->assertSee('My forked snippets (' . $user1->paginatedForkedSnippets()->count() . ')');
         $response->assertSee($snippet->title);
         $response->assertSee($fork->title);

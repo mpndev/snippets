@@ -5,6 +5,11 @@
 @endsection
 
 @section('content')
+    @if($snippets->total() > $snippets->perPage())
+        @component('components.pagers.snippets', ['snippets' => $snippets])
+        @endcomponent
+    @endif
+
     @foreach($snippets as $snippet)
         @component('components.snippets.show', ['snippet' => $snippet])
         @endcomponent

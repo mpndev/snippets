@@ -18,6 +18,18 @@
                         @endauth
                     </p>
                 </div>
+                <div class="column is-6">
+                    <div class="field has-addons">
+                        <div class="control">
+                            <input name="search" class="input" type="text" placeholder="find a snippet">
+                        </div>
+                        <div class="control">
+                            <a class="button is-info">
+                                search
+                            </a>
+                        </div>
+                    </div>
+                </div>
                 @guest
                 <div class="column is-3">
                     <a href="/" class="button is-info" title="home"><i class="fa fa-home"></i></a>
@@ -39,13 +51,13 @@
                         <div class="dropdown-menu" id="dropdown-menu" role="menu">
                             <div class="dropdown-content">
                                 <a href="{{ route('user.snippets', ['user' => auth()->user()->name]) }}" class="dropdown-item">
-                                    My snippets ({{ auth()->user()->snippets()->count() }})
+                                    My snippets ({{ auth()->user()->myPaginatedSnippets()->total() }})
                                 </a>
                                 <a href="{{ route('favorite-snippets', ['user' => auth()->user()->name]) }}" class="dropdown-item">
-                                    My collection ({{ auth()->user()->paginatedFavoriteSnippets()->count() }})
+                                    My collection ({{ auth()->user()->paginatedFavoriteSnippets()->total() }})
                                 </a>
                                 <a href="{{ route('user.forked-snippets', ['user' => auth()->user()->name]) }}" class="dropdown-item">
-                                    My forked snippets ({{ auth()->user()->paginatedForkedSnippets()->count() }})
+                                    My forked snippets ({{ auth()->user()->paginatedForkedSnippets()->total() }})
                                 </a>
                                 <a class="dropdown-item">
                                     Settings

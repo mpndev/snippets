@@ -23,15 +23,24 @@ class UserTest extends TestCase
     }
 
     /** @test */
+    public function user_can_get_his_paginated_snippets()
+    {
+        $user = factory(User::class)->create();
+        $user->snippets()->saveMany(factory(Snippet::class, 10)->make());
+
+        $this->assertEquals(10, $user->myPaginatedSnippets()->total());
+    }
+
+    /** @test */
     public function user_can_get_snippets_that_was_forked()
     {
         $user = factory(User::class)->create();
-        $snippet1 = $user->snippets()->save(factory(Snippet::class)->make());
-        $snippet2 = $user->snippets()->save(factory(Snippet::class)->make());
+        $snippet1 = $user->snippets()->save(factory(Snippet::class)->make(['fork_id' => null]));
+        $snippet2 = $user->snippets()->save(factory(Snippet::class)->make(['fork_id' => null]));
         $user->snippets()->saveMany(factory(Snippet::class, 5)->make(['fork_id' => $snippet1->id]));
         $user->snippets()->saveMany(factory(Snippet::class, 5)->make(['fork_id' => $snippet2->id]));
 
-        $this->assertEquals(2, $user->paginatedForkedSnippets()->count());
+        $this->assertEquals(2, $user->paginatedForkedSnippets()->total());
         $this->assertEquals(12, $user->snippets->count());
     }
 

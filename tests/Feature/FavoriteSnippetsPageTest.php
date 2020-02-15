@@ -53,6 +53,7 @@ class FavoriteSnippetsPageTest extends TestCase
         $response = $this->actingAs($user)->get(route('favorite-snippets', ['user' => $user->name]));
 
         $response->assertStatus(200);
+        $response->assertSee('My favorite snippets');
         $response->assertSee($snippet->title);
         $response->assertSee(htmlspecialchars($snippet->body));
     }

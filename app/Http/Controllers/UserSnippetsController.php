@@ -9,7 +9,7 @@ class UserSnippetsController extends Controller
 {
     public function index(User $user)
     {
-        $snippets = $user->snippets()->latest()->paginate();
+        $snippets = $user->myPaginatedSnippets();
         return view('user.snippets.index', compact('snippets'));
     }
 }
