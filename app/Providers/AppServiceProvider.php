@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -36,6 +36,41 @@ class AppServiceProvider extends ServiceProvider
                 $page,
                 $options
             );
+        });
+        Collection::macro('orderByRelevance', function($search_needle = null) {
+            /** @var Collection $this */
+            if ($search_needle && count($this->items)) {
+                $fields = $this->first()->searchable_fields;
+                usort($fields, function($a, $b) {
+                    return $a['priority'] > $b['priority'];
+                });
+
+                return $this->sort(function($item1, $item2) use ($search_needle, $fields) {
+                    foreach($fields as $field) {
+                        $position_first = strpos($item1->{$field['name']}, $search_needle);
+                        $position_second = strpos($item2->{$field['name']}, $search_needle);
+
+                        if (!is_numeric($position_first) && !is_numeric($position_second)) {
+                            continue;
+                        }
+                        if (!is_numeric($position_first)) {
+                            return -1;
+                        }
+                        if (!is_numeric($position_second)) {
+                            return 1;
+                        }
+                        if ($position_first === $position_second) {
+                            return 1;
+                        }
+
+                        return $position_first < $position_second ? -1 : 1;
+                    }
+
+                    return 0;
+                });
+            }
+
+            return $this;
         });
     }
 }

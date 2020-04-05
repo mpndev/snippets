@@ -3,7 +3,11 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 
 class Handler extends ExceptionHandler
 {
@@ -50,6 +54,45 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof ValidationException && $request->expectsJson()) {
+            return response()->json($exception->errors(), 400);
+        }
+
+        if ($exception instanceof AuthorizationException) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'user' => [
+                        'This action is unauthorized.'
+                    ],
+                ], 403);
+            }
+            return redirect(route('login.create'));
+        }
+
+        if ($exception instanceof ModelNotFoundException && $request->expectsJson()) {
+            $model_name_segments = explode('\\', strtolower($exception->getModel()));
+            $model_name = end($model_name_segments);
+
+            return response()->json([
+                $model_name => [
+                    ucfirst($model_name) . ' not found.'
+                ],
+            ], 404);
+        }
+
         return parent::render($request, $exception);
+    }
+
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        if ($request->expectsJson()) {
+            return response()->json([
+                'user' => [
+                    $exception->getMessage()
+                ],
+            ], 401);
+        }
+
+        return parent::unauthenticated($request, $exception);
     }
 }

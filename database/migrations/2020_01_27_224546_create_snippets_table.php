@@ -18,6 +18,7 @@ class CreateSnippetsTable extends Migration
             $table->unsignedBigInteger('fork_id')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->string('title');
+            $table->text('description')->nullable();
             $table->text('body');
             $table->timestamps();
         });

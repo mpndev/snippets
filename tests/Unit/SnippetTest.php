@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Tag;
 use App\User;
 use App\Snippet;
 use Tests\TestCase;
@@ -12,57 +13,296 @@ class SnippetTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function snippet_can_get_forks()
+    public function it_can_get_forks()
     {
+        // Arrange
+        $expected_forks_amount = 7;
+        $expected_total_snippets_amount = $expected_forks_amount + 1;
         $parent_snippet = factory(Snippet::class)->create();
-        $first_child = factory(Snippet::class)->create(['fork_id' => $parent_snippet->id]);
-        $second_child = factory(Snippet::class)->create(['fork_id' => $parent_snippet->id]);
+        $children = [];
+        foreach (range(1, $expected_forks_amount) as $item) {
+            $children[] = factory(Snippet::class)->create(['fork_id' => $parent_snippet->id]);
+        }
 
+        // Act
         $forks = $parent_snippet->forks;
 
-        $this->assertEquals(2, $forks->count());
-        $this->assertEquals($forks[0]->id, $first_child->id);
-        $this->assertEquals($forks[1]->id, $second_child->id);
+        // Assert
+        $this->assertEquals($expected_total_snippets_amount, Snippet::count());
+        $this->assertEquals($expected_forks_amount, $forks->count());
+        $forks->each(function($fork, $index) use ($children) {
+            $this->assertEquals($fork->id, $children[$index]->id);
+        });
     }
 
     /** @test */
-    public function snippet_can_get_his_parent()
+    public function it_can_get_his_parent()
     {
+        // Arrange
         $snippet = factory(Snippet::class)->create();
         $fork = factory(Snippet::class)->create(['fork_id' => $snippet->id]);
 
+        // Act
         $parent = $fork->parent;
 
+        // Assert
         $this->assertEquals($snippet->id, $parent->id);
     }
 
     /** @test */
-    public function snippet_can_check_is_a_fork_or_not()
+    public function it_can_get_escaped_body()
     {
-        $snippet = factory(Snippet::class)->create();
-        $fork = factory(Snippet::class)->create(['fork_id' => $snippet->id]);
+        // Arrange
+        $code = '<p>lorem ipsum</p>';
+        $expected = e($code);
+        $snippet = factory(Snippet::class)->create(['body' => $code]);
 
-        $this->assertTrue($fork->isAFork());
-        $this->assertFalse($snippet->isAFork());
+        // Act
+        $body = $snippet->body;
+
+        // Assert
+        $this->assertEquals($expected, e($body));
     }
 
     /** @test */
-    public function snippet_can_check_is_a_parent_or_not()
+    public function it_can_check_is_a_fork_or_not()
     {
+        // Arrange
         $snippet = factory(Snippet::class)->create();
-        $fork = factory(Snippet::class)->create(['fork_id' => $snippet->id]);
+        $fork = factory(Snippet::class)->make();
+        $snippet->addFork($fork);
 
-        $this->assertTrue($snippet->haveForks());
-        $this->assertFalse($fork->haveForks());
+        // Act
+        $fork_is_fork = $fork->is_fork;
+        $snippet_is_fork = $snippet->is_fork;
+
+        // Assert
+        $this->assertTrue($fork_is_fork);
+        $this->assertFalse($snippet_is_fork);
     }
 
     /** @test */
-    public function snippet_can_get_creator()
+    public function it_can_check_is_have_children()
     {
+        // Arrange
+        $snippet = factory(Snippet::class)->create();
+        $fork = factory(Snippet::class)->make();
+        $snippet->addFork($fork);
+
+        // Act
+        $snippet_have_forks = $snippet->have_forks;
+        $fork_have_forks = $fork->have_forks;
+
+        // Assert
+        $this->assertTrue($snippet_have_forks);
+        $this->assertFalse($fork_have_forks);
+    }
+
+    /** @test */
+    public function it_can_check_is_a_parent()
+    {
+        // Arrange
+        $snippet = factory(Snippet::class)->create();
+        $fork = factory(Snippet::class)->make();
+        $snippet->addFork($fork);
+
+        // Act
+        $snippet_is_parent = $snippet->is_parent;
+        $fork_is_parent = $fork->is_parent;
+
+        // Assert
+        $this->assertTrue($snippet_is_parent);
+        $this->assertFalse($fork_is_parent);
+    }
+
+    /** @test */
+    public function it_can_get_creator()
+    {
+        // Arrange
         $user = factory(User::class)->create();
-        $snippet = $user->snippets()->save(factory(Snippet::class)->create());
+        $snippet = factory(Snippet::class)->create();
+        $user->addSnippet($snippet);
 
-        $this->assertEquals($snippet->user->name, $user->name);
+        // Act
+        $username = $snippet->user->name;
+
+        // Assert
+        $this->assertEquals($user->name, $username);
+    }
+
+    /** @test */
+    public function it_can_show_all_fans()
+    {
+        // Arrange
+        $fans_amount = 2;
+        $total_users_amount = 4;
+        $users = factory(User::class, $total_users_amount)->make();
+        $users->each(function ($user) {
+            $user->save();
+            $user->generateToken();
+        });
+        $snippet = factory(Snippet::class)->create();
+        $users->take($fans_amount)->each(function($user) use ($snippet) {
+            $user->addToFavoriteSnippets($snippet);
+        });
+
+        // Act
+        $snippet_fans = $snippet->fans;
+
+        // Assert
+        $this->assertCount($fans_amount, $snippet_fans);
+    }
+
+    /** @test */
+    public function it_can_show_quantity_of_fans()
+    {
+        // Arrange
+        $total_users_amount = 10;
+        $fans_amount = 7;
+        $users = factory(User::class, $total_users_amount)->make();
+        $users->each(function($user) {
+            $user->save();
+            $user->generateToken();
+        });
+        $snippet = factory(Snippet::class)->create();
+        $users->take($fans_amount)->each(function($user) use ($snippet) {
+            $user->addToFavoriteSnippets($snippet);
+        });
+
+        // Act
+        $quantity = $snippet->fans_quantity;
+
+        // Assert
+        $this->assertEquals($fans_amount, $quantity);
+    }
+
+    /** @test */
+    public function it_can_get_forks_quantity()
+    {
+        // Arrange
+        $expected_forks_amount = 7;
+        $parent_snippet = factory(Snippet::class)->create();
+        foreach(range(1, $expected_forks_amount) as $step) {
+            factory(Snippet::class)->create(['fork_id' => $parent_snippet]);
+        }
+
+        // Act
+        $quantity = $parent_snippet->forks_quantity;
+
+        // Assert
+        $this->assertEquals($expected_forks_amount, $quantity);
+    }
+
+    /** @test */
+    public function it_can_add_fork()
+    {
+        // Arrange
+        $snippet = factory(Snippet::class)->create();
+        $fork = factory(Snippet::class)->make();
+
+        // Act
+        $snippet->addFork($fork);
+
+        // Assert
+        $this->assertEquals(1, $snippet->forks_quantity);
+    }
+
+    /** @test */
+    public function it_can_remove_fork()
+    {
+        // Arrange
+        $snippet = factory(Snippet::class)->create();
+        $fork = factory(Snippet::class)->make();
+        $snippet->addFork($fork);
+        $this->assertEquals(1, $snippet->forks_quantity);
+
+        // Act
+        $snippet->removeFork($fork);
+
+        // Assert
+        $this->assertEquals(0, $snippet->forks_quantity);
+    }
+
+    /** @test */
+    public function it_can_become_parent_when_his_parent_is_deleted()
+    {
+        // Arrange
+        $forks_amount = 3;
+        $expected_forks_amount_after_deletion = $forks_amount - 1;
+        $grandpa_snippet = factory(Snippet::class)->create();
+        $father_snippet = factory(Snippet::class)->make();
+        $child_snippet = factory(Snippet::class)->make();
+        $grandpa_snippet->addFork($father_snippet);
+        $father_snippet->addFork($child_snippet);
+        $this->assertCount($forks_amount, Snippet::all());
+
+        // Act
+        $grandpa_snippet->removeFork($father_snippet);
+
+        // Assert
+        $this->assertTrue($child_snippet->fresh()->is_parent);
+        $this->assertCount($expected_forks_amount_after_deletion, Snippet::all());
+    }
+
+    /** @test */
+    public function snippet_can_have_many_tags()
+    {
+        // Arrange
+        $snippet = factory(Snippet::class)->create();
+        $tag1 = factory(Tag::class)->make(['name' => 'foo']);
+        $tag2 = factory(Tag::class)->make(['name' => 'bar']);
+        $tag3 = factory(Tag::class)->make(['name' => 'baz']);
+        $snippet->addTag($tag1);
+        $snippet->addTag($tag2);
+        $snippet->addTag($tag3);
+
+        // Act
+        $tags_from_snippet = $snippet->tags;
+
+        // Assert
+        $this->assertEquals($tag1->name, $tags_from_snippet[0]->name);
+        $this->assertEquals($tag2->name, $tags_from_snippet[1]->name);
+        $this->assertEquals($tag3->name, $tags_from_snippet[2]->name);
+    }
+
+    /** @test */
+    public function it_can_get_forks_with_nested_forks()
+    {
+        // Arrange
+        [$snippet1, $snippet2, $snippet3, $snippet4, $snippet5, $snippet6, $snippet7, $snippet8, $snippet9, $snippet10] = factory(Snippet::class, 10)->create();
+        $snippet1
+            ->addFork($snippet2)
+            ->forks()->first()->addFork($snippet3)
+            ->forks()->first()->addFork($snippet4)
+            ->forks()->first()->addFork($snippet5)
+            ->forks()->first()->addFork($snippet6)
+            ->forks()->first()->addFork($snippet7)
+            ->forks()->first()->addFork($snippet8)
+            ->forks()->first()->addFork($snippet9)
+            ->forks()->first()->addFork($snippet10);
+
+        // Act
+        $forks = $snippet1->forks->toArray();
+
+        // Assert
+        $fork = $forks[0];
+        $this->assertEquals(2, $fork['id']);
+        $fork = $fork['forks'][0];
+        $this->assertEquals(3, $fork['id']);
+        $fork = $fork['forks'][0];
+        $this->assertEquals(4, $fork['id']);
+        $fork = $fork['forks'][0];
+        $this->assertEquals(5, $fork['id']);
+        $fork = $fork['forks'][0];
+        $this->assertEquals(6, $fork['id']);
+        $fork = $fork['forks'][0];
+        $this->assertEquals(7, $fork['id']);
+        $fork = $fork['forks'][0];
+        $this->assertEquals(8, $fork['id']);
+        $fork = $fork['forks'][0];
+        $this->assertEquals(9, $fork['id']);
+        $fork = $fork['forks'][0];
+        $this->assertEquals(10, $fork['id']);
     }
 
 }
