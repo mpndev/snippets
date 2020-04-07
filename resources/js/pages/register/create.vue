@@ -31,6 +31,7 @@
     export default {
         data: () => {
             return {
+                Auth: Auth,
                 name: '',
                 password: '',
                 password_confirmation: '',
@@ -42,7 +43,7 @@
             }
         },
         created() {
-            if (this.$root.user) {
+            if (this.Auth.check()) {
                 this.$router.push({ name: 'snippets.index' })
             }
         },
@@ -80,10 +81,11 @@
                     password: this.password,
                     password_confirmation: this.password_confirmation
                 }).then(response => {
-                    this.successfulRegistration({
+                    this.success({
                         message: "Welcome " + response.data.name,
                     })
-                    Event.$emit('register', response.data)
+                    this.Auth.update(response.data)
+                    this.$router.push({ name: 'snippets.index' })
                 }).catch(error => {
                     let parsed_errors = ''
 
@@ -107,23 +109,12 @@
                         }
                     }
 
-                    this.failedRegistration({
+                    this.error({
                         message: parsed_errors,
                     })
                 })
             }
         },
-        notifications: {
-            successfulRegistration: {
-                title: '',
-                message: '',
-                type: 'success'
-            },
-            failedRegistration: {
-                title: 'Error!',
-                message: '',
-                type: 'error'
-            }
-        }
+        notifications: require('../../GlobalNotifications')
     }
 </script>

@@ -4,7 +4,7 @@
             <div class="column is-3">
                 <div class="box">
                     <div>
-                        <p v-if="user"><b>Author:</b> {{ user.name }}</p>
+                        <p v-if="Auth.check()"><b>Author:</b> {{ Auth.user.name }}</p>
                         <ring-loader v-else class="is-narrow"></ring-loader>
                     </div>
                     <hr>
@@ -67,7 +67,7 @@
     export default {
         data: () => {
             return {
-                user: null,
+                Auth: Auth,
                 snippet: {
                     title: '',
                     description: '',
@@ -82,23 +82,18 @@
                 }
             }
         },
-        created() {
-            if (!this.$root.user) {
+        mounted() {
+            if (this.Auth.guest()) {
                 this.$router.push({ name: 'login.create' })
             }
             else {
-                this.user = this.$root.user
-            }
-        },
-        mounted() {
-            axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(response => {
-                this.parent = response.data
-            }).catch(error => {
-                this.$router.push({ name: 'snippets.index' })
-                this.failToLoadParent({
-                    message: error.toString()
+                axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(response => {
+                    this.parent = response.data
+                }).catch(error => {
+                    this.$router.push({ name: 'snippets.index' })
+                    this.error({message: error.toString()})
                 })
-            })
+            }
         },
         watch: {
             parent() {
@@ -150,7 +145,7 @@
             create() {
                 this.resetErrors()
                 if (this.validateForm()) {
-                    let response = axios.post('/api/snippets/?api_token=' + this.user.api_token, {
+                    let response = axios.post('/api/snippets/?api_token=' + this.Auth.user.api_token, {
                         title: this.snippet.title,
                         description: this.snippet.description,
                         body: this.snippet.body,
@@ -158,28 +153,20 @@
                     }).then(response => {
                         return response
                     }).catch(error => {
-                        this.failToStoreFork({
-                            message: error.toString()
-                        })
+                        this.error({message: error.toString()})
                     })
                     response.then(response => {
                         let snippet_id = response.data.id
-                        this.successfulStoreFork({
-                            message: 'Fork was created successful.'
-                        })
+                        this.success({message: 'Fork was created successful.'})
                         if (this.tags.length) {
                             this.tags.map(tag => {
-                                axios.post(`/api/tags?api_token=` + this.user.api_token, {
+                                axios.post(`/api/tags?api_token=` + this.Auth.user.api_token, {
                                     name: tag,
                                     snippet: snippet_id
                                 }).then(inner_response => {
-                                    this.successfulStoreTag({
-                                        message: `"${inner_response.data.name}" tag was added to the snippet.`
-                                    })
+                                    this.success({message: `"${inner_response.data.name}" tag was added to the snippet.`})
                                 }).catch(inner_error => {
-                                    this.failToStoreTag({
-                                        message: inner_error.toString()
-                                    })
+                                    this.error({message: inner_error.toString()})
                                 })
                             })
                         }
@@ -188,32 +175,6 @@
                 }
             }
         },
-        notifications: {
-            failToLoadParent: {
-                title: 'Error!',
-                message: '',
-                type: 'error'
-            },
-            successfulStoreFork: {
-                title: 'Success!',
-                message: '',
-                type: 'success'
-            },
-            failToStoreFork: {
-                title: 'Error!',
-                message: '',
-                type: 'error'
-            },
-            successfulStoreTag: {
-                title: 'Success!',
-                message: '',
-                type: 'success'
-            },
-            failToStoreTag: {
-                title: 'Error!',
-                message: '',
-                type: 'error'
-            }
-        }
+        notifications: require('../../../GlobalNotifications')
     }
 </script>

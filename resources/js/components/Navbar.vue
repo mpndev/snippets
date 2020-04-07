@@ -20,10 +20,10 @@
             <div class="navbar-menu is-relative" :class="{ 'is-active': burger_is_on }">
                 <div class="navbar-end has-background-primary has-text-centered" @click="burger_is_on = false">
                     <router-link class="navbar-item has-text-white" :to="{ name: 'snippets.index' }">Home</router-link>
-                    <router-link v-if="user" :to="{ name: 'snippets.create' }" class="navbar-item has-text-white">Create Snippet</router-link>
-                    <a v-if="user" class="navbar-item has-text-white" @click="logout">Logout</a>
-                    <router-link v-if="!user" :to="{ name: 'login.create' }" class="navbar-item has-text-white" @click="burger_is_on = false">Login</router-link>
-                    <router-link v-if="!user" :to="{ name: 'register.create' }" class="navbar-item has-text-white" @click="burger_is_on = false">Register</router-link>
+                    <router-link v-if="Auth.check()" :to="{ name: 'snippets.create' }" class="navbar-item has-text-white">Create Snippet</router-link>
+                    <a v-if="Auth.check()" class="navbar-item has-text-white" @click="logout">Logout</a>
+                    <router-link v-if="Auth.guest()" :to="{ name: 'login.create' }" class="navbar-item has-text-white" @click="burger_is_on = false">Login</router-link>
+                    <router-link v-if="Auth.guest()" :to="{ name: 'register.create' }" class="navbar-item has-text-white" @click="burger_is_on = false">Register</router-link>
                 </div>
             </div>
         </div>
@@ -32,11 +32,9 @@
 
 <script>
     export default {
-        props: [
-            'user'
-        ],
         data: () => {
             return {
+                Auth: Auth,
                 burger_is_on: false
             }
         },
@@ -44,31 +42,17 @@
             logout() {
                 this.burger_is_on = false
                 axios.post('/api/logout', {
-                    api_token: this.$props.user.api_token,
+                    api_token: this.Auth.user.api_token,
                     _method: 'DELETE'
                 }).then(response => {
-                    this.showLogoutSuccessMessage({
-                        message: `See ya later ${this.user.name}!`,
-                    })
-                    Event.$emit('logout')
+                    this.success({message: `See ya later ${this.Auth.user.name}!`})
+                    this.Auth.logout()
+                    this.$router.push({ name: 'login.create' })
                 }).catch(error => {
-                    this.showLogoutFailMessage({
-                        message: error.response.data.user[0],
-                    })
+                    this.error({message: error.response.data.user[0]})
                 })
             }
         },
-        notifications: {
-            showLogoutSuccessMessage: {
-                title: 'Successful logout.',
-                message: 'See ya later!',
-                type: 'success'
-            },
-            showLogoutFailMessage: {
-                title: 'Successful logout.',
-                message: 'Loggin out fail...',
-                type: 'error'
-            }
-        }
+        notifications: require('../GlobalNotifications')
     }
 </script>

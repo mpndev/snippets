@@ -12,7 +12,7 @@
 
         <message></message>
 
-        <navbar :user="user"></navbar>
+        <navbar></navbar>
 
         <div class="section" style="margin-top: 2rem;">
             <div>

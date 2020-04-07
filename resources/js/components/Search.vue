@@ -3,10 +3,10 @@
         <div class="columns">
             <div class="column is-4">
                 <div class="tags">
-                    <span v-if="user" class="tag is-rounded is-unselectable" :class="{'is-info': my_snippets}" @click="toggleFilter('my_snippets')">my snippets</span>
-                    <span v-if="user" class="tag is-rounded is-unselectable" :class="{'is-info': favorite_snippets}" @click="toggleFilter('favorite_snippets')">my favorite snippets</span>
-                    <span v-if="user" class="tag is-rounded is-unselectable" :class="{'is-info': forked_snippets}" @click="toggleFilter('forked_snippets')">my snippets that was extended</span>
-                    <span v-if="user" class="tag is-rounded is-unselectable" :class="{'is-info': forks_snippets}" @click="toggleFilter('forks_snippets')">snippets that extends my snippets</span>
+                    <span v-if="Auth.check()" class="tag is-rounded is-unselectable" :class="{'is-info': my_snippets}" @click="toggleFilter('my_snippets')">my snippets</span>
+                    <span v-if="Auth.check()" class="tag is-rounded is-unselectable" :class="{'is-info': favorite_snippets}" @click="toggleFilter('favorite_snippets')">my favorite snippets</span>
+                    <span v-if="Auth.check()" class="tag is-rounded is-unselectable" :class="{'is-info': forked_snippets}" @click="toggleFilter('forked_snippets')">my snippets that was extended</span>
+                    <span v-if="Auth.check()" class="tag is-rounded is-unselectable" :class="{'is-info': forks_snippets}" @click="toggleFilter('forks_snippets')">snippets that extends my snippets</span>
                     <span class="tag is-rounded is-unselectable" :class="{'is-info': latest}" @click="toggleFilter('latest')">latest</span>
                 </div>
             </div>
@@ -20,7 +20,7 @@
             <div class="column is-3 is-offset-1 field has-addon">
                 <div class="field has-addons">
                     <div class="control is-expanded">
-                        <input id="search" class="input is-rounded" type="text" placeholder="looking for..." v-model="search" @keyup="debauncedSearch">
+                        <input id="search" class="input is-rounded" type="text" placeholder="looking for..." v-model="search" @keyup="debauncedSearch" @keyup.enter="searchRun('search')">
                     </div>
                 </div>
                 <p class="title is-7 has-text-info">{{search_button_text}}</p>
@@ -34,7 +34,7 @@
     export default {
         data: () => {
             return {
-                user: null,
+                Auth: Auth,
                 page: 1,
                 my_snippets: false,
                 favorite_snippets: false,
@@ -49,9 +49,6 @@
             if (Initializer === 'search' || Initializer === 'tags') {
                 document.getElementById(Initializer).focus()
                 Initializer = null
-            }
-            if (this.$root.user) {
-                this.user = this.$root.user
             }
             let query = {...this.$route.query}
             this.page = 1
@@ -131,17 +128,16 @@
         methods: {
             debauncedSearch: _.debounce(function() {
                 if (this.search.length) {
-                    Initializer = 'search'
-                    this.searchRun()
+                    this.searchRun('search')
                 }
             }, 1500),
             debauncedTagsSearch: _.debounce(function() {
                 if (this.tags.length) {
-                    Initializer = 'tags'
-                    this.searchRun()
+                    this.searchRun('tags')
                 }
             }, 1500),
-            searchRun() {
+            searchRun(initializer) {
+                Initializer = initializer
                 this.$router.push({ name: 'snippets.index', query: this.query }).catch(e => {})
             },
             toggleFilter(type) {

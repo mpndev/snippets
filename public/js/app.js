@@ -115,6 +115,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
@@ -142,7 +146,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     is_active_class: function is_active_class() {
-      return this.message.length ? 'is-active' : null;
+      return this.message.length ? 'is-active' : '';
     },
     background_class: function background_class() {
       return this.background_classes[this.type];
@@ -167,6 +171,7 @@ __webpack_require__.r(__webpack_exports__);
       this.callback = null;
     },
     yes: function yes() {
+      this.message = '';
       this.run_callback = false;
       this.callback();
     }
@@ -217,9 +222,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['user'],
   data: function data() {
     return {
+      Auth: Auth,
       burger_is_on: false
     };
   },
@@ -229,33 +234,26 @@ __webpack_require__.r(__webpack_exports__);
 
       this.burger_is_on = false;
       axios.post('/api/logout', {
-        api_token: this.$props.user.api_token,
+        api_token: this.Auth.user.api_token,
         _method: 'DELETE'
       }).then(function (response) {
-        _this.showLogoutSuccessMessage({
-          message: "See ya later ".concat(_this.user.name, "!")
+        _this.success({
+          message: "See ya later ".concat(_this.Auth.user.name, "!")
         });
 
-        Event.$emit('logout');
+        _this.Auth.logout();
+
+        _this.$router.push({
+          name: 'login.create'
+        });
       })["catch"](function (error) {
-        _this.showLogoutFailMessage({
+        _this.error({
           message: error.response.data.user[0]
         });
       });
     }
   },
-  notifications: {
-    showLogoutSuccessMessage: {
-      title: 'Successful logout.',
-      message: 'See ya later!',
-      type: 'success'
-    },
-    showLogoutFailMessage: {
-      title: 'Successful logout.',
-      message: 'Loggin out fail...',
-      type: 'error'
-    }
-  }
+  notifications: __webpack_require__(/*! ../GlobalNotifications */ "./resources/js/GlobalNotifications.json")
 });
 
 /***/ }),
@@ -275,6 +273,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
+//
 //
 //
 //
@@ -389,7 +389,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      user: null,
+      Auth: Auth,
       page: 1,
       my_snippets: false,
       favorite_snippets: false,
@@ -404,10 +404,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     if (Initializer === 'search' || Initializer === 'tags') {
       document.getElementById(Initializer).focus();
       Initializer = null;
-    }
-
-    if (this.$root.user) {
-      this.user = this.$root.user;
     }
 
     var query = _objectSpread({}, this.$route.query);
@@ -482,17 +478,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   methods: {
     debauncedSearch: lodash__WEBPACK_IMPORTED_MODULE_0___default.a.debounce(function () {
       if (this.search.length) {
-        Initializer = 'search';
-        this.searchRun();
+        this.searchRun('search');
       }
     }, 1500),
     debauncedTagsSearch: lodash__WEBPACK_IMPORTED_MODULE_0___default.a.debounce(function () {
       if (this.tags.length) {
-        Initializer = 'tags';
-        this.searchRun();
+        this.searchRun('tags');
       }
     }, 1500),
-    searchRun: function searchRun() {
+    searchRun: function searchRun(initializer) {
+      Initializer = initializer;
       this.$router.push({
         name: 'snippets.index',
         query: this.query
@@ -536,19 +531,28 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['snippet'],
   data: function data() {
     return {
-      user: null
+      Auth: Auth
     };
   },
-  created: function created() {
-    if (this.$root.user) {
-      this.user = this.$root.user;
-    }
-  },
   computed: {
+    sortedTags: function sortedTags() {
+      return this.snippet.tags.sort(function (tag1, tag2) {
+        return tag1.name > tag2.name ? 1 : -1;
+      });
+    },
     parsed_description: function parsed_description() {
       return this.snippet.description.length > 140 ? this.snippet.description.substring(0, 137) + '...' : this.snippet.description;
     }
@@ -558,13 +562,12 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.$copyText(this.snippet.body).then(function () {
-        _this.snippetWasCopied({
+        _this.success({
           message: 'Copied to clipbord.'
         });
       }, function () {
-        _this.snippetWasNotCopied({
-          title: 'Cannot copy snippet.',
-          message: 'Maybe your browser do not allow this.'
+        _this.warn({
+          message: 'Cannot copy snippet. Maybe your browser do not allow this.'
         });
       });
     },
@@ -591,17 +594,28 @@ __webpack_require__.r(__webpack_exports__);
         message: 'Do you confirm deletion?',
         type: 'warning',
         callback: function callback() {
-          axios.post('/api/snippets/' + snippet.id + '?api_token=' + _this2.user.api_token, {
+          axios.post('/api/snippets/' + snippet.id + '?api_token=' + _this2.Auth.user.api_token, {
             _method: 'DELETE'
           }).then(function (response) {
             _this2.$emit('snippet-was-deleted', snippet.id);
 
-            _this2.snippetWasDeleted();
+            _this2.success({
+              message: 'Snippet is deleted.'
+            });
           })["catch"](function (error) {
-            _this2.somethingWentWrongWithDeletion({
+            _this2.error({
               message: error.toString()
             });
           });
+        }
+      });
+    },
+    findByTag: function findByTag(tag) {
+      this.$router.push({
+        name: 'snippets.index',
+        query: {
+          "with-tags": tag.name,
+          page: 1
         }
       });
     },
@@ -617,16 +631,17 @@ __webpack_require__.r(__webpack_exports__);
       var _this3 = this;
 
       axios.post("/api/snippets/favorite/".concat(snippet.id), {
-        'api_token': this.user.api_token
+        'api_token': this.Auth.user.api_token
       }).then(function (response) {
-        _this3.user.favorite_snippets.push(snippet);
+        _this3.Auth.user.favorite_snippets.push(snippet);
 
-        _this3.$root.user = _this3.user;
-        localStorage.user = JSON.stringify(_this3.$root.user);
+        localStorage.user = JSON.stringify(_this3.Auth.user);
 
-        _this3.successfulAddingSnippetToFavorite();
+        _this3.success({
+          message: 'Snippet was added to yours favorite snippets.'
+        });
       })["catch"](function (error) {
-        _this3.failingAddingSnippetToFavorite({
+        _this3.error({
           message: error.toString()
         });
       });
@@ -635,65 +650,25 @@ __webpack_require__.r(__webpack_exports__);
       var _this4 = this;
 
       axios.post("/api/snippets/favorite/".concat(snippet.id), {
-        'api_token': this.user.api_token,
+        'api_token': this.Auth.user.api_token,
         '_method': 'DELETE'
       }).then(function (response) {
-        _this4.user.favorite_snippets = _this4.user.favorite_snippets.filter(function (s) {
+        _this4.Auth.user.favorite_snippets = _this4.Auth.user.favorite_snippets.filter(function (s) {
           return s.id != snippet.id;
         });
-        _this4.$root.user = _this4.user;
-        localStorage.user = JSON.stringify(_this4.$root.user);
+        localStorage.user = JSON.stringify(_this4.Auth.user);
 
-        _this4.successfulRemovingSnippetFromFavorite();
+        _this4.success({
+          message: 'Snippet was removed from yours favorite snippets.'
+        });
       })["catch"](function (error) {
-        _this4.failingRemovingSnippetFromFavorite({
+        _this4.error({
           message: error.toString()
         });
       });
     }
   },
-  notifications: {
-    snippetWasCopied: {
-      title: '',
-      message: '',
-      type: 'success'
-    },
-    snippetWasNotCopied: {
-      title: '',
-      message: '',
-      type: 'warn'
-    },
-    snippetWasDeleted: {
-      title: 'Success!',
-      message: 'Snippet was successful deleted. Also all of his tag and fans.',
-      type: 'success'
-    },
-    somethingWentWrongWithDeletion: {
-      title: '',
-      message: '',
-      type: 'error'
-    },
-    successfulAddingSnippetToFavorite: {
-      title: 'Success!',
-      message: 'Snippet was added to your favorite snippets',
-      type: 'success'
-    },
-    failingAddingSnippetToFavorite: {
-      title: 'Error!',
-      message: '',
-      type: 'error'
-    },
-    successfulRemovingSnippetFromFavorite: {
-      title: 'Success!',
-      message: 'Snippet was removed from your favorite snippets',
-      type: 'success'
-    },
-    failingRemovingSnippetFromFavorite: {
-      title: 'Error!',
-      message: '',
-      type: 'error'
-    }
-  }
+  notifications: __webpack_require__(/*! ../GlobalNotifications */ "./resources/js/GlobalNotifications.json")
 });
 
 /***/ }),
@@ -764,6 +739,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      Auth: Auth,
       name: '',
       password: '',
       errors: {
@@ -772,7 +748,7 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   created: function created() {
-    if (this.$root.user) {
+    if (this.Auth.check()) {
       this.$router.push({
         name: 'snippets.index'
       });
@@ -790,11 +766,15 @@ __webpack_require__.r(__webpack_exports__);
         name: this.name,
         password: this.password
       }).then(function (response) {
-        _this.showLoginSuccessMessage({
+        _this.success({
           message: "Welcome ".concat(response.data.name, "!")
         });
 
-        Event.$emit('login', response.data);
+        _this.Auth.update(response.data);
+
+        _this.$router.push({
+          name: 'snippets.index'
+        });
       })["catch"](function (error) {
         var parsed_errors = '';
 
@@ -830,13 +810,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     }
   },
-  notifications: {
-    showLoginSuccessMessage: {
-      title: 'Successful login.',
-      message: 'welcome',
-      type: 'success'
-    }
-  }
+  notifications: __webpack_require__(/*! ../../GlobalNotifications */ "./resources/js/GlobalNotifications.json")
 });
 
 /***/ }),
@@ -882,6 +856,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      Auth: Auth,
       name: '',
       password: '',
       password_confirmation: '',
@@ -893,7 +868,7 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   created: function created() {
-    if (this.$root.user) {
+    if (this.Auth.check()) {
       this.$router.push({
         name: 'snippets.index'
       });
@@ -937,11 +912,15 @@ __webpack_require__.r(__webpack_exports__);
         password: this.password,
         password_confirmation: this.password_confirmation
       }).then(function (response) {
-        _this.successfulRegistration({
+        _this.success({
           message: "Welcome " + response.data.name
         });
 
-        Event.$emit('register', response.data);
+        _this.Auth.update(response.data);
+
+        _this.$router.push({
+          name: 'snippets.index'
+        });
       })["catch"](function (error) {
         var parsed_errors = '';
 
@@ -1025,24 +1004,13 @@ __webpack_require__.r(__webpack_exports__);
           }
         }
 
-        _this.failedRegistration({
+        _this.error({
           message: parsed_errors
         });
       });
     }
   },
-  notifications: {
-    successfulRegistration: {
-      title: '',
-      message: '',
-      type: 'success'
-    },
-    failedRegistration: {
-      title: 'Error!',
-      message: '',
-      type: 'error'
-    }
-  }
+  notifications: __webpack_require__(/*! ../../GlobalNotifications */ "./resources/js/GlobalNotifications.json")
 });
 
 /***/ }),
@@ -1132,7 +1100,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      user: null,
+      Auth: Auth,
       snippet: {
         title: '',
         description: '',
@@ -1147,13 +1115,10 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     };
   },
   created: function created() {
-    //mod_alias, mod_authz_core, mod_authz_host, mod_include, mod_negotiation
-    if (!this.$root.user) {
+    if (this.Auth.guest()) {
       this.$router.push({
         name: 'login.create'
       });
-    } else {
-      this.user = this.$root.user;
     }
   },
   computed: {
@@ -1203,14 +1168,14 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       this.resetErrors();
 
       if (this.validateForm()) {
-        var response = axios.post('/api/snippets/?api_token=' + this.user.api_token, {
+        var response = axios.post('/api/snippets/?api_token=' + this.Auth.user.api_token, {
           title: this.snippet.title,
           description: this.snippet.description,
           body: this.snippet.body
         }).then(function (response) {
           return response;
         })["catch"](function (error) {
-          _this.failedCreatingSnippet({
+          _this.error({
             message: error.toString()
           });
         });
@@ -1224,21 +1189,21 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
             }
           });
 
-          _this.successfulCreatingSnippet({
+          _this.success({
             message: 'Snippet was created successful.'
           });
 
           if (_this.tags.length) {
             _this.tags.map(function (tag) {
-              axios.post("/api/tags?api_token=" + _this.user.api_token, {
+              axios.post("/api/tags?api_token=" + _this.Auth.user.api_token, {
                 name: tag,
                 snippet: snippet_id
               }).then(function (inner_response) {
-                _this.successfulCreatingTag({
+                _this.success({
                   message: "\"".concat(inner_response.data.name, "\" tag was added to the snippet.")
                 });
               })["catch"](function (inner_error) {
-                _this.failedCreatingTag({
+                _this.error({
                   message: inner_error.toString()
                 });
               });
@@ -1248,28 +1213,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       }
     }
   },
-  notifications: {
-    successfulCreatingSnippet: {
-      title: 'Success!',
-      message: '',
-      type: 'success'
-    },
-    failedCreatingSnippet: {
-      title: 'Error!',
-      message: '',
-      type: 'error'
-    },
-    successfulCreatingTag: {
-      title: 'Success!',
-      message: '',
-      type: 'success'
-    },
-    failedCreatingTag: {
-      title: 'Error!',
-      message: '',
-      type: 'error'
-    }
-  }
+  notifications: __webpack_require__(/*! ../../GlobalNotifications */ "./resources/js/GlobalNotifications.json")
 });
 
 /***/ }),
@@ -1394,9 +1338,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      Auth: Auth,
       snippet: {},
       snippet_copy: null,
-      user: null,
       errors: {
         description: [],
         body: []
@@ -1405,9 +1349,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     };
   },
   created: function created() {
-    if (this.$root.user) {
-      this.user = this.$root.user;
-    } else {
+    if (this.Auth.guest()) {
       return this.$router.push({
         name: 'login.create'
       });
@@ -1418,7 +1360,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this = this;
 
       if (this.snippet != null) {
-        if (this.user.id !== this.snippet.user.id) {
+        if (this.Auth.user.id !== this.snippet.user.id) {
           return this.$router.push({
             name: 'login.create'
           });
@@ -1450,8 +1392,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(function (response) {
       _this2.snippet = response.data;
     })["catch"](function (error) {
-      _this2.failedToLoadParentSnippet({
-        title: 'Error!',
+      _this2.error({
         message: error.toString()
       });
 
@@ -1494,7 +1435,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.resetErrors();
 
       if (this.validateForm()) {
-        var response = axios.post('/api/snippets/' + this.snippet_copy.id + '/?api_token=' + this.user.api_token, {
+        var response = axios.post('/api/snippets/' + this.snippet_copy.id + '/?api_token=' + this.Auth.user.api_token, {
           title: this.snippet.title,
           description: this.snippet_copy.description,
           body: this.snippet_copy.body,
@@ -1502,18 +1443,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }).then(function (response) {
           return response;
         })["catch"](function (error) {
-          _this3.failedUpdatingSnippet({
+          _this3.error({
             message: error.toString()
           });
         });
         response.then(function (response) {
-          _this3.successfulUpdatingSnippet({
+          _this3.success({
             message: 'Snippet was updated successful.'
           });
 
           if (_this3.snippet.tags.length) {
             _this3.snippet.tags.map(function (tag) {
-              axios.post("/api/tags/".concat(tag.id, "/?api_token=") + _this3.user.api_token, {
+              axios.post("/api/tags/".concat(tag.id, "/?api_token=") + _this3.Auth.user.api_token, {
                 snippet: _this3.snippet.id,
                 _method: 'DELETE'
               });
@@ -1524,15 +1465,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
           if (_this3.tags.length) {
             _this3.tags.map(function (tag) {
-              axios.post("/api/tags?api_token=" + _this3.user.api_token, {
+              axios.post("/api/tags?api_token=" + _this3.Auth.user.api_token, {
                 name: tag,
                 snippet: snippet_id
               }).then(function (inner_response) {
-                _this3.successfulUpdatingTag({
+                _this3.success({
                   message: 'tags was updated.'
                 });
               })["catch"](function (inner_error) {
-                _this3.failedUpdatingTag({
+                _this3.error({
                   message: inner_error.toString()
                 });
               });
@@ -1555,18 +1496,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         message: 'Do you confirm deletion?',
         type: 'warning',
         callback: function callback() {
-          axios.post('/api/snippets/' + snippet.id + '?api_token=' + _this4.user.api_token, {
+          axios.post('/api/snippets/' + snippet.id + '?api_token=' + _this4.Auth.user.api_token, {
             _method: 'DELETE'
           }).then(function (response) {
             _this4.$router.push({
               name: 'snippets.index'
             });
 
-            _this4.successfulDeletingSnippet({
+            _this4.success({
               message: 'Snippet was successful deleted. Also all of his tag and fans.'
             });
           })["catch"](function (error) {
-            _this4.failedDeletingSnippet({
+            _this4.error({
               message: error.toString()
             });
           });
@@ -1574,43 +1515,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     }
   },
-  notifications: {
-    failedToLoadParentSnippet: {
-      title: 'Error!',
-      message: '',
-      type: 'error'
-    },
-    successfulUpdatingSnippet: {
-      title: 'Success!',
-      message: '',
-      type: 'success'
-    },
-    failedUpdatingSnippet: {
-      title: 'Error!',
-      message: '',
-      type: 'error'
-    },
-    successfulUpdatingTag: {
-      title: 'Success!',
-      message: '',
-      type: 'success'
-    },
-    failedUpdatingTag: {
-      title: 'Error!',
-      message: '',
-      type: 'error'
-    },
-    successfulDeletingSnippet: {
-      title: 'Success!',
-      message: '',
-      type: 'success'
-    },
-    failedDeletingSnippet: {
-      title: 'Error!',
-      message: '',
-      type: 'error'
-    }
-  }
+  notifications: __webpack_require__(/*! ../../GlobalNotifications */ "./resources/js/GlobalNotifications.json")
 });
 
 /***/ }),
@@ -1706,7 +1611,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      user: null,
+      Auth: Auth,
       snippet: {
         title: '',
         description: '',
@@ -1721,29 +1626,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
     };
   },
-  created: function created() {
-    if (!this.$root.user) {
+  mounted: function mounted() {
+    var _this = this;
+
+    if (this.Auth.guest()) {
       this.$router.push({
         name: 'login.create'
       });
     } else {
-      this.user = this.$root.user;
+      axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(function (response) {
+        _this.parent = response.data;
+      })["catch"](function (error) {
+        _this.$router.push({
+          name: 'snippets.index'
+        });
+
+        _this.error({
+          message: error.toString()
+        });
+      });
     }
-  },
-  mounted: function mounted() {
-    var _this = this;
-
-    axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(function (response) {
-      _this.parent = response.data;
-    })["catch"](function (error) {
-      _this.$router.push({
-        name: 'snippets.index'
-      });
-
-      _this.failToLoadParent({
-        message: error.toString()
-      });
-    });
   },
   watch: {
     parent: function parent() {
@@ -1810,7 +1712,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.resetErrors();
 
       if (this.validateForm()) {
-        var response = axios.post('/api/snippets/?api_token=' + this.user.api_token, {
+        var response = axios.post('/api/snippets/?api_token=' + this.Auth.user.api_token, {
           title: this.snippet.title,
           description: this.snippet.description,
           body: this.snippet.body,
@@ -1818,28 +1720,28 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }).then(function (response) {
           return response;
         })["catch"](function (error) {
-          _this3.failToStoreFork({
+          _this3.error({
             message: error.toString()
           });
         });
         response.then(function (response) {
           var snippet_id = response.data.id;
 
-          _this3.successfulStoreFork({
+          _this3.success({
             message: 'Fork was created successful.'
           });
 
           if (_this3.tags.length) {
             _this3.tags.map(function (tag) {
-              axios.post("/api/tags?api_token=" + _this3.user.api_token, {
+              axios.post("/api/tags?api_token=" + _this3.Auth.user.api_token, {
                 name: tag,
                 snippet: snippet_id
               }).then(function (inner_response) {
-                _this3.successfulStoreTag({
+                _this3.success({
                   message: "\"".concat(inner_response.data.name, "\" tag was added to the snippet.")
                 });
               })["catch"](function (inner_error) {
-                _this3.failToStoreTag({
+                _this3.error({
                   message: inner_error.toString()
                 });
               });
@@ -1856,33 +1758,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
     }
   },
-  notifications: {
-    failToLoadParent: {
-      title: 'Error!',
-      message: '',
-      type: 'error'
-    },
-    successfulStoreFork: {
-      title: 'Success!',
-      message: '',
-      type: 'success'
-    },
-    failToStoreFork: {
-      title: 'Error!',
-      message: '',
-      type: 'error'
-    },
-    successfulStoreTag: {
-      title: 'Success!',
-      message: '',
-      type: 'success'
-    },
-    failToStoreTag: {
-      title: 'Error!',
-      message: '',
-      type: 'error'
-    }
-  }
+  notifications: __webpack_require__(/*! ../../../GlobalNotifications */ "./resources/js/GlobalNotifications.json")
 });
 
 /***/ }),
@@ -1945,6 +1821,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
+      Auth: Auth,
       paginated_data: {
         data: []
       },
@@ -1958,8 +1835,8 @@ __webpack_require__.r(__webpack_exports__);
     var query = this.$router.currentRoute.fullPath.substr(this.$router.currentRoute.path);
     var api_token_param = '';
 
-    if (this.$root.user) {
-      api_token_param = 'api_token=' + this.$root.user.api_token;
+    if (this.Auth.check()) {
+      api_token_param = 'api_token=' + this.Auth.user.api_token;
 
       if (query.length > 1) {
         query = query + '&' + api_token_param;
@@ -1977,7 +1854,9 @@ __webpack_require__.r(__webpack_exports__);
 
       _this.show_rings = false;
     })["catch"](function (error) {
-      _this.somethingWentWrong();
+      _this.error({
+        message: error.toString()
+      });
     });
   },
   methods: {
@@ -1991,13 +1870,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     }
   },
-  notifications: {
-    somethingWentWrong: {
-      title: 'Error!',
-      message: 'Something went wrong...',
-      type: 'error'
-    }
-  }
+  notifications: __webpack_require__(/*! ../../GlobalNotifications */ "./resources/js/GlobalNotifications.json")
 });
 
 /***/ }),
@@ -2091,11 +1964,8 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       snippet: {},
-      user: null
+      Auth: Auth
     };
-  },
-  created: function created() {
-    this.user = this.$root.user;
   },
   mounted: function mounted() {
     var _this = this;
@@ -2107,7 +1977,7 @@ __webpack_require__.r(__webpack_exports__);
         name: 'snippets.index'
       });
 
-      _this.failToLoadSnippet({
+      _this.error({
         message: error.toString()
       });
     });
@@ -2117,12 +1987,11 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       this.$copyText(this.snippet.body).then(function () {
-        _this2.snippetWasCopied({
-          title: 'Copied to clipbord.'
+        _this2.success({
+          message: 'Copied to clipbord.'
         });
       }, function () {
-        _this2.snippetWasNotCopied({
-          title: 'Cannot copy snippet.',
+        _this2.warn({
           message: 'Maybe your browser do not allow this.'
         });
       });
@@ -2142,21 +2011,30 @@ __webpack_require__.r(__webpack_exports__);
         message: 'Do you confirm deletion?',
         type: 'warning',
         callback: function callback() {
-          axios.post('/api/snippets/' + snippet.id + '?api_token=' + _this3.user.api_token, {
+          axios.post('/api/snippets/' + snippet.id + '?api_token=' + _this3.Auth.user.api_token, {
             _method: 'DELETE'
           }).then(function (response) {
             _this3.$router.push({
               name: 'snippets.index'
             });
 
-            _this3.successfulDeletedSnippet({
+            _this3.success({
               message: 'Snippet was successful deleted. Also all of his tag and fans.'
             });
           })["catch"](function (error) {
-            _this3.failedToDeleteSnippet({
+            _this3.error({
               message: error.toString()
             });
           });
+        }
+      });
+    },
+    findByTag: function findByTag(tag) {
+      this.$router.push({
+        name: 'snippets.index',
+        query: {
+          "with-tags": tag.name,
+          page: 1
         }
       });
     },
@@ -2172,16 +2050,17 @@ __webpack_require__.r(__webpack_exports__);
       var _this4 = this;
 
       axios.post("/api/snippets/favorite/".concat(snippet.id), {
-        'api_token': this.user.api_token
+        'api_token': this.Auth.user.api_token
       }).then(function (response) {
-        _this4.user.favorite_snippets.push(snippet);
+        _this4.Auth.user.favorite_snippets.push(snippet);
 
-        _this4.$root.user = _this4.user;
-        localStorage.user = JSON.stringify(_this4.$root.user);
+        localStorage.user = JSON.stringify(_this4.Auth.user);
 
-        _this4.successfulAddingSnippetToFavorite();
+        _this4.success({
+          message: 'Snippet was added to yours favorite snippets.'
+        });
       })["catch"](function (error) {
-        _this4.failingAddingSnippetToFavorite({
+        _this4.error({
           message: error.toString()
         });
       });
@@ -2190,70 +2069,25 @@ __webpack_require__.r(__webpack_exports__);
       var _this5 = this;
 
       axios.post("/api/snippets/favorite/".concat(snippet.id), {
-        'api_token': this.user.api_token,
+        'api_token': this.Auth.user.api_token,
         '_method': 'DELETE'
       }).then(function (response) {
-        _this5.user.favorite_snippets = _this5.user.favorite_snippets.filter(function (s) {
+        _this5.Auth.user.favorite_snippets = _this5.Auth.user.favorite_snippets.filter(function (s) {
           return s.id != snippet.id;
         });
-        _this5.$root.user = _this5.user;
-        localStorage.user = JSON.stringify(_this5.$root.user);
+        localStorage.user = JSON.stringify(_this5.Auth.user);
 
-        _this5.successfulRemovingSnippetFromFavorite();
+        _this5.success({
+          message: 'Snippet was removed from yours favorite snippets.'
+        });
       })["catch"](function (error) {
-        _this5.failingRemovingSnippetFromFavorite({
+        _this5.error({
           message: error.toString()
         });
       });
     }
   },
-  notifications: {
-    failToLoadSnippet: {
-      title: 'Error!',
-      message: '',
-      type: 'error'
-    },
-    snippetWasCopied: {
-      title: '',
-      message: '',
-      type: 'success'
-    },
-    snippetWasNotCopied: {
-      title: '',
-      message: '',
-      type: 'warn'
-    },
-    successfulDeletedSnippet: {
-      title: 'Success!',
-      message: '',
-      type: 'success'
-    },
-    failedToDeleteSnippet: {
-      title: 'Error!',
-      message: '',
-      type: 'error'
-    },
-    successfulAddingSnippetToFavorite: {
-      title: 'Success!',
-      message: 'Snippet was added to your favorite snippets',
-      type: 'success'
-    },
-    failingAddingSnippetToFavorite: {
-      title: 'Error!',
-      message: '',
-      type: 'error'
-    },
-    successfulRemovingSnippetFromFavorite: {
-      title: 'Success!',
-      message: 'Snippet was removed from your favorite snippets',
-      type: 'success'
-    },
-    failingRemovingSnippetFromFavorite: {
-      title: 'Error!',
-      message: '',
-      type: 'error'
-    }
-  }
+  notifications: __webpack_require__(/*! ../../GlobalNotifications */ "./resources/js/GlobalNotifications.json")
 });
 
 /***/ }),
@@ -21060,53 +20894,58 @@ var render = function() {
       }
     }),
     _vm._v(" "),
-    _c("div", { staticClass: "modal-content" }, [
-      _c(
-        "div",
-        {
-          staticClass: "box has-text-centered",
-          class: [_vm.background_class, _vm.color_class],
-          staticStyle: { "white-space": "pre" }
-        },
-        [_vm._v(_vm._s(_vm.message))]
-      ),
-      _vm._v(" "),
-      _c("div", { staticClass: "columns" }, [
-        _c("div", { staticClass: "column is-offset-3 is-2" }, [
-          _vm.run_callback
-            ? _c(
-                "button",
-                {
-                  staticClass: "button is-success is-large",
-                  on: {
-                    click: function($event) {
-                      return _vm.yes()
-                    }
-                  }
-                },
-                [_vm._v("YES")]
-              )
-            : _vm._e()
+    _c(
+      "div",
+      {
+        staticClass: "modal-content box",
+        class: [_vm.background_class, _vm.color_class]
+      },
+      [
+        _c("div", { staticClass: "columns is-marginless" }, [
+          _c("div", { staticClass: "column" }, [
+            _c("p", { staticClass: "title is-3 has-text-centered" }, [
+              _vm._v(_vm._s(_vm.message))
+            ])
+          ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "column is-offset-2 is-2" }, [
-          _vm.run_callback
-            ? _c(
-                "button",
-                {
-                  staticClass: "button is-danger is-large",
-                  on: {
-                    click: function($event) {
-                      return _vm.hideMessage()
+        _c("div", { staticClass: "columns" }, [
+          _c("div", { staticClass: "column is-offset-2 is-4" }, [
+            _vm.run_callback
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "button is-success is-large is-fullwidth",
+                    on: {
+                      click: function($event) {
+                        return _vm.yes()
+                      }
                     }
-                  }
-                },
-                [_vm._v("NO")]
-              )
-            : _vm._e()
+                  },
+                  [_vm._v("YES")]
+                )
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "column is-4" }, [
+            _vm.run_callback
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "button is-danger is-large is-fullwidth",
+                    on: {
+                      click: function($event) {
+                        return _vm.hideMessage()
+                      }
+                    }
+                  },
+                  [_vm._v("NO")]
+                )
+              : _vm._e()
+          ])
         ])
-      ])
-    ]),
+      ]
+    ),
     _vm._v(" "),
     _c("button", {
       staticClass: "modal-close is-large",
@@ -21207,7 +21046,7 @@ var render = function() {
                   [_vm._v("Home")]
                 ),
                 _vm._v(" "),
-                _vm.user
+                _vm.Auth.check()
                   ? _c(
                       "router-link",
                       {
@@ -21218,7 +21057,7 @@ var render = function() {
                     )
                   : _vm._e(),
                 _vm._v(" "),
-                _vm.user
+                _vm.Auth.check()
                   ? _c(
                       "a",
                       {
@@ -21229,7 +21068,7 @@ var render = function() {
                     )
                   : _vm._e(),
                 _vm._v(" "),
-                !_vm.user
+                _vm.Auth.guest()
                   ? _c(
                       "router-link",
                       {
@@ -21245,7 +21084,7 @@ var render = function() {
                     )
                   : _vm._e(),
                 _vm._v(" "),
-                !_vm.user
+                _vm.Auth.guest()
                   ? _c(
                       "router-link",
                       {
@@ -21291,225 +21130,227 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.paginated_data.data.length
-    ? _c(
-        "nav",
-        {
-          staticClass: "pagination is-right",
-          attrs: { role: "navigation", "aria-label": "pagination" }
-        },
-        [
-          _c("span", { staticClass: "tag is-light is-large" }, [
-            _vm._v(
-              _vm._s(_vm.paginated_data.from) +
-                " - " +
-                _vm._s(_vm.paginated_data.to) +
-                " / " +
-                _vm._s(_vm.paginated_data.total)
-            )
-          ]),
-          _vm._v(" "),
-          _c("ul", { staticClass: "pagination-list" }, [
-            _vm.paginated_data.current_page > 2
-              ? _c("li", [
-                  _c(
-                    "span",
-                    {
-                      staticClass: "pagination-link",
-                      attrs: { "aria-label": "first page" },
-                      on: {
-                        click: function($event) {
-                          return _vm.changePage(1)
-                        }
-                      }
-                    },
-                    [_vm._v("first page")]
-                  )
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.paginated_data.current_page > 2
-              ? _c("li", [
-                  _c("span", { staticClass: "pagination-ellipsis" }, [
-                    _vm._v("…")
-                  ])
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.paginated_data.current_page > 2
-              ? _c("li", [
-                  _c(
-                    "span",
-                    {
-                      staticClass: "pagination-link",
-                      on: {
-                        click: function($event) {
-                          return _vm.changePage(
-                            _vm.paginated_data.current_page - 1
-                          )
-                        }
-                      }
-                    },
-                    [_vm._v("previous page")]
-                  )
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.paginated_data.current_page > 2
-              ? _c("li", [
-                  _c(
-                    "span",
-                    {
-                      staticClass: "pagination-link",
-                      attrs: {
-                        "aria-label": _vm.paginated_data.current_page - 1
-                      },
-                      on: {
-                        click: function($event) {
-                          return _vm.changePage(
-                            _vm.paginated_data.current_page - 2
-                          )
-                        }
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.paginated_data.current_page - 2))]
-                  )
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.paginated_data.current_page > 1
-              ? _c("li", [
-                  _c(
-                    "span",
-                    {
-                      staticClass: "pagination-link",
-                      attrs: {
-                        "aria-label": _vm.paginated_data.current_page - 1
-                      },
-                      on: {
-                        click: function($event) {
-                          return _vm.changePage(
-                            _vm.paginated_data.current_page - 1
-                          )
-                        }
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.paginated_data.current_page - 1))]
-                  )
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _c("li", [
-              _c(
-                "span",
-                {
-                  staticClass: "pagination-link is-current",
-                  attrs: {
-                    "aria-label": "Page " + _vm.paginated_data.current_page,
-                    "aria-current": "page"
-                  },
-                  on: {
-                    click: function($event) {
-                      return _vm.changePage(_vm.paginated_data.current_page)
-                    }
-                  }
-                },
-                [_vm._v(_vm._s(_vm.paginated_data.current_page))]
+  return _vm.paginated_data.data.length > 4
+    ? _c("div", { staticClass: "box" }, [
+        _c(
+          "nav",
+          {
+            staticClass: "pagination is-right",
+            attrs: { role: "navigation", "aria-label": "pagination" }
+          },
+          [
+            _c("span", { staticClass: "tag is-light is-large" }, [
+              _vm._v(
+                _vm._s(_vm.paginated_data.from) +
+                  " - " +
+                  _vm._s(_vm.paginated_data.to) +
+                  " / " +
+                  _vm._s(_vm.paginated_data.total)
               )
             ]),
             _vm._v(" "),
-            _vm.paginated_data.current_page < _vm.paginated_data.last_page
-              ? _c("li", [
-                  _c(
-                    "span",
-                    {
-                      staticClass: "pagination-link",
-                      attrs: {
-                        "aria-label": _vm.paginated_data.current_page + 1
+            _c("ul", { staticClass: "pagination-list" }, [
+              _vm.paginated_data.current_page > 2
+                ? _c("li", [
+                    _c(
+                      "span",
+                      {
+                        staticClass: "pagination-link",
+                        attrs: { "aria-label": "first page" },
+                        on: {
+                          click: function($event) {
+                            return _vm.changePage(1)
+                          }
+                        }
                       },
-                      on: {
-                        click: function($event) {
-                          return _vm.changePage(
-                            _vm.paginated_data.current_page + 1
-                          )
-                        }
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.paginated_data.current_page + 1))]
-                  )
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.paginated_data.current_page < _vm.paginated_data.last_page - 1
-              ? _c("li", [
-                  _c(
-                    "span",
-                    {
-                      staticClass: "pagination-link",
-                      attrs: {
-                        "aria-label": _vm.paginated_data.current_page + 2
-                      },
-                      on: {
-                        click: function($event) {
-                          return _vm.changePage(
-                            _vm.paginated_data.current_page + 2
-                          )
-                        }
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.paginated_data.current_page + 2))]
-                  )
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.paginated_data.current_page < _vm.paginated_data.last_page - 1
-              ? _c("li", [
-                  _c(
-                    "span",
-                    {
-                      staticClass: "pagination-link",
-                      attrs: { "area-label": "next page" },
-                      on: {
-                        click: function($event) {
-                          return _vm.changePage(
-                            _vm.paginated_data.current_page + 1
-                          )
-                        }
-                      }
-                    },
-                    [_vm._v("next page")]
-                  )
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.paginated_data.current_page < _vm.paginated_data.last_page - 1
-              ? _c("li", [
-                  _c("span", { staticClass: "pagination-ellipsis" }, [
-                    _vm._v("…")
+                      [_vm._v("first page")]
+                    )
                   ])
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.paginated_data.current_page < _vm.paginated_data.last_page - 1
-              ? _c("li", [
-                  _c(
-                    "span",
-                    {
-                      staticClass: "pagination-link",
-                      attrs: { "aria-label": "last page" },
-                      on: {
-                        click: function($event) {
-                          return _vm.changePage(_vm.paginated_data.last_page)
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.paginated_data.current_page > 2
+                ? _c("li", [
+                    _c("span", { staticClass: "pagination-ellipsis" }, [
+                      _vm._v("…")
+                    ])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.paginated_data.current_page > 2
+                ? _c("li", [
+                    _c(
+                      "span",
+                      {
+                        staticClass: "pagination-link",
+                        on: {
+                          click: function($event) {
+                            return _vm.changePage(
+                              _vm.paginated_data.current_page - 1
+                            )
+                          }
                         }
-                      }
+                      },
+                      [_vm._v("previous page")]
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.paginated_data.current_page > 2
+                ? _c("li", [
+                    _c(
+                      "span",
+                      {
+                        staticClass: "pagination-link",
+                        attrs: {
+                          "aria-label": _vm.paginated_data.current_page - 1
+                        },
+                        on: {
+                          click: function($event) {
+                            return _vm.changePage(
+                              _vm.paginated_data.current_page - 2
+                            )
+                          }
+                        }
+                      },
+                      [_vm._v(_vm._s(_vm.paginated_data.current_page - 2))]
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.paginated_data.current_page > 1
+                ? _c("li", [
+                    _c(
+                      "span",
+                      {
+                        staticClass: "pagination-link",
+                        attrs: {
+                          "aria-label": _vm.paginated_data.current_page - 1
+                        },
+                        on: {
+                          click: function($event) {
+                            return _vm.changePage(
+                              _vm.paginated_data.current_page - 1
+                            )
+                          }
+                        }
+                      },
+                      [_vm._v(_vm._s(_vm.paginated_data.current_page - 1))]
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _c("li", [
+                _c(
+                  "span",
+                  {
+                    staticClass: "pagination-link is-current",
+                    attrs: {
+                      "aria-label": "Page " + _vm.paginated_data.current_page,
+                      "aria-current": "page"
                     },
-                    [_vm._v("last page")]
-                  )
-                ])
-              : _vm._e()
-          ])
-        ]
-      )
+                    on: {
+                      click: function($event) {
+                        return _vm.changePage(_vm.paginated_data.current_page)
+                      }
+                    }
+                  },
+                  [_vm._v(_vm._s(_vm.paginated_data.current_page))]
+                )
+              ]),
+              _vm._v(" "),
+              _vm.paginated_data.current_page < _vm.paginated_data.last_page
+                ? _c("li", [
+                    _c(
+                      "span",
+                      {
+                        staticClass: "pagination-link",
+                        attrs: {
+                          "aria-label": _vm.paginated_data.current_page + 1
+                        },
+                        on: {
+                          click: function($event) {
+                            return _vm.changePage(
+                              _vm.paginated_data.current_page + 1
+                            )
+                          }
+                        }
+                      },
+                      [_vm._v(_vm._s(_vm.paginated_data.current_page + 1))]
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.paginated_data.current_page < _vm.paginated_data.last_page - 1
+                ? _c("li", [
+                    _c(
+                      "span",
+                      {
+                        staticClass: "pagination-link",
+                        attrs: {
+                          "aria-label": _vm.paginated_data.current_page + 2
+                        },
+                        on: {
+                          click: function($event) {
+                            return _vm.changePage(
+                              _vm.paginated_data.current_page + 2
+                            )
+                          }
+                        }
+                      },
+                      [_vm._v(_vm._s(_vm.paginated_data.current_page + 2))]
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.paginated_data.current_page < _vm.paginated_data.last_page - 1
+                ? _c("li", [
+                    _c(
+                      "span",
+                      {
+                        staticClass: "pagination-link",
+                        attrs: { "area-label": "next page" },
+                        on: {
+                          click: function($event) {
+                            return _vm.changePage(
+                              _vm.paginated_data.current_page + 1
+                            )
+                          }
+                        }
+                      },
+                      [_vm._v("next page")]
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.paginated_data.current_page < _vm.paginated_data.last_page - 1
+                ? _c("li", [
+                    _c("span", { staticClass: "pagination-ellipsis" }, [
+                      _vm._v("…")
+                    ])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.paginated_data.current_page < _vm.paginated_data.last_page - 1
+                ? _c("li", [
+                    _c(
+                      "span",
+                      {
+                        staticClass: "pagination-link",
+                        attrs: { "aria-label": "last page" },
+                        on: {
+                          click: function($event) {
+                            return _vm.changePage(_vm.paginated_data.last_page)
+                          }
+                        }
+                      },
+                      [_vm._v("last page")]
+                    )
+                  ])
+                : _vm._e()
+            ])
+          ]
+        )
+      ])
     : _vm._e()
 }
 var staticRenderFns = []
@@ -21538,7 +21379,7 @@ var render = function() {
     _c("div", { staticClass: "columns" }, [
       _c("div", { staticClass: "column is-4" }, [
         _c("div", { staticClass: "tags" }, [
-          _vm.user
+          _vm.Auth.check()
             ? _c(
                 "span",
                 {
@@ -21554,7 +21395,7 @@ var render = function() {
               )
             : _vm._e(),
           _vm._v(" "),
-          _vm.user
+          _vm.Auth.check()
             ? _c(
                 "span",
                 {
@@ -21570,7 +21411,7 @@ var render = function() {
               )
             : _vm._e(),
           _vm._v(" "),
-          _vm.user
+          _vm.Auth.check()
             ? _c(
                 "span",
                 {
@@ -21586,7 +21427,7 @@ var render = function() {
               )
             : _vm._e(),
           _vm._v(" "),
-          _vm.user
+          _vm.Auth.check()
             ? _c(
                 "span",
                 {
@@ -21673,7 +21514,18 @@ var render = function() {
               },
               domProps: { value: _vm.search },
               on: {
-                keyup: _vm.debauncedSearch,
+                keyup: [
+                  _vm.debauncedSearch,
+                  function($event) {
+                    if (
+                      !$event.type.indexOf("key") &&
+                      _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                    ) {
+                      return null
+                    }
+                    return _vm.searchRun("search")
+                  }
+                ],
                 input: function($event) {
                   if ($event.target.composing) {
                     return
@@ -21716,13 +21568,49 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "columns" }, [
     _c("div", { staticClass: "column" }, [
-      _c("a", { attrs: { href: "/snippets/" + _vm.snippet.id } }, [
-        _c("p", { staticClass: "title has-text-dark is-4" }, [
-          _vm._v("Title: " + _vm._s(_vm.snippet.title))
-        ]),
-        _vm._v(" "),
-        _c("p", { staticClass: "title has-text-dark is-6" }, [
-          _vm._v("Description: " + _vm._s(_vm.parsed_description))
+      _c("div", [
+        _c("div", [
+          _c("p", [
+            _c(
+              "a",
+              {
+                staticClass: "title has-text-dark is-4",
+                attrs: { href: "/snippets/" + _vm.snippet.id }
+              },
+              [_vm._v("Title: " + _vm._s(_vm.snippet.title))]
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _c(
+              "a",
+              {
+                staticClass: "title has-text-dark is-6",
+                attrs: { href: "/snippets/" + _vm.snippet.id }
+              },
+              [_vm._v("Description: " + _vm._s(_vm.parsed_description))]
+            )
+          ]),
+          _vm._v(" "),
+          _c(
+            "p",
+            { staticClass: "tags" },
+            _vm._l(_vm.sortedTags, function(tag) {
+              return _c(
+                "span",
+                {
+                  staticClass: "tag is-success is-unselectable",
+                  on: {
+                    click: function($event) {
+                      return _vm.findByTag(tag)
+                    }
+                  }
+                },
+                [_vm._v(_vm._s(tag.name))]
+              )
+            }),
+            0
+          )
         ])
       ])
     ]),
@@ -21744,7 +21632,7 @@ var render = function() {
         }
       }),
       _vm._v(" "),
-      _vm.user && _vm.user.id == _vm.snippet.user_id
+      _vm.Auth.check() && _vm.Auth.user.id == _vm.snippet.user_id
         ? _c("button", {
             staticClass: "button is-warning fa fa-edit",
             attrs: { title: "edit the snippet" },
@@ -21756,7 +21644,7 @@ var render = function() {
           })
         : _vm._e(),
       _vm._v(" "),
-      _vm.user && _vm.user.id == _vm.snippet.user_id
+      _vm.Auth.check() && _vm.Auth.user.id == _vm.snippet.user_id
         ? _c("button", {
             staticClass: "button is-danger fa fa-trash-alt",
             attrs: { title: "delete the snippet" },
@@ -21768,7 +21656,7 @@ var render = function() {
           })
         : _vm._e(),
       _vm._v(" "),
-      _vm.user
+      _vm.Auth.check()
         ? _c("button", {
             staticClass: "button is-dark fas fa-code-branch",
             attrs: { title: "fork the snippet" },
@@ -21780,8 +21668,8 @@ var render = function() {
           })
         : _vm._e(),
       _vm._v(" "),
-      _vm.user &&
-      _vm.user.favorite_snippets.some(function(favorite_snippet) {
+      _vm.Auth.check() &&
+      _vm.Auth.user.favorite_snippets.some(function(favorite_snippet) {
         return favorite_snippet.id === _vm.snippet.id
       })
         ? _c("button", {
@@ -21795,8 +21683,8 @@ var render = function() {
           })
         : _vm._e(),
       _vm._v(" "),
-      _vm.user &&
-      _vm.user.favorite_snippets.every(function(favorite_snippet) {
+      _vm.Auth.check() &&
+      _vm.Auth.user.favorite_snippets.every(function(favorite_snippet) {
         return favorite_snippet.id != _vm.snippet.id
       })
         ? _c("button", {
@@ -22158,10 +22046,10 @@ var render = function() {
           _c(
             "div",
             [
-              _vm.user
+              _vm.Auth.check()
                 ? _c("p", [
                     _c("b", [_vm._v("Author:")]),
-                    _vm._v(" " + _vm._s(_vm.user.name))
+                    _vm._v(" " + _vm._s(_vm.Auth.user.name))
                   ])
                 : _c("ring-loader", { staticClass: "is-narrow" })
             ],
@@ -22448,7 +22336,7 @@ var render = function() {
                       }
                     }),
                     _vm._v(" "),
-                    _vm.user && _vm.user.id == _vm.snippet.user_id
+                    _vm.Auth.check() && _vm.Auth.user.id == _vm.snippet.user_id
                       ? _c("button", {
                           staticClass: "button is-danger fa fa-trash-alt",
                           attrs: { title: "delete the snippet" },
@@ -22837,10 +22725,10 @@ var render = function() {
           _c(
             "div",
             [
-              _vm.user
+              _vm.Auth.check()
                 ? _c("p", [
                     _c("b", [_vm._v("Author:")]),
-                    _vm._v(" " + _vm._s(_vm.user.name))
+                    _vm._v(" " + _vm._s(_vm.Auth.user.name))
                   ])
                 : _c("ring-loader", { staticClass: "is-narrow" })
             ],
@@ -23105,25 +22993,20 @@ var render = function() {
     [
       _c("search"),
       _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "box" },
-        [
-          _vm.has_results
-            ? _c("paginator", { attrs: { paginated_data: _vm.paginated_data } })
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.show_rings
-            ? _c(
-                "div",
-                { staticClass: "columns is-centered" },
-                [_c("ring-loader", { staticClass: "column is-narrow" })],
-                1
-              )
-            : _vm._e()
-        ],
-        1
-      ),
+      _vm.has_results
+        ? _c("paginator", { attrs: { paginated_data: _vm.paginated_data } })
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.show_rings
+        ? _c("div", { staticClass: "box" }, [
+            _c(
+              "div",
+              { staticClass: "columns is-centered" },
+              [_c("ring-loader", { staticClass: "column is-narrow" })],
+              1
+            )
+          ])
+        : _vm._e(),
       _vm._v(" "),
       _c(
         "div",
@@ -23174,25 +23057,20 @@ var render = function() {
         2
       ),
       _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "box" },
-        [
-          _vm.has_results
-            ? _c("paginator", { attrs: { paginated_data: _vm.paginated_data } })
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.show_rings
-            ? _c(
-                "div",
-                { staticClass: "columns is-centered" },
-                [_c("ring-loader", { staticClass: "column is-narrow" })],
-                1
-              )
-            : _vm._e()
-        ],
-        1
-      )
+      _vm.has_results
+        ? _c("paginator", { attrs: { paginated_data: _vm.paginated_data } })
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.show_rings
+        ? _c("div", { staticClass: "box" }, [
+            _c(
+              "div",
+              { staticClass: "columns is-centered" },
+              [_c("ring-loader", { staticClass: "column is-narrow" })],
+              1
+            )
+          ])
+        : _vm._e()
     ],
     1
   )
@@ -23234,7 +23112,7 @@ var render = function() {
                     on: { click: _vm.copy }
                   }),
                   _vm._v(" "),
-                  _vm.user && _vm.user.id == _vm.snippet.user_id
+                  _vm.Auth.check() && _vm.Auth.user.id == _vm.snippet.user_id
                     ? _c("button", {
                         staticClass: "button is-warning fa fa-edit",
                         attrs: { title: "edit the snippet" },
@@ -23246,7 +23124,7 @@ var render = function() {
                       })
                     : _vm._e(),
                   _vm._v(" "),
-                  _vm.user && _vm.user.id == _vm.snippet.user_id
+                  _vm.Auth.check() && _vm.Auth.user.id == _vm.snippet.user_id
                     ? _c("button", {
                         staticClass: "button is-danger fa fa-trash-alt",
                         attrs: { title: "delete the snippet" },
@@ -23258,7 +23136,7 @@ var render = function() {
                       })
                     : _vm._e(),
                   _vm._v(" "),
-                  _vm.user
+                  _vm.Auth.check()
                     ? _c("button", {
                         staticClass: "button is-dark fas fa-code-branch",
                         attrs: { title: "fork the snippet" },
@@ -23270,8 +23148,10 @@ var render = function() {
                       })
                     : _vm._e(),
                   _vm._v(" "),
-                  _vm.user &&
-                  _vm.user.favorite_snippets.some(function(favorite_snippet) {
+                  _vm.Auth.check() &&
+                  _vm.Auth.user.favorite_snippets.some(function(
+                    favorite_snippet
+                  ) {
                     return favorite_snippet.id === _vm.snippet.id
                   })
                     ? _c("button", {
@@ -23286,8 +23166,10 @@ var render = function() {
                       })
                     : _vm._e(),
                   _vm._v(" "),
-                  _vm.user &&
-                  _vm.user.favorite_snippets.every(function(favorite_snippet) {
+                  _vm.Auth.check() &&
+                  _vm.Auth.user.favorite_snippets.every(function(
+                    favorite_snippet
+                  ) {
                     return favorite_snippet.id != _vm.snippet.id
                   })
                     ? _c("button", {
@@ -23391,15 +23273,26 @@ var render = function() {
                       [
                         _vm._m(0),
                         _vm._v(" "),
-                        _vm._l(_vm.snippet.tags, function(tag, tag_index) {
+                        _vm._l(_vm.snippet.tags, function(tag) {
                           return _vm.snippet.tags.length > 0
-                            ? _c("span", { staticClass: "tag is-success" }, [
-                                _vm._v(
-                                  "\n                            " +
-                                    _vm._s(tag.name) +
-                                    "\n                        "
-                                )
-                              ])
+                            ? _c(
+                                "span",
+                                {
+                                  staticClass: "tag is-success is-unselectable",
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.findByTag(tag)
+                                    }
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                            " +
+                                      _vm._s(tag.name) +
+                                      "\n                        "
+                                  )
+                                ]
+                              )
                             : _vm._e()
                         }),
                         _vm._v(" "),
@@ -38832,6 +38725,46 @@ module.exports = function(module) {
 
 /***/ }),
 
+/***/ "./resources/js/Auth.js":
+/*!******************************!*\
+  !*** ./resources/js/Auth.js ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var Auth = {
+  user: localStorage.user ? JSON.parse(localStorage.user) : null,
+  update: function update(data) {
+    this.user = data;
+    localStorage.user = JSON.stringify(this.user);
+  },
+  check: function check() {
+    return !!this.user;
+  },
+  guest: function guest() {
+    return !this.check();
+  },
+  logout: function logout() {
+    this.update(null);
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = (Auth);
+
+/***/ }),
+
+/***/ "./resources/js/GlobalNotifications.json":
+/*!***********************************************!*\
+  !*** ./resources/js/GlobalNotifications.json ***!
+  \***********************************************/
+/*! exports provided: success, warn, error, default */
+/***/ (function(module) {
+
+module.exports = JSON.parse("{\"success\":{\"title\":\"Success!\",\"message\":\"\",\"type\":\"success\"},\"warn\":{\"title\":\"Warning!\",\"message\":\"\",\"type\":\"warn\"},\"error\":{\"title\":\"Important!\",\"message\":\"\",\"type\":\"error\"}}");
+
+/***/ }),
+
 /***/ "./resources/js/app.js":
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
@@ -38852,6 +38785,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_clipboard2__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(vue_clipboard2__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var vue_notifications__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue-notifications */ "./node_modules/vue-notifications/dist/vue-notifications.js");
 /* harmony import */ var mini_toastr__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! mini-toastr */ "./node_modules/mini-toastr/mini-toastr.js");
+/* harmony import */ var _Auth__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Auth */ "./resources/js/Auth.js");
+
 
 
 
@@ -38862,6 +38797,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 window.Event = new vue__WEBPACK_IMPORTED_MODULE_0___default.a();
+window.Initializer = null;
+window.Auth = _Auth__WEBPACK_IMPORTED_MODULE_9__["default"];
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_clipboard2__WEBPACK_IMPORTED_MODULE_6___default.a);
 var toastTypes = {
@@ -38893,48 +38830,11 @@ vue_notifications__WEBPACK_IMPORTED_MODULE_7__["default"].config.timeout = 6000;
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_notifications__WEBPACK_IMPORTED_MODULE_7__["default"], options);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('ring-loader', vue_spinner_src_RingLoader__WEBPACK_IMPORTED_MODULE_5__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('message', _components_Message__WEBPACK_IMPORTED_MODULE_4__["default"]);
-var user = localStorage.user ? JSON.parse(localStorage.user) : null;
-window.Initializer = null;
 var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   el: '#app',
   router: new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"](_routes__WEBPACK_IMPORTED_MODULE_2__["default"]),
-  mounted: function mounted() {
-    Event.$on('login', this.userWasLogin);
-    Event.$on('logout', this.userWasLoggedOut);
-    Event.$on('register', this.userRegistered);
-  },
-  watch: {
-    user: function user(value) {
-      localStorage.user = JSON.stringify(value);
-    }
-  },
-  data: function data() {
-    return {
-      user: user
-    };
-  },
   components: {
     navbar: _components_Navbar__WEBPACK_IMPORTED_MODULE_3__["default"]
-  },
-  methods: {
-    userWasLogin: function userWasLogin(user) {
-      this.user = user;
-      this.$router.push({
-        name: 'snippets.index'
-      });
-    },
-    userWasLoggedOut: function userWasLoggedOut() {
-      this.user = null;
-      this.$router.push({
-        name: 'login.create'
-      });
-    },
-    userRegistered: function userRegistered(user) {
-      this.user = user;
-      this.$router.push({
-        name: 'snippets.index'
-      });
-    }
   }
 });
 

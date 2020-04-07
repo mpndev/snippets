@@ -4,7 +4,7 @@
             <div class="column is-3">
                 <div class="box">
                     <div>
-                        <p v-if="user"><b>Author:</b> {{ user.name }}</p>
+                        <p v-if="Auth.check()"><b>Author:</b> {{ Auth.user.name }}</p>
                         <ring-loader v-else class="is-narrow"></ring-loader>
                     </div>
                     <hr>
@@ -67,7 +67,7 @@
     export default {
         data: () => {
             return {
-                user: null,
+                Auth: Auth,
                 snippet: {
                     title: '',
                     description: '',
@@ -82,12 +82,8 @@
             }
         },
         created() {
-            //mod_alias, mod_authz_core, mod_authz_host, mod_include, mod_negotiation
-            if (!this.$root.user) {
+            if (this.Auth.guest()) {
                 this.$router.push({ name: 'login.create' })
-            }
-            else {
-                this.user = this.$root.user
             }
         },
         computed: {
@@ -126,36 +122,28 @@
             create() {
                 this.resetErrors()
                 if (this.validateForm()) {
-                    let response = axios.post('/api/snippets/?api_token=' + this.user.api_token, {
+                    let response = axios.post('/api/snippets/?api_token=' + this.Auth.user.api_token, {
                         title: this.snippet.title,
                         description: this.snippet.description,
                         body: this.snippet.body
                     }).then(response => {
                         return response
                     }).catch(error => {
-                        this.failedCreatingSnippet({
-                            message: error.toString()
-                        })
+                        this.error({message: error.toString()})
                     })
                     response.then(response => {
                         let snippet_id = response.data.id
                         this.$router.push({ name: 'snippets.show', params: {snippet: snippet_id} })
-                        this.successfulCreatingSnippet({
-                            message: 'Snippet was created successful.'
-                        })
+                        this.success({message: 'Snippet was created successful.'})
                         if (this.tags.length) {
                             this.tags.map(tag => {
-                                axios.post(`/api/tags?api_token=` + this.user.api_token, {
+                                axios.post(`/api/tags?api_token=` + this.Auth.user.api_token, {
                                     name: tag,
                                     snippet: snippet_id
                                 }).then(inner_response => {
-                                    this.successfulCreatingTag({
-                                        message: `"${inner_response.data.name}" tag was added to the snippet.`
-                                    })
+                                    this.success({message: `"${inner_response.data.name}" tag was added to the snippet.`})
                                 }).catch(inner_error => {
-                                    this.failedCreatingTag({
-                                        message: inner_error.toString()
-                                    })
+                                    this.error({message: inner_error.toString()})
                                 })
                             })
                         }
@@ -163,27 +151,6 @@
                 }
             }
         },
-        notifications: {
-            successfulCreatingSnippet: {
-                title: 'Success!',
-                message: '',
-                type: 'success'
-            },
-            failedCreatingSnippet: {
-                title: 'Error!',
-                message: '',
-                type: 'error'
-            },
-            successfulCreatingTag: {
-                title: 'Success!',
-                message: '',
-                type: 'success'
-            },
-            failedCreatingTag: {
-                title: 'Error!',
-                message: '',
-                type: 'error'
-            }
-        }
+        notifications: require('../../GlobalNotifications')
     }
 </script>

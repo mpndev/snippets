@@ -23,6 +23,7 @@
     export default {
         data: () => {
             return {
+                Auth: Auth,
                 name: '',
                 password: '',
                 errors: {
@@ -31,7 +32,7 @@
             }
         },
         created() {
-            if (this.$root.user) {
+            if (this.Auth.check()) {
                 this.$router.push({ name: 'snippets.index' })
             }
         },
@@ -46,8 +47,9 @@
                     name: this.name,
                     password: this.password
                 }).then(response => {
-                    this.showLoginSuccessMessage({ message: `Welcome ${response.data.name}!` })
-                    Event.$emit('login', response.data)
+                    this.success({message: `Welcome ${response.data.name}!`})
+                    this.Auth.update(response.data)
+                    this.$router.push({ name: 'snippets.index' })
                 }).catch(error => {
                     let parsed_errors = ''
                     if (error.response && error.response.data) {
@@ -61,12 +63,6 @@
                 })
             }
         },
-        notifications: {
-            showLoginSuccessMessage: {
-                title: 'Successful login.',
-                message: 'welcome',
-                type: 'success'
-            }
-        }
+        notifications: require('../../GlobalNotifications')
     }
 </script>

@@ -5,11 +5,11 @@
                 <div class="box">
                     <div v-if="snippet.id">
                         <button class="button is-success fa fa-clipboard" title="copy code to the clipboard" @click="copy"></button>
-                        <button v-if="user && user.id == snippet.user_id" class="button is-warning fa fa-edit" title="edit the snippet" @click="edit(snippet)"></button>
-                        <button v-if="user && user.id == snippet.user_id" class="button is-danger fa fa-trash-alt" title="delete the snippet" @click="destroy(snippet)"></button>
-                        <button v-if="user" class="button is-dark fas fa-code-branch" title="fork the snippet" @click="createFork(snippet)"></button>
-                        <button v-if="user && user.favorite_snippets.some(favorite_snippet => favorite_snippet.id === snippet.id)" class="button is-danger fas fa-heart is-outlined" title="remove from favorite" @click="removeFromFavoriteSnippets(snippet)"></button>
-                        <button v-if="user && user.favorite_snippets.every(favorite_snippet => favorite_snippet.id != snippet.id)" class="button is-dark fas fa-heart-broken is-outlined" title="add to favorite" @click="addToFavoriteSnippets(snippet)"></button>
+                        <button v-if="Auth.check() && Auth.user.id == snippet.user_id" class="button is-warning fa fa-edit" title="edit the snippet" @click="edit(snippet)"></button>
+                        <button v-if="Auth.check() && Auth.user.id == snippet.user_id" class="button is-danger fa fa-trash-alt" title="delete the snippet" @click="destroy(snippet)"></button>
+                        <button v-if="Auth.check()" class="button is-dark fas fa-code-branch" title="fork the snippet" @click="createFork(snippet)"></button>
+                        <button v-if="Auth.check() && Auth.user.favorite_snippets.some(favorite_snippet => favorite_snippet.id === snippet.id)" class="button is-danger fas fa-heart is-outlined" title="remove from favorite" @click="removeFromFavoriteSnippets(snippet)"></button>
+                        <button v-if="Auth.check() && Auth.user.favorite_snippets.every(favorite_snippet => favorite_snippet.id != snippet.id)" class="button is-dark fas fa-heart-broken is-outlined" title="add to favorite" @click="addToFavoriteSnippets(snippet)"></button>
                     </div>
                     <ring-loader v-else class="is-narrow"></ring-loader>
                     <hr>
@@ -41,7 +41,7 @@
                     <div>
                         <div v-if="snippet.tags" class="tags">
                             <span><b>Tags:</b></span>
-                            <span v-if="snippet.tags.length > 0" v-for="(tag, tag_index) in snippet.tags" class="tag is-success">
+                            <span v-if="snippet.tags.length > 0" v-for="tag in snippet.tags" class="tag is-success is-unselectable" @click="findByTag(tag)">
                                 {{ tag.name }}
                             </span>
                             <span v-if="snippet.tags.length == 0">0</span>
@@ -79,33 +79,23 @@
         data: () => {
             return {
                 snippet: {},
-                user: null
+                Auth: Auth
             }
-        },
-        created() {
-            this.user = this.$root.user
         },
         mounted() {
             axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(response => {
                 this.snippet = response.data
             }).catch(error => {
                 this.$router.push({ name: 'snippets.index' })
-                this.failToLoadSnippet({
-                    message: error.toString()
-                })
+                this.error({message: error.toString()})
             })
         },
         methods: {
             copy() {
                 this.$copyText(this.snippet.body).then(() => {
-                    this.snippetWasCopied({
-                        title: 'Copied to clipbord.',
-                    })
+                    this.success({message: 'Copied to clipbord.'})
                 }, () => {
-                    this.snippetWasNotCopied({
-                        title: 'Cannot copy snippet.',
-                        message: 'Maybe your browser do not allow this.'
-                    })
+                    this.warn({message: 'Maybe your browser do not allow this.'})
                 })
             },
             edit(snippet) {
@@ -116,100 +106,47 @@
                     message: 'Do you confirm deletion?',
                     type: 'warning',
                     callback: () => {
-                        axios.post('/api/snippets/' + snippet.id + '?api_token=' + this.user.api_token, {
+                        axios.post('/api/snippets/' + snippet.id + '?api_token=' + this.Auth.user.api_token, {
                             _method: 'DELETE'
                         }).then(response => {
                             this.$router.push({ name: 'snippets.index' })
-                            this.successfulDeletedSnippet({
-                                message: 'Snippet was successful deleted. Also all of his tag and fans.'
-                            })
+                            this.success({message: 'Snippet was successful deleted. Also all of his tag and fans.'})
                         }).catch(error => {
-                            this.failedToDeleteSnippet({
-                                message: error.toString()
-                            })
+                            this.error({message: error.toString()})
                         })
                     }
                 })
+            },
+            findByTag(tag) {
+                this.$router.push({ name: 'snippets.index', query: { "with-tags": tag.name, page: 1 } })
             },
             createFork(snippet) {
                 this.$router.push({ name: 'snippets.forks.create', params: { snippet: snippet.id }})
             },
             addToFavoriteSnippets(snippet) {
                 axios.post(`/api/snippets/favorite/${snippet.id}`, {
-                    'api_token': this.user.api_token
+                    'api_token': this.Auth.user.api_token
                 }).then(response => {
-                    this.user.favorite_snippets.push(snippet)
-                    this.$root.user = this.user
-                    localStorage.user = JSON.stringify(this.$root.user)
-                    this.successfulAddingSnippetToFavorite()
+                    this.Auth.user.favorite_snippets.push(snippet)
+                    localStorage.user = JSON.stringify(this.Auth.user)
+                    this.success({message: 'Snippet was added to yours favorite snippets.'})
                 }).catch(error => {
-                    this.failingAddingSnippetToFavorite({
-                        message: error.toString()
-                    })
+                    this.error({message: error.toString()})
                 })
             },
             removeFromFavoriteSnippets(snippet) {
                 axios.post(`/api/snippets/favorite/${snippet.id}`, {
-                    'api_token': this.user.api_token,
+                    'api_token': this.Auth.user.api_token,
                     '_method': 'DELETE'
                 }).then(response => {
-                    this.user.favorite_snippets = this.user.favorite_snippets.filter(s => s.id != snippet.id)
-                    this.$root.user = this.user
-                    localStorage.user = JSON.stringify(this.$root.user)
-                    this.successfulRemovingSnippetFromFavorite()
+                    this.Auth.user.favorite_snippets = this.Auth.user.favorite_snippets.filter(s => s.id != snippet.id)
+                    localStorage.user = JSON.stringify(this.Auth.user)
+                    this.success({message: 'Snippet was removed from yours favorite snippets.'})
                 }).catch(error => {
-                    this.failingRemovingSnippetFromFavorite({
-                        message: error.toString()
-                    })
+                    this.error({message: error.toString()})
                 })
             }
         },
-        notifications: {
-            failToLoadSnippet: {
-                title: 'Error!',
-                message: '',
-                type: 'error'
-            },
-            snippetWasCopied: {
-                title: '',
-                message: '',
-                type: 'success'
-            },
-            snippetWasNotCopied: {
-                title: '',
-                message: '',
-                type: 'warn'
-            },
-            successfulDeletedSnippet: {
-                title: 'Success!',
-                message: '',
-                type: 'success'
-            },
-            failedToDeleteSnippet: {
-                title: 'Error!',
-                message: '',
-                type: 'error'
-            },
-            successfulAddingSnippetToFavorite: {
-                title: 'Success!',
-                message: 'Snippet was added to your favorite snippets',
-                type: 'success'
-            },
-            failingAddingSnippetToFavorite: {
-                title: 'Error!',
-                message: '',
-                type: 'error'
-            },
-            successfulRemovingSnippetFromFavorite: {
-                title: 'Success!',
-                message: 'Snippet was removed from your favorite snippets',
-                type: 'success'
-            },
-            failingRemovingSnippetFromFavorite: {
-                title: 'Error!',
-                message: '',
-                type: 'error'
-            }
-        }
+        notifications: require('../../GlobalNotifications')
     }
 </script>

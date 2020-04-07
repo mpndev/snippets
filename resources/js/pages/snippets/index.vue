@@ -2,9 +2,9 @@
     <div>
         <search></search>
 
-        <div class="box">
-            <paginator v-if="has_results" :paginated_data="paginated_data"></paginator>
-            <div v-if="show_rings" class="columns is-centered">
+        <paginator v-if="has_results" :paginated_data="paginated_data"></paginator>
+        <div v-if="show_rings" class="box">
+            <div class="columns is-centered">
                 <ring-loader class="column is-narrow"></ring-loader>
             </div>
         </div>
@@ -24,9 +24,9 @@
             </div>
         </div>
 
-        <div class="box">
-            <paginator v-if="has_results" :paginated_data="paginated_data"></paginator>
-            <div v-if="show_rings" class="columns is-centered">
+        <paginator v-if="has_results" :paginated_data="paginated_data"></paginator>
+        <div v-if="show_rings" class="box">
+            <div class="columns is-centered">
                 <ring-loader class="column is-narrow"></ring-loader>
             </div>
         </div>
@@ -45,6 +45,7 @@
         },
         data: () => {
             return {
+                Auth: Auth,
                 paginated_data: {
                     data: []
                 },
@@ -55,8 +56,8 @@
         mounted() {
             let query = this.$router.currentRoute.fullPath.substr(this.$router.currentRoute.path)
             let api_token_param = ''
-            if (this.$root.user) {
-                api_token_param = 'api_token=' + this.$root.user.api_token
+            if (this.Auth.check()) {
+                api_token_param = 'api_token=' + this.Auth.user.api_token
                 if (query.length > 1) {
                     query = query + '&' + api_token_param
                 }
@@ -71,7 +72,7 @@
                 }
                 this.show_rings = false
             }).catch(error => {
-                this.somethingWentWrong()
+                this.error({message: error.toString()})
             })
         },
         methods: {
@@ -84,12 +85,6 @@
                 }
             }
         },
-        notifications: {
-            somethingWentWrong: {
-                title: 'Error!',
-                message: 'Something went wrong...',
-                type: 'error'
-            }
-        }
+        notifications: require('../../GlobalNotifications')
     }
 </script>

@@ -1,14 +1,18 @@
 <template>
     <div class="modal" :class="is_active_class">
         <div class="modal-background" @click="hideMessage()"></div>
-        <div class="modal-content">
-            <div style="white-space: pre;" :class="[background_class, color_class]" class="box has-text-centered">{{ message }}</div>
-            <div class="columns">
-                <div class="column is-offset-3 is-2">
-                    <button v-if="run_callback" class="button is-success is-large" @click="yes()">YES</button>
+        <div class="modal-content box" :class="[background_class, color_class]">
+            <div class="columns is-marginless">
+                <div class="column">
+                    <p class="title is-3 has-text-centered">{{ message }}</p>
                 </div>
-                <div class="column is-offset-2 is-2">
-                    <button v-if="run_callback" class="button is-danger is-large" @click="hideMessage()">NO</button>
+            </div>
+            <div class="columns">
+                <div class="column is-offset-2 is-4">
+                    <button v-if="run_callback" class="button is-success is-large is-fullwidth" @click="yes()">YES</button>
+                </div>
+                <div class="column is-4">
+                    <button v-if="run_callback" class="button is-danger is-large is-fullwidth" @click="hideMessage()">NO</button>
                 </div>
             </div>
         </div>
@@ -45,7 +49,7 @@
         },
         computed: {
             is_active_class() {
-                return this.message.length ? 'is-active' : null
+                return this.message.length ? 'is-active' : ''
             },
             background_class() {
                 return this.background_classes[this.type];
@@ -69,6 +73,7 @@
                 this.callback = null
             },
             yes() {
+                this.message = ''
                 this.run_callback = false
                 this.callback()
             }

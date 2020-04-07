@@ -1,0 +1,17 @@
+{
+    "success": {
+        "title": "Success!",
+        "message": "",
+        "type": "success"
+    },
+    "warn": {
+        "title": "Warning!",
+        "message": "",
+        "type": "warn"
+    },
+    "error": {
+        "title": "Important!",
+        "message": "",
+        "type": "error"
+    }
+}

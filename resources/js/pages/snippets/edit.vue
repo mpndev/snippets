@@ -6,7 +6,7 @@
                     <div v-if="snippet.id">
                         <button class="button is-success fa fa-clipboard" title="copy code to the clipboard"></button>
                         <button class="button is-info fa fa-eye" title="show the snippet" @click="show(snippet)"></button>
-                        <button v-if="user && user.id == snippet.user_id" class="button is-danger fa fa-trash-alt" title="delete the snippet" @click="destroy(snippet)"></button>
+                        <button v-if="Auth.check() && Auth.user.id == snippet.user_id" class="button is-danger fa fa-trash-alt" title="delete the snippet" @click="destroy(snippet)"></button>
                     </div>
                     <ring-loader v-else class="is-narrow"></ring-loader>
                     <hr>
@@ -96,9 +96,9 @@
     export default {
         data: () => {
             return {
+                Auth: Auth,
                 snippet: {},
                 snippet_copy: null,
-                user: null,
                 errors: {
                     description: [],
                     body: [],
@@ -107,17 +107,14 @@
             }
         },
         created() {
-            if (this.$root.user) {
-                this.user = this.$root.user
-            }
-            else {
+            if (this.Auth.guest()) {
                 return this.$router.push({ name: 'login.create' })
             }
         },
         watch: {
             snippet() {
                 if (this.snippet != null) {
-                    if (this.user.id !== this.snippet.user.id) {
+                    if (this.Auth.user.id !== this.snippet.user.id) {
                         return this.$router.push({ name: 'login.create' })
                     }
                     this.snippet_copy = {...this.snippet}
@@ -140,10 +137,7 @@
             axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(response => {
                 this.snippet = response.data
             }).catch(error => {
-                this.failedToLoadParentSnippet({
-                    title: 'Error!',
-                    message: error.toString()
-                })
+                this.error({message: error.toString()})
                 this.$router.push({ name: 'snippets.index' })
             })
         },
@@ -171,7 +165,7 @@
             update() {
                 this.resetErrors()
                 if (this.validateForm()) {
-                    let response = axios.post('/api/snippets/' + this.snippet_copy.id + '/?api_token=' + this.user.api_token, {
+                    let response = axios.post('/api/snippets/' + this.snippet_copy.id + '/?api_token=' + this.Auth.user.api_token, {
                         title: this.snippet.title,
                         description: this.snippet_copy.description,
                         body: this.snippet_copy.body,
@@ -179,17 +173,13 @@
                     }).then(response => {
                         return response
                     }).catch(error => {
-                        this.failedUpdatingSnippet({
-                            message: error.toString()
-                        })
+                        this.error({message: error.toString()})
                     })
                     response.then(response => {
-                        this.successfulUpdatingSnippet({
-                            message: 'Snippet was updated successful.'
-                        })
+                        this.success({message: 'Snippet was updated successful.'})
                         if (this.snippet.tags.length) {
                             this.snippet.tags.map(tag => {
-                                axios.post(`/api/tags/${tag.id}/?api_token=` + this.user.api_token, {
+                                axios.post(`/api/tags/${tag.id}/?api_token=` + this.Auth.user.api_token, {
                                     snippet: this.snippet.id,
                                     _method: 'DELETE'
                                 })
@@ -198,17 +188,13 @@
                         let snippet_id = response.data.id
                         if (this.tags.length) {
                             this.tags.map(tag => {
-                                axios.post(`/api/tags?api_token=` + this.user.api_token, {
+                                axios.post(`/api/tags?api_token=` + this.Auth.user.api_token, {
                                     name: tag,
                                     snippet: snippet_id
                                 }).then(inner_response => {
-                                    this.successfulUpdatingTag({
-                                        message: 'tags was updated.'
-                                    })
+                                    this.success({message: 'tags was updated.'})
                                 }).catch(inner_error => {
-                                    this.failedUpdatingTag({
-                                        message: inner_error.toString()
-                                    })
+                                    this.error({message: inner_error.toString()})
                                 })
                             })
                         }
@@ -221,58 +207,18 @@
                     message: 'Do you confirm deletion?',
                     type: 'warning',
                     callback: () => {
-                        axios.post('/api/snippets/' + snippet.id + '?api_token=' + this.user.api_token, {
+                        axios.post('/api/snippets/' + snippet.id + '?api_token=' + this.Auth.user.api_token, {
                             _method: 'DELETE'
                         }).then(response => {
                             this.$router.push({ name: 'snippets.index' })
-                            this.successfulDeletingSnippet({
-                                message: 'Snippet was successful deleted. Also all of his tag and fans.'
-                            })
+                            this.success({message: 'Snippet was successful deleted. Also all of his tag and fans.'})
                         }).catch(error => {
-                            this.failedDeletingSnippet({
-                                message: error.toString()
-                            })
+                            this.error({message: error.toString()})
                         })
                     }
                 })
             }
         },
-        notifications: {
-            failedToLoadParentSnippet: {
-                title: 'Error!',
-                message: '',
-                type: 'error'
-            },
-            successfulUpdatingSnippet: {
-                title: 'Success!',
-                message: '',
-                type: 'success'
-            },
-            failedUpdatingSnippet: {
-                title: 'Error!',
-                message: '',
-                type: 'error'
-            },
-            successfulUpdatingTag: {
-                title: 'Success!',
-                message: '',
-                type: 'success'
-            },
-            failedUpdatingTag: {
-                title: 'Error!',
-                message: '',
-                type: 'error'
-            },
-            successfulDeletingSnippet: {
-                title: 'Success!',
-                message: '',
-                type: 'success'
-            },
-            failedDeletingSnippet: {
-                title: 'Error!',
-                message: '',
-                type: 'error'
-            }
-        }
+        notifications: require('../../GlobalNotifications')
     }
 </script>
