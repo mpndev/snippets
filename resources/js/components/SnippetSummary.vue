@@ -4,7 +4,9 @@
             <div>
                 <div>
                     <p>
-                        <a :href="`/snippets/${snippet.id}`" class="title has-text-dark is-4">Title: {{ snippet.title }}</a>
+                        <a :href="`/snippets/${snippet.id}`" class="title has-text-dark is-4">Title: {{ snippet.title }}
+                            <span class="tag title is-7 has-background-grey-light has-text-white">{{ snippet.created_at_for_humans }}</span>
+                        </a>
                     </p>
                     <p>
                         <a :href="`/snippets/${snippet.id}`" class="title has-text-dark is-6">Description: {{ parsed_description }}</a>
@@ -40,7 +42,7 @@
                 return this.snippet.tags.sort((tag1, tag2) => (tag1.name > tag2.name) ? 1 : -1)
             },
             parsed_description() {
-                return (this.snippet.description.length > 140) ? this.snippet.description.substring(0, 137) + '...' : this.snippet.description
+                return (this.snippet.description.length > 130) ? this.snippet.description.substring(0, 127) + '...' : this.snippet.description
             }
         },
         methods: {
@@ -86,6 +88,7 @@
                     this.Auth.user.favorite_snippets.push(snippet)
                     localStorage.user = JSON.stringify(this.Auth.user)
                     this.success({message: 'Snippet was added to yours favorite snippets.'})
+                    this.$emit('favorite-was-changed')
                 }).catch(error => {
                     this.error({
                         message: error.toString()
@@ -100,6 +103,7 @@
                     this.Auth.user.favorite_snippets = this.Auth.user.favorite_snippets.filter(s => s.id != snippet.id)
                     localStorage.user = JSON.stringify(this.Auth.user)
                     this.success({message: 'Snippet was removed from yours favorite snippets.'})
+                    this.$emit('favorite-was-changed')
                 }).catch(error => {
                     this.error({message: error.toString()})
                 })

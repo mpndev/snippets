@@ -190,6 +190,15 @@ class Snippet extends Model
         return $query;
     }
 
+    public function scopeMostLikedSnippets($query, $do_it = false)
+    {
+        if ($do_it) {
+            $query = $query->withCount('fans')->orderBy('fans_count', 'desc');
+        }
+
+        return $query;
+    }
+
     public function addTag(Tag $tag)
     {
         $this->tags()->save($tag);

@@ -9,18 +9,27 @@
             </div>
         </div>
 
-        <div class="box">
-            <div v-if="has_results" v-for="snippet in paginated_data.data" class="box has-background-light">
-                <snippet-summary :key="snippet.id" :snippet="snippet" @snippet-was-deleted="snippetWasDeleted"></snippet-summary>
-            </div>
-            <div v-if="!has_results" class="columns is-centered">
-                <div v-if="!show_rings" class="column">
-                    <div class="colun"></div>
-                    <p class="title has-text-centered is-3">No results found.</p>
+        <div class="columns">
+            <div class="column is-2">
+                <div class="box">
+                    <most-liked-snippets :most_liked_snippets="most_liked_snippets"></most-liked-snippets>
                 </div>
             </div>
-            <div v-if="show_rings" v-for="i in 5" class="columns is-centered">
-                <ring-loader class="column is-narrow"></ring-loader>
+            <div class="column">
+                <div class="box">
+                    <div v-if="has_results" v-for="snippet in paginated_data.data" class="box has-background-light">
+                        <snippet-summary :key="snippet.id" :snippet="snippet" @snippet-was-deleted="snippetWasDeleted" @favorite-was-changed="updateMostLikedSnippets"></snippet-summary>
+                    </div>
+                    <div v-if="!has_results" class="columns is-centered">
+                        <div v-if="!show_rings" class="column">
+                            <div class="colun"></div>
+                            <p class="title has-text-centered is-3">No results found.</p>
+                        </div>
+                    </div>
+                    <div v-if="show_rings" v-for="i in 5" class="columns is-centered">
+                        <ring-loader class="column is-narrow"></ring-loader>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -37,11 +46,13 @@
     import Paginator from './../../components/Paginator'
     import SnippetSummary from './../../components/SnippetSummary'
     import Search from "./../../components/Search";
+    import MostLikedSnippets from "./../../components/MostLikedSnippets";
     export default {
         components: {
             SnippetSummary: SnippetSummary,
             Paginator: Paginator,
-            search: Search
+            search: Search,
+            MostLikedSnippets: MostLikedSnippets
         },
         data: () => {
             return {
@@ -49,6 +60,7 @@
                 paginated_data: {
                     data: []
                 },
+                most_liked_snippets: [],
                 has_results: false,
                 show_rings: true
             }
@@ -74,6 +86,9 @@
             }).catch(error => {
                 this.error({message: error.toString()})
             })
+            axios('/api/snippets?limit=5&most-liked-snippets=true').then(response => {
+                this.most_liked_snippets = response.data.data
+            })
         },
         methods: {
             snippetWasDeleted(id) {
@@ -83,8 +98,18 @@
                 else {
                     this.$router.push({ name: 'snippets.index' })
                 }
+            },
+            updateMostLikedSnippets() {
+                axios('/api/snippets?limit=5&most-liked-snippets=true').then(response => {
+                    this.most_liked_snippets = response.data.data
+                })
             }
         },
         notifications: require('../../GlobalNotifications')
     }
+    // компонент за бутоните
+    // codemirror за едитабъл код (create/edit снипет)
+    // бутон за модал съдържащ настройките на бутона
+    // форм модел
+    // сниппет модел
 </script>

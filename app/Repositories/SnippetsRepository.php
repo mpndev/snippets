@@ -18,6 +18,8 @@ class SnippetsRepository
         $with_tags = request()->get('with-tags');
         $search = request('search');
         $latest = request()->has('latest');
+        $most_liked_snippets = request()->has('most-liked-snippets');
+        $limit = request('limit');
 
         $snippets =  Snippet
             ::owned($my_snippets, $user_id)
@@ -26,9 +28,11 @@ class SnippetsRepository
             ->forked($my_forked_snippets, $user_id)
             ->forks($forks_of_my_snippets, $user_id)
             ->favorite($my_favorite_snippets, $user_id)
+            ->mostLikedSnippets($most_liked_snippets)
             ->with('user')
             ->with('tags')
             ->orderBy('created_at', $latest ? 'desc' : 'asc')
+            ->limit($limit)
             ->get()
             ->orderByRelevance($search)
             ->paginate(5);
