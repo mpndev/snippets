@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Traits\Searchable;
+use App\Actions;
 use Illuminate\Database\Eloquent\Model;
 
 class Snippet extends Model
@@ -15,6 +16,7 @@ class Snippet extends Model
         'forks_quantity',
         'created_at_for_humans',
         'updated_at_for_humans',
+        'times_copied',
     ];
 
     protected $guarded = [];
@@ -37,7 +39,7 @@ class Snippet extends Model
     public function delete()
     {
         if (is_null($this->getKeyName())) {
-            throw new Exception('No primary key defined on model.');
+            throw new \Exception('No primary key defined on model.');
         }
         if (! $this->exists) {
             return;
@@ -86,6 +88,11 @@ class Snippet extends Model
     public function fans()
     {
         return $this->belongsToMany(User::class, 'favorite_snippets')->withTimestamps();
+    }
+
+    public function actions()
+    {
+        return $this->hasOne(Actions::class);
     }
 
     public function getFansQuantityAttribute()
@@ -199,6 +206,20 @@ class Snippet extends Model
         return $query;
     }
 
+    public function scopeMostCopiedSnippets($query, $do_it = false)
+    {
+        if ($do_it) {
+            $query = $query->orderByDesc(function($q) {
+                $q->select('times_copied')
+                    ->from('actions')
+                    ->orderBy('times_copied', 'desc')
+                    ->whereColumn('snippet_id', 'snippets.id');
+            });
+        }
+
+        return $query;
+    }
+
     public function addTag(Tag $tag)
     {
         $this->tags()->save($tag);
@@ -237,6 +258,15 @@ class Snippet extends Model
         return $query;
     }
 
+    public function scopeByAuthor($query, $do_it = false)
+    {
+        if ($do_it) {
+            $query = $query->where('user_id', $do_it);
+        }
+
+        return $query;
+    }
+
     public function getCreatedAtForHumansAttribute()
     {
         return $this->created_at->diffForHumans();
@@ -245,6 +275,24 @@ class Snippet extends Model
     public function getUpdatedAtForHumansAttribute()
     {
         return $this->updated_at->diffForHumans();
+    }
+
+    public function getTimesCopiedAttribute()
+    {
+        if ($this->actions()->first()) {
+            return $this->actions()->first()->times_copied;
+        }
+        return 0;
+    }
+
+    public function copy()
+    {
+        if ($this->actions === null) {
+            $this->actions()->create();
+        }
+        $this->actions()->update(['times_copied' => $this->fresh()->actions->times_copied + 1]);
+
+        return $this->fresh();
     }
 
 }

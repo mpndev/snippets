@@ -149,4 +149,21 @@ class UserTest extends TestCase
         // Assert
         $this->assertEquals(0, $user->snippets_quantity);
     }
+
+    /** @test */
+    public function it_can_register_and_store_copy_actions_on_snippet()
+    {
+        // Arrange
+        $user = factory(User::class)->create();
+        $snippet = factory(Snippet::class)->create();
+        $snippet->actions()->create();
+
+        // Act
+        $user->copy($snippet->fresh())
+            ->copy($snippet->fresh())
+            ->copy($snippet->fresh());
+
+        // Assert
+        $this->assertEquals(3, $snippet->actions->times_copied);
+    }
 }

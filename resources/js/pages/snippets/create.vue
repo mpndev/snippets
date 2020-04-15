@@ -1,10 +1,11 @@
 <template>
     <div>
+        <editor-settings :show_editor_settings="show_editor_settings"@editor-options-was-updated="updateEditorOptions"></editor-settings>
         <div class="columns">
             <div class="column is-3">
                 <div class="box">
                     <div>
-                        <p v-if="Auth.check()"><b>Author:</b> {{ Auth.user.name }}</p>
+                        <p v-if="Auth.check()"><b>Author:</b> {{ Auth.user.name }}<button class="button is-info fa fa-cog is-pulled-right" @click="show_editor_settings = true"></button></p>
                         <ring-loader v-else class="is-narrow"></ring-loader>
                     </div>
                     <hr>
@@ -49,7 +50,7 @@
             <div class="column is-9">
                 <div class="columns">
                     <p class="column field">
-                        <textarea class="textarea" id="body" cols="30" rows="25" placeholder="min symbols 1, max symbols 100 000" v-model="snippet.body"></textarea>
+                        <Editor :snippet="snippet.body" :options="editorOptions" @code-was-updated="codeWasUpdated"></Editor>
                         <span v-for="error in errors.body" class="title is-6 has-text-danger">{{ error }}</span>
                     </p>
                 </div>
@@ -64,9 +65,17 @@
 </template>
 
 <script>
+    import EditorSettings from '../../components/EditorSettings'
+    import Editor from '../../components/Editor'
+
     export default {
+        components: {
+            EditorSettings: EditorSettings,
+            Editor: Editor
+        },
         data: () => {
             return {
+                editorOptions: {},
                 Auth: Auth,
                 snippet: {
                     title: '',
@@ -78,7 +87,8 @@
                     title: [],
                     description: [],
                     body: [],
-                }
+                },
+                show_editor_settings: false
             }
         },
         created() {
@@ -149,6 +159,27 @@
                         }
                     })
                 }
+            },
+            updateEditorOptions(options) {
+                this.show_editor_settings = false
+                this.updateStylesheet(options.theme)
+                this.editorOptions = options
+            },
+            updateStylesheet(name) {
+                const current_theme_name = this.editorOptions.theme
+                const current_theme_link = document.querySelector(`link[data-current-theme="${current_theme_name}"]`)
+                if (current_theme_link) {
+                    current_theme_link.remove()
+                }
+                const stylesheet = document.createElement('link')
+                stylesheet.setAttribute("data-current-theme", name)
+                stylesheet.setAttribute("rel", "stylesheet")
+                stylesheet.setAttribute("type", "text/css")
+                stylesheet.setAttribute("href", `/css/themes/${name}.css`)
+                document.getElementsByTagName("head")[0].appendChild(stylesheet);
+            },
+            codeWasUpdated(code) {
+                this.snippet.body = code
             }
         },
         notifications: require('../../GlobalNotifications')

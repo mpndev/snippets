@@ -18,7 +18,6 @@ class FavoriteSnippetsDestroyTest extends TestCase
     /** @test */
     public function user_can_remove_snippet_from_favorite_snippets()
     {
-        $this->withoutExceptionHandling();
         // Arrange
         $user = factory(User::class)->create();
         $snippet = factory(Snippet::class)->create();

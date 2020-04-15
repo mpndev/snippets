@@ -12,6 +12,7 @@ class SnippetsRepository
     {
         $user_id = request()->has('api_token') ? User::where('api_token', request('api_token'))->first()->id : null;
         $my_snippets = request()->has('my-snippets');
+        $snippets_by_author = request('snippets-by-author');
         $my_forked_snippets = request()->has('my-forked-snippets');
         $forks_of_my_snippets = request()->has('forks-of-my-snippets');
         $my_favorite_snippets = request()->has('my-favorite-snippets');
@@ -19,16 +20,19 @@ class SnippetsRepository
         $search = request('search');
         $latest = request()->has('latest');
         $most_liked_snippets = request()->has('most-liked-snippets');
+        $most_copied_snippets = request()->has('most-copied-snippets');
         $limit = request('limit');
 
         $snippets =  Snippet
             ::owned($my_snippets, $user_id)
+            ->byAuthor($snippets_by_author)
             ->search($search)
             ->withTags($with_tags)
             ->forked($my_forked_snippets, $user_id)
             ->forks($forks_of_my_snippets, $user_id)
             ->favorite($my_favorite_snippets, $user_id)
             ->mostLikedSnippets($most_liked_snippets)
+            ->mostCopiedSnippets($most_copied_snippets)
             ->with('user')
             ->with('tags')
             ->orderBy('created_at', $latest ? 'desc' : 'asc')

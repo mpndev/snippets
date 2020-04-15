@@ -17,3 +17,5 @@ Route::delete('/tags/{tag}', 'API\TagsController@destroy')->name('api.tags.destr
 
 Route::post('/snippets/favorite/{snippet}', 'API\FavoriteSnippetsController@store')->name('api.snippets.favorite.store');
 Route::delete('/snippets/favorite/{snippet}', 'API\FavoriteSnippetsController@destroy')->name('api.snippets.favorite.destroy');
+
+Route::put('/snippets/actions/copy/{snippet}', 'API\SnippetsActionsCopyController@update')->name('api.snippets.actions.copy.store');

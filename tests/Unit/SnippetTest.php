@@ -305,4 +305,37 @@ class SnippetTest extends TestCase
         $this->assertEquals(10, $fork['id']);
     }
 
+    /** @test */
+    public function it_can_register_and_store_copy_actions()
+    {
+        // Arrange
+        $snippet = factory(Snippet::class)->create();
+
+        // Act
+        $snippet
+            ->copy()
+            ->copy()
+            ->copy();
+
+        // Assert
+        $this->assertEquals(3, $snippet->fresh()->actions->times_copied);
+    }
+
+    /** @test */
+    public function it_can_access_times_copied_directly()
+    {
+        // Arrange
+        $snippet = factory(Snippet::class)->create();
+        $snippet
+            ->copy()
+            ->copy()
+            ->copy();
+
+        // Act
+        $times_copied = $snippet->times_copied;
+
+        // Assert
+        $this->assertEquals(3, $times_copied);
+    }
+
 }

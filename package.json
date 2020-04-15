@@ -27,6 +27,7 @@
         "mini-toastr": "^0.8.1",
         "sweetalert": "^2.1.2",
         "vue-clipboard2": "^0.3.1",
+        "vue-codemirror": "^4.0.6",
         "vue-notifications": "^1.0.2",
         "vue-router": "^3.1.6",
         "vue-spinner": "^1.0.3"

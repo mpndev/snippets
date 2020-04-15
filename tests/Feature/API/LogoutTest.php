@@ -17,7 +17,6 @@ class LogoutTest extends TestCase
     /** @test */
     public function user_can_log_out()
     {
-        $this->withoutExceptionHandling();
         // Arrange
         $user = factory(User::class)->create();
 

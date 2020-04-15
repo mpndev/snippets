@@ -46,6 +46,7 @@ class SnippetsController extends Controller
         ]));
         $snippet->fork_id = $this->getParentSnippetIdOnStore();
         auth()->user()->addSnippet($snippet);
+        $snippet->actions()->create();
 
         return response()->json($snippet->fresh()->toArray(), 201);
     }

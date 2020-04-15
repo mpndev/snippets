@@ -6,7 +6,7 @@
         <ul class="menu-list">
             <li v-for="snippet in most_liked_snippets">
                 <a class="title is-7" :href="`/snippets/${snippet.id}`">
-                    <span class="tag is-success is-inline"><span class="fa fa-heart has-text-danger"></span>X{{ snippet.fans_quantity }}</span>
+                    <span class="tag is-success is-inline"><span class="fa fa-heart has-text-danger"></span> X {{ snippet.fans_quantity }}</span>
                     {{ snippet.title }}
                 </a>
             </li>

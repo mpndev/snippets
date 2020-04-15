@@ -19,7 +19,6 @@ class GetSnippetsByTagsTest extends TestCase
     /** @test */
     public function see_only_snippets_for_specific_tags()
     {
-        $this->withoutExceptionHandling();
         // Arrange
         $user = factory(User::class)->create();
         $snippet1 = factory(Snippet::class)->make(['title' => 'fuzz']);

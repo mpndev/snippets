@@ -14,11 +14,14 @@
                 <div class="box">
                     <most-liked-snippets :most_liked_snippets="most_liked_snippets"></most-liked-snippets>
                 </div>
+                <div class="box">
+                    <most-copied-snippets :most_copied_snippets="most_copied_snippets"></most-copied-snippets>
+                </div>
             </div>
             <div class="column">
                 <div class="box">
                     <div v-if="has_results" v-for="snippet in paginated_data.data" class="box has-background-light">
-                        <snippet-summary :key="snippet.id" :snippet="snippet" @snippet-was-deleted="snippetWasDeleted" @favorite-was-changed="updateMostLikedSnippets"></snippet-summary>
+                        <snippet-summary :key="snippet.id" :snippet="snippet" @snippet-was-deleted="snippetWasDeleted" @favorite-was-changed="updateMostLikedSnippets" @snippet-was-copied="updateMostCopiedSnippets"></snippet-summary>
                     </div>
                     <div v-if="!has_results" class="columns is-centered">
                         <div v-if="!show_rings" class="column">
@@ -45,14 +48,16 @@
 <script>
     import Paginator from './../../components/Paginator'
     import SnippetSummary from './../../components/SnippetSummary'
-    import Search from "./../../components/Search";
-    import MostLikedSnippets from "./../../components/MostLikedSnippets";
+    import Search from "./../../components/Search"
+    import MostLikedSnippets from "./../../components/MostLikedSnippets"
+    import MostCopiedSnippets from "./../../components/MostCopiedSnippets"
     export default {
         components: {
             SnippetSummary: SnippetSummary,
             Paginator: Paginator,
             search: Search,
-            MostLikedSnippets: MostLikedSnippets
+            MostLikedSnippets: MostLikedSnippets,
+            MostCopiedSnippets: MostCopiedSnippets
         },
         data: () => {
             return {
@@ -61,6 +66,7 @@
                     data: []
                 },
                 most_liked_snippets: [],
+                most_copied_snippets: [],
                 has_results: false,
                 show_rings: true
             }
@@ -89,6 +95,9 @@
             axios('/api/snippets?limit=5&most-liked-snippets=true').then(response => {
                 this.most_liked_snippets = response.data.data
             })
+            axios('/api/snippets?limit=5&most-copied-snippets=true').then(response => {
+                this.most_copied_snippets = response.data.data
+            })
         },
         methods: {
             snippetWasDeleted(id) {
@@ -99,17 +108,44 @@
                     this.$router.push({ name: 'snippets.index' })
                 }
             },
-            updateMostLikedSnippets() {
-                axios('/api/snippets?limit=5&most-liked-snippets=true').then(response => {
-                    this.most_liked_snippets = response.data.data
+            updateMostLikedSnippets(snippet) {
+                const must_update_liked_snippets = this.most_liked_snippets.some(liked_snippet => {
+                    return (liked_snippet.id === snippet.id || liked_snippet.fans_quantity < snippet.fans_quantity)
                 })
+                if (must_update_liked_snippets) {
+                    this.most_liked_snippets = []
+                    setTimeout(() => {
+                        axios('/api/snippets?limit=5&most-liked-snippets=true').then(response => {
+                            this.most_liked_snippets = response.data.data
+                        })
+                    }, 500)
+                }
+            },
+            updateMostCopiedSnippets(snippet) {
+                this.paginated_data.data.map(original_snippet => {
+                    if (original_snippet.id === snippet.id) {
+                        original_snippet.times_copied = snippet.times_copied;
+                    }
+                })
+
+                const must_update_copied_snippets = this.most_copied_snippets.some(copied_snippet => {
+                    return (copied_snippet.id === snippet.id || copied_snippet.times_copied < snippet.times_copied)
+                })
+
+                if (must_update_copied_snippets) {
+                    setTimeout(() => {
+                        this.most_copied_snippets = []
+                        axios('/api/snippets?limit=5&most-copied-snippets=true').then(response => {
+                            this.most_copied_snippets = response.data.data
+                        })
+                    }, 500)
+                }
             }
         },
         notifications: require('../../GlobalNotifications')
     }
     // компонент за бутоните
-    // codemirror за едитабъл код (create/edit снипет)
-    // бутон за модал съдържащ настройките на бутона
+    // codemirror за едитабъл код (create/edit/show снипет)
     // форм модел
     // сниппет модел
 </script>
