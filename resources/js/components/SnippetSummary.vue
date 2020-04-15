@@ -53,8 +53,7 @@
                 this.$copyText(this.snippet.body).then(() => {
                     this.success({message: 'Copied to clipbord.'})
                     axios.post(`/api/snippets/actions/copy/${this.snippet.id}`, {
-                        '_method': 'PUT',
-                        'api_token': this.Auth.user.api_token
+                        '_method': 'PUT'
                     }).then(response => {
                         this.$emit('snippet-was-copied', response.data)
                     })

@@ -387,11 +387,26 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   mounted: function mounted() {
+    if (this.Auth.check()) {
+      this.options.theme = JSON.parse(this.Auth.user.settings).theme;
+    }
+
     this.$emit('editor-options-was-updated', this.options);
   },
   methods: {
     updateOptions: function updateOptions() {
       this.$emit('editor-options-was-updated', this.options);
+    },
+    setSettings: function setSettings() {
+      if (this.Auth.check()) {
+        this.Auth.user.settings = "{\"theme\":\"".concat(this.options.theme, "\"}");
+        this.Auth.update(this.Auth.user);
+        axios.post("/api/users/".concat(this.Auth.user.name, "/settings"), {
+          '_method': 'PUT',
+          'settings': this.Auth.user.settings,
+          'api_token': this.Auth.user.api_token
+        });
+      }
     }
   }
 });
@@ -948,8 +963,7 @@ __webpack_require__.r(__webpack_exports__);
         });
 
         axios.post("/api/snippets/actions/copy/".concat(_this.snippet.id), {
-          '_method': 'PUT',
-          'api_token': _this.Auth.user.api_token
+          '_method': 'PUT'
         }).then(function (response) {
           _this.$emit('snippet-was-copied', response.data);
         });
@@ -38572,23 +38586,26 @@ var render = function() {
                             }
                           ],
                           on: {
-                            change: function($event) {
-                              var $$selectedVal = Array.prototype.filter
-                                .call($event.target.options, function(o) {
-                                  return o.selected
-                                })
-                                .map(function(o) {
-                                  var val = "_value" in o ? o._value : o.value
-                                  return val
-                                })
-                              _vm.$set(
-                                _vm.options,
-                                "theme",
-                                $event.target.multiple
-                                  ? $$selectedVal
-                                  : $$selectedVal[0]
-                              )
-                            }
+                            change: [
+                              function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.$set(
+                                  _vm.options,
+                                  "theme",
+                                  $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                )
+                              },
+                              _vm.setSettings
+                            ]
                           }
                         },
                         _vm._l(_vm.themes, function(theme) {

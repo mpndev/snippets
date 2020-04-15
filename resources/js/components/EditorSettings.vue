@@ -31,7 +31,7 @@
                         <div class="field">
                             <div class="control">
                                 <div class="select">
-                                    <select v-model="options.theme">
+                                    <select v-model="options.theme" @change="setSettings">
                                         <option v-for="theme in themes">{{ theme }}</option>
                                     </select>
                                 </div>
@@ -235,12 +235,26 @@
             }
         },
         mounted() {
+            if (this.Auth.check()) {
+                this.options.theme = JSON.parse(this.Auth.user.settings).theme
+            }
             this.$emit('editor-options-was-updated', this.options)
         },
         methods: {
             updateOptions() {
                 this.$emit('editor-options-was-updated', this.options)
-            }
+            },
+            setSettings() {
+                if (this.Auth.check()) {
+                    this.Auth.user.settings = `{"theme":"${this.options.theme}"}`
+                    this.Auth.update(this.Auth.user)
+                    axios.post(`/api/users/${this.Auth.user.name}/settings`, {
+                        '_method': 'PUT',
+                        'settings': this.Auth.user.settings,
+                        'api_token': this.Auth.user.api_token
+                    })
+                }
+            },
         }
     }
 </script>

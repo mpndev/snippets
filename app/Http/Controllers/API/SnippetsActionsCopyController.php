@@ -10,6 +10,6 @@ class SnippetsActionsCopyController extends Controller
     public function update(Snippet $snippet)
     {
         $snippet->copy();
-        return response()->json($snippet->fresh()->toArray(), 200);
+        return response()->json($snippet->fresh()->toArray(), 202);
     }
 }

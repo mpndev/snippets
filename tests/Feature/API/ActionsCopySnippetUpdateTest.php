@@ -11,7 +11,7 @@ class ActionsCopySnippetTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $test_route_name = 'api.snippets.actions.copy.store';
+    protected $test_route_name = 'api.snippets.actions.copy.update';
 
     protected $test_verb = 'put';
 
@@ -28,7 +28,7 @@ class ActionsCopySnippetTest extends TestCase
 
         // Assert
         $response
-            ->assertStatus(200)
+            ->assertStatus(202)
             ->assertJson($snippet->toArray());
         $this->assertEquals(1, $snippet->times_copied);
     }

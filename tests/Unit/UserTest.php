@@ -166,4 +166,17 @@ class UserTest extends TestCase
         // Assert
         $this->assertEquals(3, $snippet->actions->times_copied);
     }
+
+    /** @test */
+    public function it_can_get_his_settings()
+    {
+        // Arrange
+        $user = factory(User::class)->create();
+
+        // Act
+        $settings = $user->settings;
+
+        // Assert
+        $this->assertEquals('{"theme":"default"}', $settings);
+    }
 }
