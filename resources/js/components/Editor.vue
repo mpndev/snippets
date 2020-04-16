@@ -1,13 +1,13 @@
 <style>
     .CodeMirror {
         border-radius: 5px;
-        min-height: 70vh;
+        min-height: 7.5vh;
         height: auto;
     }
 </style>
 
 <template>
-    <codemirror id="body" :options="options" placeholder="min symbols 1, max symbols 100 000" @input="onCmCodeChange"></codemirror>
+    <codemirror id="body" :options="options" placeholder="min symbols 1, max symbols 100 000" v-model="newCode" @input="onCmCodeChange"></codemirror>
 </template>
 
 <script>
@@ -27,8 +27,18 @@
             'snippet',
             'options'
         ],
+        data: () => {
+            return {
+                newCode: ''
+            }
+        },
         components: {
             codemirror
+        },
+        watch: {
+            snippet() {
+                this.newCode = this.snippet.body ? this.snippet.body : ''
+            }
         },
         methods: {
             onCmCodeChange(newCode) {

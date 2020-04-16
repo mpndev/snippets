@@ -37,12 +37,14 @@ class SnippetsController extends Controller
             'title' => 'required|min:1|max:255',
             'description' => 'sometimes|nullable|min:1|max:2000',
             'body' => 'required|min:1|max:100000',
+            'settings' => 'sometimes|nullable|min: 1',
         ]);
 
         $snippet = new Snippet(request([
             'title',
             'body',
             'description',
+            'settings',
         ]));
         $snippet->fork_id = $this->getParentSnippetIdOnStore();
         auth()->user()->addSnippet($snippet);
@@ -58,6 +60,7 @@ class SnippetsController extends Controller
             'title' => 'required|min:1|max:255',
             'description' => 'sometimes|nullable|min:1|max:2000',
             'body' => 'required|min:1|max:100000',
+            'settings' => 'sometimes|nullable|min: 1',
         ]);
 
         if ($snippet->have_parent) {
@@ -68,6 +71,7 @@ class SnippetsController extends Controller
             'title',
             'description',
             'body',
+            'settings',
         ]));
 
         return response()->json($snippet->fresh()->toArray(), 200);

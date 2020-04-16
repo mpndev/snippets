@@ -50,7 +50,7 @@
             <div class="column is-9">
                 <div class="columns">
                     <p class="column field">
-                        <Editor :snippet="snippet.body" :options="editorOptions" @code-was-updated="codeWasUpdated"></Editor>
+                        <Editor :snippet="snippet" :options="editorOptions" @code-was-updated="codeWasUpdated"></Editor>
                         <span v-for="error in errors.body" class="title is-6 has-text-danger">{{ error }}</span>
                     </p>
                 </div>
@@ -135,7 +135,8 @@
                     let response = axios.post('/api/snippets/?api_token=' + this.Auth.user.api_token, {
                         title: this.snippet.title,
                         description: this.snippet.description,
-                        body: this.snippet.body
+                        body: this.snippet.body,
+                        settings: JSON.stringify(this.editorOptions)
                     }).then(response => {
                         return response
                     }).catch(error => {

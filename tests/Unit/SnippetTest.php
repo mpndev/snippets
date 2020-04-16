@@ -338,4 +338,19 @@ class SnippetTest extends TestCase
         $this->assertEquals(3, $times_copied);
     }
 
+    /** @test */
+    public function it_can_get_his_settings()
+    {
+        // Arrange
+        $snippet = factory(Snippet::class)->create();
+        $snippet->settings = '{"theme":"darcula"}';
+        $snippet->save();
+
+        // Act
+        $settings = $snippet->fresh()->settings;
+
+        // Assert
+        $this->assertEquals('{"theme":"darcula"}', $settings);
+    }
+
 }

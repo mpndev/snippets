@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->string('api_token', 60)->unique()->nullable();
-            $table->string('settings')->default('{"theme":"default"}');
+            $table->string('settings', 1000)->default('{"indentUnit": 2, "smartIndent": true, "tabSize": 2, "indentWithTabs": false, "electricChars": true, "direction": "ltr", "mode": "default", "theme": "default", "lineWrapping": true, "lineNumbers": true, "readOnly": false, "undoDepth": 200, "autofocus": true, "cursorBlinkRate": 530, "cursorScrollMargin": 0, "cursorHeight": 1, "workTime": 200, "workDelay": 300, "spellcheck": false, "autocorrect": false, "autocapitalize": false, "line": true}');
             $table->timestamps();
         });
     }

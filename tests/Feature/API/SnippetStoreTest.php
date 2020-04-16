@@ -19,6 +19,7 @@ class SnippetStoreTest extends TestCase
     /** @test */
     public function user_can_submit_new_snippet()
     {
+        $this->withoutExceptionHandling();
         // Arrange
         $user = factory(User::class)->create();
 
@@ -27,6 +28,7 @@ class SnippetStoreTest extends TestCase
             'title' => 'Foo',
             'description' => 'Bar',
             'body' => '<h1>FooBar</h1>',
+            'settings' => '{"theme": "darcula"}',
             'api_token' => $user->api_token,
         ]);
 

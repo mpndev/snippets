@@ -67,15 +67,19 @@
                 </div>
             </div>
             <div class="column is-9">
-                <pre v-if="snippet.id" class="box"><code>{{ snippet.body }}</code></pre>
-                <ring-loader v-else class="column is-narrow"></ring-loader>
+                <Editor :snippet="snippet" :options="snippet.settings"></Editor>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import Editor from '../../components/Editor'
+
     export default {
+        components: {
+            Editor: Editor
+        },
         data: () => {
             return {
                 snippet: {},
@@ -85,6 +89,11 @@
         mounted() {
             axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(response => {
                 this.snippet = response.data
+                this.snippet.settings = JSON.parse(this.snippet.settings)
+                this.snippet.settings.readOnly = true
+                this.snippet.settings.cursorHeight = 0
+                this.snippet.settings.lineNumbers = false
+                this.initializeTheme()
             }).catch(error => {
                 this.$router.push({ name: 'snippets.index' })
                 this.error({message: error.toString()})
@@ -145,6 +154,15 @@
                 }).catch(error => {
                     this.error({message: error.toString()})
                 })
+            },
+            initializeTheme() {
+                const theme = this.snippet.settings.theme
+                const stylesheet = document.createElement('link')
+                stylesheet.setAttribute("data-current-theme", theme)
+                stylesheet.setAttribute("rel", "stylesheet")
+                stylesheet.setAttribute("type", "text/css")
+                stylesheet.setAttribute("href", `/css/themes/${theme}.css`)
+                document.getElementsByTagName("head")[0].appendChild(stylesheet);
             }
         },
         notifications: require('../../GlobalNotifications')
