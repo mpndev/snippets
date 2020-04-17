@@ -147,14 +147,12 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     codemirror: vue_codemirror__WEBPACK_IMPORTED_MODULE_0__["codemirror"]
   },
-  watch: {
-    snippet: function snippet() {
-      this.newCode = this.snippet.body ? this.snippet.body : '';
-    }
+  created: function created() {
+    this.newCode = this.snippet.body ? this.snippet.body : '';
   },
   methods: {
-    onCmCodeChange: function onCmCodeChange(newCode) {
-      this.$emit('code-was-updated', newCode);
+    onCmCodeChange: function onCmCodeChange() {
+      this.$emit('code-was-updated', this.newCode);
     }
   }
 });
@@ -398,7 +396,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     if (this.Auth.check()) {
-      this.options.theme = JSON.parse(this.Auth.user.settings).theme;
+      this.options = JSON.parse(this.Auth.user.settings);
     }
 
     this.$emit('editor-options-was-updated', this.options);
@@ -409,7 +407,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     setSettings: function setSettings() {
       if (this.Auth.check()) {
-        this.Auth.user.settings = "{\"theme\":\"".concat(this.options.theme, "\"}");
+        this.Auth.user.settings = JSON.stringify(this.options);
         this.Auth.update(this.Auth.user);
         axios.post("/api/users/".concat(this.Auth.user.name, "/settings"), {
           '_method': 'PUT',
@@ -1686,6 +1684,8 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_EditorSettings__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/EditorSettings */ "./resources/js/components/EditorSettings.vue");
+/* harmony import */ var _components_Editor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../components/Editor */ "./resources/js/components/Editor.vue");
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
@@ -1794,7 +1794,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    EditorSettings: _components_EditorSettings__WEBPACK_IMPORTED_MODULE_0__["default"],
+    Editor: _components_Editor__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
   data: function data() {
     return {
       Auth: Auth,
@@ -1804,7 +1812,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         description: [],
         body: []
       },
-      fresh_tags: ''
+      fresh_tags: '',
+      show_editor_settings: false
     };
   },
   created: function created() {
@@ -1818,7 +1827,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     snippet: function snippet() {
       var _this = this;
 
-      if (this.snippet != null) {
+      if (this.snippet.id) {
         if (this.Auth.user.id !== this.snippet.user.id) {
           return this.$router.push({
             name: 'login.create'
@@ -1849,6 +1858,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var _this2 = this;
 
     axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(function (response) {
+      response.data.settings = JSON.parse(response.data.settings);
       _this2.snippet = response.data;
     })["catch"](function (error) {
       _this2.error({
@@ -1898,6 +1908,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           title: this.snippet.title,
           description: this.snippet_copy.description,
           body: this.snippet_copy.body,
+          settings: JSON.stringify(this.snippet_copy.settings),
           _method: 'PUT'
         }).then(function (response) {
           return response;
@@ -1972,6 +1983,29 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           });
         }
       });
+    },
+    updateEditorOptions: function updateEditorOptions(options) {
+      this.show_editor_settings = false;
+      this.updateStylesheet(options.theme);
+      this.snippet_copy.settings = options;
+    },
+    updateStylesheet: function updateStylesheet(name) {
+      var current_theme_name = this.snippet_copy.settings.theme;
+      var current_theme_link = document.querySelector("link[data-current-theme=\"".concat(current_theme_name, "\"]"));
+
+      if (current_theme_link) {
+        current_theme_link.remove();
+      }
+
+      var stylesheet = document.createElement('link');
+      stylesheet.setAttribute("data-current-theme", name);
+      stylesheet.setAttribute("rel", "stylesheet");
+      stylesheet.setAttribute("type", "text/css");
+      stylesheet.setAttribute("href", "/css/themes/".concat(name, ".css"));
+      document.getElementsByTagName("head")[0].appendChild(stylesheet);
+    },
+    codeWasUpdated: function codeWasUpdated(code) {
+      this.snippet_copy.body = code;
     }
   },
   notifications: __webpack_require__(/*! ../../GlobalNotifications */ "./resources/js/GlobalNotifications.json")
@@ -2070,10 +2104,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2083,12 +2113,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   data: function data() {
     return {
-      editorOptions: {},
       Auth: Auth,
       snippet: {
         title: '',
         description: '',
-        body: ''
+        body: '',
+        settings: ''
       },
       parent: {},
       fresh_tags: '',
@@ -2109,6 +2139,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     } else {
       axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(function (response) {
+        response.data.settings = JSON.parse(response.data.settings);
         _this.parent = response.data;
       })["catch"](function (error) {
         _this.$router.push({
@@ -2190,6 +2221,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           title: this.snippet.title,
           description: this.snippet.description,
           body: this.snippet.body,
+          settings: JSON.stringify(this.snippet.settings),
           _parent_id: this.parent.id
         }).then(function (response) {
           return response;
@@ -2234,10 +2266,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     updateEditorOptions: function updateEditorOptions(options) {
       this.show_editor_settings = false;
       this.updateStylesheet(options.theme);
-      this.editorOptions = options;
+      this.snippet.settings = options;
     },
     updateStylesheet: function updateStylesheet(name) {
-      var current_theme_name = this.editorOptions.theme;
+      var current_theme_name = this.snippet.settings.theme;
       var current_theme_link = document.querySelector("link[data-current-theme=\"".concat(current_theme_name, "\"]"));
 
       if (current_theme_link) {
@@ -2538,8 +2570,8 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(function (response) {
+      response.data.settings = JSON.parse(response.data.settings);
       _this.snippet = response.data;
-      _this.snippet.settings = JSON.parse(_this.snippet.settings);
       _this.snippet.settings.readOnly = true;
       _this.snippet.settings.cursorHeight = 0;
       _this.snippet.settings.lineNumbers = false;
@@ -41022,385 +41054,394 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c(
-      "div",
-      { staticClass: "columns" },
-      [
-        _c("div", { staticClass: "column is-3" }, [
-          _c(
-            "div",
-            { staticClass: "box" },
-            [
-              _vm.snippet.id
-                ? _c("div", [
-                    _c("button", {
-                      staticClass: "button is-success fa fa-clipboard",
-                      attrs: { title: "copy code to the clipboard" }
-                    }),
-                    _vm._v(" "),
-                    _c("button", {
-                      staticClass: "button is-info fa fa-eye",
-                      attrs: { title: "show the snippet" },
-                      on: {
-                        click: function($event) {
-                          return _vm.show(_vm.snippet)
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm.Auth.check() && _vm.Auth.user.id == _vm.snippet.user_id
-                      ? _c("button", {
-                          staticClass: "button is-danger fa fa-trash-alt",
-                          attrs: { title: "delete the snippet" },
-                          on: {
-                            click: function($event) {
-                              return _vm.destroy(_vm.snippet)
-                            }
+  return _c(
+    "div",
+    [
+      _vm.snippet_copy
+        ? _c("editor-settings", {
+            attrs: { show_editor_settings: _vm.show_editor_settings },
+            on: { "editor-options-was-updated": _vm.updateEditorOptions }
+          })
+        : _vm._e(),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "columns" },
+        [
+          _c("div", { staticClass: "column is-3" }, [
+            _c(
+              "div",
+              { staticClass: "box" },
+              [
+                _vm.snippet.id
+                  ? _c("div", [
+                      _c("button", {
+                        staticClass: "button is-success fa fa-clipboard",
+                        attrs: { title: "copy code to the clipboard" }
+                      }),
+                      _vm._v(" "),
+                      _c("button", {
+                        staticClass: "button is-info fa fa-eye",
+                        attrs: { title: "show the snippet" },
+                        on: {
+                          click: function($event) {
+                            return _vm.show(_vm.snippet)
                           }
-                        })
-                      : _vm._e()
-                  ])
-                : _c("ring-loader", { staticClass: "is-narrow" }),
-              _vm._v(" "),
-              _c("hr"),
-              _vm._v(" "),
-              _c(
-                "div",
-                [
-                  _vm.snippet.user
-                    ? _c("p", [
-                        _c("b", [_vm._v("Author:")]),
-                        _vm._v(" " + _vm._s(_vm.snippet.user.name))
-                      ])
-                    : _c("ring-loader", { staticClass: "is-narrow" })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("hr"),
-              _vm._v(" "),
-              _c(
-                "div",
-                [
-                  _vm.snippet.id
-                    ? _c("p", [
-                        _c("b", [_vm._v("Title:")]),
-                        _vm._v(" " + _vm._s(_vm.snippet.title))
-                      ])
-                    : _c("ring-loader", { staticClass: "is-narrow" })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("hr"),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "field" },
-                [
-                  _vm.snippet.id
-                    ? _c(
-                        "div",
-                        { staticClass: "control" },
-                        [
-                          _c("label", { attrs: { for: "description" } }, [
-                            _vm._v("Description:")
-                          ]),
-                          _vm._v(" "),
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.snippet_copy.description,
-                                expression: "snippet_copy.description"
-                              }
-                            ],
-                            staticClass: "input",
-                            attrs: {
-                              id: "description",
-                              type: "text",
-                              placeholder: "max symbols 2000"
-                            },
-                            domProps: { value: _vm.snippet_copy.description },
+                        }
+                      }),
+                      _vm._v(" "),
+                      _vm.Auth.check() &&
+                      _vm.Auth.user.id == _vm.snippet.user_id
+                        ? _c("button", {
+                            staticClass: "button is-danger fa fa-trash-alt",
+                            attrs: { title: "delete the snippet" },
                             on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  _vm.snippet_copy,
-                                  "description",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          }),
-                          _vm._v(" "),
-                          _vm._l(_vm.errors.description, function(error) {
-                            return _c(
-                              "span",
-                              { staticClass: "title is-6 has-text-danger" },
-                              [_vm._v(_vm._s(error))]
-                            )
-                          })
-                        ],
-                        2
-                      )
-                    : _c("ring-loader", { staticClass: "is-narrow" })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("hr"),
-              _vm._v(" "),
-              _c(
-                "div",
-                [
-                  _vm.snippet.id
-                    ? _c("p", [
-                        _c("b", [_vm._v("Created: ")]),
-                        _vm._v(" " + _vm._s(_vm.snippet.created_at_for_humans))
-                      ])
-                    : _c("ring-loader", { staticClass: "is-narrow" })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("hr"),
-              _vm._v(" "),
-              _c(
-                "div",
-                [
-                  _vm.snippet.id
-                    ? _c("p", [
-                        _c("b", [_vm._v("Last update: ")]),
-                        _vm._v(" " + _vm._s(_vm.snippet.updated_at_for_humans))
-                      ])
-                    : _c("ring-loader", { staticClass: "is-narrow" })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("hr"),
-              _vm._v(" "),
-              _c(
-                "div",
-                [
-                  _vm.snippet.id
-                    ? _c("div", { staticClass: "field" }, [
-                        _c("div", { staticClass: "control" }, [
-                          _vm._m(0),
-                          _vm._v(" "),
-                          _c("label", { attrs: { for: "tags" } }),
-                          _vm._v(" "),
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.fresh_tags,
-                                expression: "fresh_tags"
-                              }
-                            ],
-                            staticClass: "input",
-                            attrs: {
-                              id: "tags",
-                              type: "text",
-                              placeholder: "php, c#, full stack, bash'"
-                            },
-                            domProps: { value: _vm.fresh_tags },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.fresh_tags = $event.target.value
+                              click: function($event) {
+                                return _vm.destroy(_vm.snippet)
                               }
                             }
                           })
-                        ])
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "field" }, [
-                    _c("div", { staticClass: "control" }, [
-                      _c(
-                        "div",
-                        { staticClass: "tags" },
-                        _vm._l(_vm.tags, function(tag) {
-                          return _c("span", { staticClass: "tag is-success" }, [
-                            _vm._v(_vm._s(tag))
-                          ])
-                        }),
-                        0
-                      )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm.Auth.check()
+                        ? _c("button", {
+                            staticClass:
+                              "button is-info fa fa-cog is-pulled-right",
+                            on: {
+                              click: function($event) {
+                                _vm.show_editor_settings = true
+                              }
+                            }
+                          })
+                        : _vm._e()
                     ])
-                  ]),
-                  _vm._v(" "),
-                  !_vm.snippet.id
-                    ? _c("ring-loader", { staticClass: "is-narrow" })
-                    : _vm._e()
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("hr"),
-              _vm._v(" "),
-              _c(
-                "div",
-                [
-                  _vm.snippet.id
-                    ? _c(
-                        "div",
-                        [
-                          _vm._l(_vm.snippet.forks, function(fork) {
-                            return _vm.snippet.forks_quantity > 0
-                              ? _c("p", [
-                                  _c("b", [_vm._v("Fork:")]),
-                                  _vm._v(" "),
-                                  _c(
-                                    "a",
-                                    { attrs: { href: "/snippets/" + fork.id } },
-                                    [_vm._v(_vm._s(fork.title))]
-                                  )
-                                ])
-                              : _vm._e()
-                          }),
-                          _vm._v(" "),
-                          _vm.snippet.forks_quantity == 0
-                            ? _c("p", [
-                                _c("b", [_vm._v("Forks:")]),
-                                _vm._v("0")
-                              ])
-                            : _vm._e()
-                        ],
-                        2
-                      )
-                    : _vm._e(),
-                  _vm._v(" "),
-                  !_vm.snippet.id
-                    ? _c("ring-loader", { staticClass: "is-narrow" })
-                    : _vm._e()
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("hr"),
-              _vm._v(" "),
-              _c(
-                "div",
-                [
-                  _vm.snippet.id
-                    ? _c("div", [
-                        _vm.snippet.parent
-                          ? _c("p", [
-                              _c("b", [_vm._v("Forked from:")]),
-                              _vm._v(" "),
-                              _c(
-                                "a",
-                                {
-                                  attrs: {
-                                    href: "/snippets/" + _vm.snippet.parent.id
-                                  }
-                                },
-                                [_vm._v(_vm._s(_vm.snippet.parent.title))]
-                              )
-                            ])
-                          : _vm._e(),
-                        _vm._v(" "),
-                        _vm.snippet.parent == undefined
-                          ? _c("p", [
-                              _c("b", [_vm._v("Do not have parent fork")])
-                            ])
-                          : _vm._e()
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  !_vm.snippet.id
-                    ? _c("ring-loader", { staticClass: "is-narrow" })
-                    : _vm._e()
-                ],
-                1
-              )
-            ],
-            1
-          )
-        ]),
-        _vm._v(" "),
-        _vm.snippet.id
-          ? _c("div", { staticClass: "column is-9" }, [
-              _c("div", { staticClass: "columns" }, [
+                  : _c("ring-loader", { staticClass: "is-narrow" }),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
                 _c(
                   "div",
-                  { staticClass: "column field" },
                   [
-                    _c("textarea", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.snippet_copy.body,
-                          expression: "snippet_copy.body"
-                        }
-                      ],
-                      staticClass: "textarea",
-                      attrs: {
-                        id: "body",
-                        cols: "30",
-                        rows: "25",
-                        placeholder: "min symbols 1, max symbols 100 000"
-                      },
-                      domProps: { value: _vm.snippet_copy.body },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.snippet_copy,
-                            "body",
-                            $event.target.value
-                          )
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm._l(_vm.errors.body, function(error) {
-                      return _c(
-                        "span",
-                        { staticClass: "title is-6 has-text-danger" },
-                        [_vm._v(_vm._s(error))]
-                      )
-                    })
+                    _vm.snippet.user
+                      ? _c("p", [
+                          _c("b", [_vm._v("Author:")]),
+                          _vm._v(" " + _vm._s(_vm.snippet.user.name))
+                        ])
+                      : _c("ring-loader", { staticClass: "is-narrow" })
                   ],
-                  2
+                  1
+                ),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  [
+                    _vm.snippet.id
+                      ? _c("p", [
+                          _c("b", [_vm._v("Title:")]),
+                          _vm._v(" " + _vm._s(_vm.snippet.title))
+                        ])
+                      : _c("ring-loader", { staticClass: "is-narrow" })
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "field" },
+                  [
+                    _vm.snippet.id
+                      ? _c(
+                          "div",
+                          { staticClass: "control" },
+                          [
+                            _c("label", { attrs: { for: "description" } }, [
+                              _vm._v("Description:")
+                            ]),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.snippet_copy.description,
+                                  expression: "snippet_copy.description"
+                                }
+                              ],
+                              staticClass: "input",
+                              attrs: {
+                                id: "description",
+                                type: "text",
+                                placeholder: "max symbols 2000"
+                              },
+                              domProps: { value: _vm.snippet_copy.description },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.snippet_copy,
+                                    "description",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm._l(_vm.errors.description, function(error) {
+                              return _c(
+                                "span",
+                                { staticClass: "title is-6 has-text-danger" },
+                                [_vm._v(_vm._s(error))]
+                              )
+                            })
+                          ],
+                          2
+                        )
+                      : _c("ring-loader", { staticClass: "is-narrow" })
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  [
+                    _vm.snippet.id
+                      ? _c("p", [
+                          _c("b", [_vm._v("Created: ")]),
+                          _vm._v(
+                            " " + _vm._s(_vm.snippet.created_at_for_humans)
+                          )
+                        ])
+                      : _c("ring-loader", { staticClass: "is-narrow" })
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  [
+                    _vm.snippet.id
+                      ? _c("p", [
+                          _c("b", [_vm._v("Last update: ")]),
+                          _vm._v(
+                            " " + _vm._s(_vm.snippet.updated_at_for_humans)
+                          )
+                        ])
+                      : _c("ring-loader", { staticClass: "is-narrow" })
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  [
+                    _vm.snippet.id
+                      ? _c("div", { staticClass: "field" }, [
+                          _c("div", { staticClass: "control" }, [
+                            _vm._m(0),
+                            _vm._v(" "),
+                            _c("label", { attrs: { for: "tags" } }),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.fresh_tags,
+                                  expression: "fresh_tags"
+                                }
+                              ],
+                              staticClass: "input",
+                              attrs: {
+                                id: "tags",
+                                type: "text",
+                                placeholder: "php, c#, full stack, bash'"
+                              },
+                              domProps: { value: _vm.fresh_tags },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.fresh_tags = $event.target.value
+                                }
+                              }
+                            })
+                          ])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "field" }, [
+                      _c("div", { staticClass: "control" }, [
+                        _c(
+                          "div",
+                          { staticClass: "tags" },
+                          _vm._l(_vm.tags, function(tag) {
+                            return _c(
+                              "span",
+                              { staticClass: "tag is-success" },
+                              [_vm._v(_vm._s(tag))]
+                            )
+                          }),
+                          0
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    !_vm.snippet.id
+                      ? _c("ring-loader", { staticClass: "is-narrow" })
+                      : _vm._e()
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  [
+                    _vm.snippet.id
+                      ? _c(
+                          "div",
+                          [
+                            _vm._l(_vm.snippet.forks, function(fork) {
+                              return _vm.snippet.forks_quantity > 0
+                                ? _c("p", [
+                                    _c("b", [_vm._v("Fork:")]),
+                                    _vm._v(" "),
+                                    _c(
+                                      "a",
+                                      {
+                                        attrs: { href: "/snippets/" + fork.id }
+                                      },
+                                      [_vm._v(_vm._s(fork.title))]
+                                    )
+                                  ])
+                                : _vm._e()
+                            }),
+                            _vm._v(" "),
+                            _vm.snippet.forks_quantity == 0
+                              ? _c("p", [
+                                  _c("b", [_vm._v("Forks:")]),
+                                  _vm._v("0")
+                                ])
+                              : _vm._e()
+                          ],
+                          2
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    !_vm.snippet.id
+                      ? _c("ring-loader", { staticClass: "is-narrow" })
+                      : _vm._e()
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  [
+                    _vm.snippet.id
+                      ? _c("div", [
+                          _vm.snippet.parent
+                            ? _c("p", [
+                                _c("b", [_vm._v("Forked from:")]),
+                                _vm._v(" "),
+                                _c(
+                                  "a",
+                                  {
+                                    attrs: {
+                                      href: "/snippets/" + _vm.snippet.parent.id
+                                    }
+                                  },
+                                  [_vm._v(_vm._s(_vm.snippet.parent.title))]
+                                )
+                              ])
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm.snippet.parent == undefined
+                            ? _c("p", [
+                                _c("b", [_vm._v("Do not have parent fork")])
+                              ])
+                            : _vm._e()
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    !_vm.snippet.id
+                      ? _c("ring-loader", { staticClass: "is-narrow" })
+                      : _vm._e()
+                  ],
+                  1
                 )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "columns" }, [
-                _c("div", { staticClass: "column" }, [
+              ],
+              1
+            )
+          ]),
+          _vm._v(" "),
+          _vm.snippet_copy
+            ? _c("div", { staticClass: "column is-9" }, [
+                _c("div", { staticClass: "columns" }, [
                   _c(
-                    "button",
-                    {
-                      staticClass: "button is-success is-large is-fullwidth",
-                      on: {
-                        click: function($event) {
-                          return _vm.update()
-                        }
-                      }
-                    },
-                    [_vm._v("UPDATE")]
+                    "div",
+                    { staticClass: "column field" },
+                    [
+                      _c("Editor", {
+                        attrs: {
+                          snippet: _vm.snippet_copy,
+                          options: _vm.snippet_copy.settings
+                        },
+                        on: { "code-was-updated": _vm.codeWasUpdated }
+                      }),
+                      _vm._v(" "),
+                      _vm._l(_vm.errors.body, function(error) {
+                        return _c(
+                          "span",
+                          { staticClass: "title is-6 has-text-danger" },
+                          [_vm._v(_vm._s(error))]
+                        )
+                      })
+                    ],
+                    2
                   )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "columns" }, [
+                  _c("div", { staticClass: "column" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "button is-success is-large is-fullwidth",
+                        on: {
+                          click: function($event) {
+                            return _vm.update()
+                          }
+                        }
+                      },
+                      [_vm._v("UPDATE")]
+                    )
+                  ])
                 ])
               ])
-            ])
-          : _c("ring-loader", { staticClass: "column is-narrow" })
-      ],
-      1
-    )
-  ])
+            : _c("ring-loader", { staticClass: "column is-narrow" })
+        ],
+        1
+      )
+    ],
+    1
+  )
 }
 var staticRenderFns = [
   function() {
@@ -41457,19 +41498,6 @@ var render = function() {
                           }
                         }
                       })
-                    ])
-                  : _c("ring-loader", { staticClass: "is-narrow" })
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              [
-                _vm.Auth.check()
-                  ? _c("p", [
-                      _c("b", [_vm._v("Author:")]),
-                      _vm._v(" " + _vm._s(_vm.Auth.user.name))
                     ])
                   : _c("ring-loader", { staticClass: "is-narrow" })
               ],
@@ -41643,10 +41671,15 @@ var render = function() {
               "p",
               { staticClass: "column field" },
               [
-                _c("Editor", {
-                  attrs: { snippet: _vm.parent, options: _vm.editorOptions },
-                  on: { "code-was-updated": _vm.codeWasUpdated }
-                }),
+                _vm.parent.id
+                  ? _c("Editor", {
+                      attrs: {
+                        snippet: _vm.parent,
+                        options: _vm.parent.settings
+                      },
+                      on: { "code-was-updated": _vm.codeWasUpdated }
+                    })
+                  : _vm._e(),
                 _vm._v(" "),
                 _vm._l(_vm.errors.body, function(error) {
                   return _c(
@@ -42152,9 +42185,11 @@ var render = function() {
         "div",
         { staticClass: "column is-9" },
         [
-          _c("Editor", {
-            attrs: { snippet: _vm.snippet, options: _vm.snippet.settings }
-          })
+          _vm.snippet.id
+            ? _c("Editor", {
+                attrs: { snippet: _vm.snippet, options: _vm.snippet.settings }
+              })
+            : _vm._e()
         ],
         1
       )

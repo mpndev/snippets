@@ -1,5 +1,6 @@
 <template>
     <div>
+        <editor-settings v-if="snippet_copy" :show_editor_settings="show_editor_settings" @editor-options-was-updated="updateEditorOptions"></editor-settings>
         <div class="columns">
             <div class="column is-3">
                 <div class="box">
@@ -7,6 +8,7 @@
                         <button class="button is-success fa fa-clipboard" title="copy code to the clipboard"></button>
                         <button class="button is-info fa fa-eye" title="show the snippet" @click="show(snippet)"></button>
                         <button v-if="Auth.check() && Auth.user.id == snippet.user_id" class="button is-danger fa fa-trash-alt" title="delete the snippet" @click="destroy(snippet)"></button>
+                        <button v-if="Auth.check()" class="button is-info fa fa-cog is-pulled-right" @click="show_editor_settings = true"></button>
                     </div>
                     <ring-loader v-else class="is-narrow"></ring-loader>
                     <hr>
@@ -74,10 +76,10 @@
                     </div>
                 </div>
             </div>
-            <div v-if="snippet.id" class="column is-9">
+            <div v-if="snippet_copy" class="column is-9">
                 <div class="columns">
                     <div class="column field">
-                        <textarea class="textarea" id="body" cols="30" rows="25" placeholder="min symbols 1, max symbols 100 000" v-model="snippet_copy.body"></textarea>
+                        <Editor :snippet="snippet_copy" :options="snippet_copy.settings" @code-was-updated="codeWasUpdated"></Editor>
                         <span v-for="error in errors.body" class="title is-6 has-text-danger">{{ error }}</span>
                     </div>
                 </div>
@@ -93,7 +95,14 @@
 </template>
 
 <script>
+    import EditorSettings from '../../components/EditorSettings'
+    import Editor from '../../components/Editor'
+
     export default {
+        components: {
+            EditorSettings: EditorSettings,
+            Editor: Editor
+        },
         data: () => {
             return {
                 Auth: Auth,
@@ -103,7 +112,8 @@
                     description: [],
                     body: [],
                 },
-                fresh_tags: ''
+                fresh_tags: '',
+                show_editor_settings: false
             }
         },
         created() {
@@ -113,7 +123,7 @@
         },
         watch: {
             snippet() {
-                if (this.snippet != null) {
+                if (this.snippet.id) {
                     if (this.Auth.user.id !== this.snippet.user.id) {
                         return this.$router.push({ name: 'login.create' })
                     }
@@ -135,6 +145,7 @@
         },
         mounted() {
             axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(response => {
+                response.data.settings = JSON.parse(response.data.settings)
                 this.snippet = response.data
             }).catch(error => {
                 this.error({message: error.toString()})
@@ -169,6 +180,7 @@
                         title: this.snippet.title,
                         description: this.snippet_copy.description,
                         body: this.snippet_copy.body,
+                        settings: JSON.stringify(this.snippet_copy.settings),
                         _method: 'PUT'
                     }).then(response => {
                         return response
@@ -217,6 +229,27 @@
                         })
                     }
                 })
+            },
+            updateEditorOptions(options) {
+                this.show_editor_settings = false
+                this.updateStylesheet(options.theme)
+                this.snippet_copy.settings = options
+            },
+            updateStylesheet(name) {
+                const current_theme_name = this.snippet_copy.settings.theme
+                const current_theme_link = document.querySelector(`link[data-current-theme="${current_theme_name}"]`)
+                if (current_theme_link) {
+                    current_theme_link.remove()
+                }
+                const stylesheet = document.createElement('link')
+                stylesheet.setAttribute("data-current-theme", name)
+                stylesheet.setAttribute("rel", "stylesheet")
+                stylesheet.setAttribute("type", "text/css")
+                stylesheet.setAttribute("href", `/css/themes/${name}.css`)
+                document.getElementsByTagName("head")[0].appendChild(stylesheet);
+            },
+            codeWasUpdated(code) {
+                this.snippet_copy.body = code
             }
         },
         notifications: require('../../GlobalNotifications')

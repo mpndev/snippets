@@ -236,7 +236,7 @@
         },
         mounted() {
             if (this.Auth.check()) {
-                this.options.theme = JSON.parse(this.Auth.user.settings).theme
+                this.options = JSON.parse(this.Auth.user.settings)
             }
             this.$emit('editor-options-was-updated', this.options)
         },
@@ -246,7 +246,7 @@
             },
             setSettings() {
                 if (this.Auth.check()) {
-                    this.Auth.user.settings = `{"theme":"${this.options.theme}"}`
+                    this.Auth.user.settings = JSON.stringify(this.options)
                     this.Auth.update(this.Auth.user)
                     axios.post(`/api/users/${this.Auth.user.name}/settings`, {
                         '_method': 'PUT',

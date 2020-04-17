@@ -67,7 +67,7 @@
                 </div>
             </div>
             <div class="column is-9">
-                <Editor :snippet="snippet" :options="snippet.settings"></Editor>
+                <Editor v-if="snippet.id" :snippet="snippet" :options="snippet.settings"></Editor>
             </div>
         </div>
     </div>
@@ -88,8 +88,8 @@
         },
         mounted() {
             axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(response => {
+                response.data.settings = JSON.parse(response.data.settings)
                 this.snippet = response.data
-                this.snippet.settings = JSON.parse(this.snippet.settings)
                 this.snippet.settings.readOnly = true
                 this.snippet.settings.cursorHeight = 0
                 this.snippet.settings.lineNumbers = false

@@ -35,14 +35,12 @@
         components: {
             codemirror
         },
-        watch: {
-            snippet() {
-                this.newCode = this.snippet.body ? this.snippet.body : ''
-            }
+        created() {
+            this.newCode = this.snippet.body ? this.snippet.body : ''
         },
         methods: {
-            onCmCodeChange(newCode) {
-                this.$emit('code-was-updated', newCode)
+            onCmCodeChange() {
+                this.$emit('code-was-updated', this.newCode)
             }
         }
     }

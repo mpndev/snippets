@@ -8,10 +8,6 @@
                         <p v-if="Auth.check()"><b>Author:</b> {{ Auth.user.name }}<button class="button is-info fa fa-cog is-pulled-right" @click="show_editor_settings = true"></button></p>
                         <ring-loader v-else class="is-narrow"></ring-loader>
                     </div>
-                    <div>
-                        <p v-if="Auth.check()"><b>Author:</b> {{ Auth.user.name }}</p>
-                        <ring-loader v-else class="is-narrow"></ring-loader>
-                    </div>
                     <hr>
                     <div>
                         <div class="field">
@@ -54,7 +50,7 @@
             <div class="column is-9">
                 <div class="columns">
                     <p class="column field">
-                        <Editor :snippet="parent" :options="editorOptions" @code-was-updated="codeWasUpdated"></Editor>
+                        <Editor v-if="parent.id" :snippet="parent" :options="parent.settings" @code-was-updated="codeWasUpdated"></Editor>
                         <span v-for="error in errors.body" class="title is-6 has-text-danger">{{ error }}</span>
                     </p>
                 </div>
@@ -79,12 +75,12 @@
         },
         data: () => {
             return {
-                editorOptions: {},
                 Auth: Auth,
                 snippet: {
                     title: '',
                     description: '',
                     body: '',
+                    settings: ''
                 },
                 parent: {},
                 fresh_tags: '',
@@ -102,6 +98,7 @@
             }
             else {
                 axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(response => {
+                    response.data.settings = JSON.parse(response.data.settings)
                     this.parent = response.data
                 }).catch(error => {
                     this.$router.push({ name: 'snippets.index' })
@@ -163,6 +160,7 @@
                         title: this.snippet.title,
                         description: this.snippet.description,
                         body: this.snippet.body,
+                        settings: JSON.stringify(this.snippet.settings),
                         _parent_id: this.parent.id
                     }).then(response => {
                         return response
@@ -191,10 +189,10 @@
             updateEditorOptions(options) {
                 this.show_editor_settings = false
                 this.updateStylesheet(options.theme)
-                this.editorOptions = options
+                this.snippet.settings = options
             },
             updateStylesheet(name) {
-                const current_theme_name = this.editorOptions.theme
+                const current_theme_name = this.snippet.settings.theme
                 const current_theme_link = document.querySelector(`link[data-current-theme="${current_theme_name}"]`)
                 if (current_theme_link) {
                     current_theme_link.remove()
