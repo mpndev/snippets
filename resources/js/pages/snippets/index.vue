@@ -1,3 +1,9 @@
+<style>
+    .snippet-summary-ring {
+        min-height: 11rem
+    }
+</style>
+
 <template>
     <div>
         <search></search>
@@ -19,8 +25,8 @@
                 </div>
             </div>
             <div class="column">
-                <div class="box">
-                    <div v-if="has_results" v-for="snippet in paginated_data.data" class="box has-background-light">
+                <div>
+                    <div v-if="has_results" v-for="snippet in paginated_data.data" class="box">
                         <snippet-summary :key="snippet.id" :snippet="snippet" @snippet-was-deleted="snippetWasDeleted" @favorite-was-changed="updateMostLikedSnippets" @snippet-was-copied="updateMostCopiedSnippets"></snippet-summary>
                     </div>
                     <div v-if="!has_results" class="columns is-centered">
@@ -29,8 +35,10 @@
                             <p class="title has-text-centered is-3">No results found.</p>
                         </div>
                     </div>
-                    <div v-if="show_rings" v-for="i in 5" class="columns is-centered">
-                        <ring-loader class="column is-narrow"></ring-loader>
+                    <div v-if="show_rings" v-for="i in 5" class="box">
+                        <div class="columns is-centered">
+                            <ring-loader class="column is-narrow snippet-summary-ring"></ring-loader>
+                        </div>
                     </div>
                 </div>
             </div>

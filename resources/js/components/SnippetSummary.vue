@@ -2,22 +2,21 @@
     <div class="columns">
         <div class="column">
             <div>
-                <div>
-                    <p>
-                        <a :href="`/snippets/${snippet.id}`" class="title has-text-dark is-6">Title: {{ snippet.title }}</a>
-                    </p>
-                    <p>
-                        <a :href="`/snippets/${snippet.id}`" class="title has-text-dark is-7">Description: {{ parsed_description }}</a>
-                    </p>
-                    <p class="tags">
-                        <span v-if="sortedTags.length" class="tag title is-7">tags: </span>
-                        <span v-for="tag in sortedTags" class="tag title is-7 is-success is-unselectable" @click="findByTag(tag)">{{ tag.name }}</span>
-                    </p>
-                    <p class="is-unselectable">
-                        <span class="tag title is-7 has-background-grey-light has-text-white">{{ snippet.created_at_for_humans }}</span>
-                        <span class="tag title is-7 has-background-grey-light has-text-white" @click="findByAuthor">By {{ snippet.user.name }}</span>
-                    </p>
-                </div>
+                <p>
+                    <a :href="`/snippets/${snippet.id}`" class="title has-text-dark is-6">{{ snippet.title }}</a>
+                </p>
+                <p>
+                    <a :href="`/snippets/${snippet.id}`" class="title has-text-dark is-7">{{ parsed_description }}</a>
+                </p>
+                <p class="tags">
+                    <span v-for="tag in sortedTags" class="tag title is-7 is-success is-unselectable" @click="findByTag(tag)">{{ tag.name }}</span>
+                </p>
+                <p class="is-unselectable">
+                    <span class="tag title is-7 has-background-grey-lighter fa fa-clock">
+                        <span @click="findByDay">&nbsp;{{ snippet.created_at_for_humans }}</span>
+                        <span @click="findByAuthor">&nbsp;by {{ snippet.user.name }}</span>
+                    </span>
+                </p>
             </div>
         </div>
         <div class="column is-narrow">
@@ -118,6 +117,9 @@
             },
             findByAuthor() {
                 this.$router.push({ name: 'snippets.index', query: { "snippets-by-author": this.snippet.user.id } })
+            },
+            findByDay() {
+                this.$router.push({ name: 'snippets.index', query: { "snippets-created-at-the-same-day-as": this.snippet.id } })
             }
         },
         notifications: require('../GlobalNotifications')

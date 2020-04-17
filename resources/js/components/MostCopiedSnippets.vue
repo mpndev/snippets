@@ -1,3 +1,9 @@
+<style>
+    .most-copied-snippets-ring {
+        min-height: 12.5rem
+    }
+</style>
+
 <template>
     <aside v-if="most_copied_snippets.length" class="menu">
         <p class="menu-label title is-6">
@@ -12,7 +18,7 @@
             </li>
         </ul>
     </aside>
-    <ring-loader v-else ring-loader class="column is-narrow"></ring-loader>
+    <ring-loader v-else ring-loader class="column most-copied-snippets-ring is-narrow"></ring-loader>
 </template>
 
 <script>

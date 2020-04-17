@@ -13,6 +13,7 @@ class SnippetsRepository
         $user_id = request()->has('api_token') ? User::where('api_token', request('api_token'))->first()->id : null;
         $my_snippets = request()->has('my-snippets');
         $snippets_by_author = request('snippets-by-author');
+        $snippets_created_at_the_same_day_as = request('snippets-created-at-the-same-day-as');
         $my_forked_snippets = request()->has('my-forked-snippets');
         $forks_of_my_snippets = request()->has('forks-of-my-snippets');
         $my_favorite_snippets = request()->has('my-favorite-snippets');
@@ -26,6 +27,7 @@ class SnippetsRepository
         $snippets =  Snippet
             ::owned($my_snippets, $user_id)
             ->byAuthor($snippets_by_author)
+            ->byDay($snippets_created_at_the_same_day_as)
             ->search($search)
             ->withTags($with_tags)
             ->forked($my_forked_snippets, $user_id)

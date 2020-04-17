@@ -267,6 +267,16 @@ class Snippet extends Model
         return $query;
     }
 
+    public function scopeByDay($query, $do_it = false)
+    {
+        if ($do_it) {
+            $constrain_snippet = Snippet::find($do_it);
+            $query = $query->whereDate('created_at', $constrain_snippet->created_at);
+        }
+
+        return $query;
+    }
+
     public function getCreatedAtForHumansAttribute()
     {
         return $this->created_at->diffForHumans();

@@ -1,5 +1,5 @@
 <template>
-    <div v-if="paginated_data.data.length > 4" class="box">
+    <div v-if="paginated_data.total > 5" class="box">
         <nav class="pagination is-right" role="navigation" aria-label="pagination">
             <span class="tag is-light is-large is-unselectable">{{ paginated_data.from }} - {{ paginated_data.to }} / {{ paginated_data.total }}</span>
             <ul class="pagination-list">

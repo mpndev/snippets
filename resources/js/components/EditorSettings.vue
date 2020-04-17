@@ -217,7 +217,7 @@
                     'sql':'SQL',
                     'twig':'Twig',
                     'vue':'Vue',
-                    'html':'HTML',
+                    'xml':'HTML',
                     'yaml':'YAML',
                     'javascript': 'javascript'
                 },

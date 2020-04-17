@@ -3,6 +3,7 @@
         border-radius: 5px;
         min-height: 7.5vh;
         height: auto;
+        padding: 1rem;
     }
 </style>
 

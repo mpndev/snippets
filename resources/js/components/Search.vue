@@ -8,6 +8,7 @@
                     <span v-if="Auth.check()" class="tag is-rounded is-unselectable" :class="{'is-info': forked_snippets}" @click="toggleFilter('forked_snippets')">my snippets that was extended</span>
                     <span v-if="Auth.check()" class="tag is-rounded is-unselectable" :class="{'is-info': forks_snippets}" @click="toggleFilter('forks_snippets')">snippets that extends my snippets</span>
                     <span class="tag is-rounded is-unselectable" :class="{'is-info': latest}" @click="toggleFilter('latest')">latest</span>
+                    <span v-if="show_reset_filters_button" class="tag is-rounded is-unselectable is-warning" @click="resetFilters">reset filters</span>
                 </div>
             </div>
             <div class="column is-4">
@@ -59,8 +60,20 @@
             this.search = query['search'] ? query['search'] : this.search
             this.tags = query['with-tags'] ? query['with-tags'] : this.tags
             this.latest = query['latest'] ? query['latest'] : this.latest
+            this.snippets_by_author = query['snippets-by-author'] ? query['snippets-by-author'] : false
+            this.snippets_by_day = query['snippets-created-at-the-same-day-as'] ? query['snippets-created-at-the-same-day-as'] : false
         },
         computed: {
+            show_reset_filters_button() {
+                let reset_it = false
+                if (Object.keys(this.$route.query).length > 1) {
+                    reset_it = true
+                }
+                if (Object.keys(this.$route.query).length === 1 && this.$route.query.page === undefined) {
+                    reset_it = true
+                }
+                return reset_it
+            },
             query() {
                 let query = {}
                 let params = {
@@ -71,7 +84,9 @@
                     'search': this.search,
                     'page': 1,
                     'with-tags': this.tags,
-                    'latest': this.latest
+                    'latest': this.latest,
+                    'snippets-by-author': this.snippets_by_author,
+                    'snippets-created-at-the-same-day-as': this.snippets_by_day
                 }
 
                 for(const param in params) {
@@ -109,7 +124,9 @@
                     this.forks_snippets ? 'extends my snippets' : '',
                     this.search ? 'contains string - "'+this.search+'" in title, body or description' : '',
                     this.tags ? 'have tags: "'+this.tags+'"' : '',
-                    this.latest ? ' are ordered by creation date' : ''
+                    this.latest ? ' are ordered by creation time' : '',
+                    this.snippets_by_author ? ' belongs to specific author' : '',
+                    this.snippets_by_day ? ' are created on specific day' : ''
                 ]
                 if (options.some(option => option.length > 0)) {
                     text += 'Looking for snipiites that '
@@ -126,6 +143,9 @@
             }
         },
         methods: {
+            resetFilters() {
+                this.$router.push({ name: 'snippets.index' })
+            },
             debauncedSearch: _.debounce(function() {
                 if (this.search.length) {
                     this.searchRun('search')
