@@ -16,6 +16,14 @@ class TagsController extends Controller
         ]);
     }
 
+    public function index()
+    {
+        $tags = Tag::orderBy('name')->get()->groupBy(function($tag) {
+            return substr($tag->name, 0, 1);
+        });
+        return response()->json($tags, 200);
+    }
+
     public function store()
     {
         $this->validate(request(), [

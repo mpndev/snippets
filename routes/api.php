@@ -12,6 +12,7 @@ Route::get('/snippets/{snippet}', 'API\SnippetsController@show')->name('api.snip
 Route::put('/snippets/{snippet}', 'API\SnippetsController@update')->name('api.snippets.update');
 Route::delete('/snippets/{snippet}', 'API\SnippetsController@destroy')->name('api.snippets.destroy');
 
+Route::get('/tags', 'API\TagsController@index')->name('api.tags.index');
 Route::post('/tags', 'API\TagsController@store')->name('api.tags.store');
 Route::delete('/tags/{tag}', 'API\TagsController@destroy')->name('api.tags.destroy');
 

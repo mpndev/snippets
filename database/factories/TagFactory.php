@@ -12,7 +12,7 @@ $factory->define(Tag::class, function (Faker $faker) {
             'name' => $faker->word(),
         ],
         'testing' => [
-            'name' => 'foo',
+            'name' => $faker->unique()->word,
         ],
     ];
 

@@ -5,6 +5,7 @@ import SnippetsShow from './pages/snippets/show'
 import SnippetsForksCreate from './pages/snippets/forks/create'
 import LoginCreate from './pages/login/create'
 import RegisterCreate from './pages/register/create'
+import Tags from './pages/tags/index'
 import NotFound from './pages/NotFound'
 
 export default {
@@ -44,6 +45,11 @@ export default {
             path: '/register',
             component: RegisterCreate,
             name: 'register.create'
+        },
+        {
+            path: '/tags',
+            component: Tags,
+            name: 'tags.index'
         },
         {
             path: '*',

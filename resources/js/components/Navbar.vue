@@ -21,6 +21,7 @@
                 <div class="navbar-end has-background-primary has-text-centered" @click="burger_is_on = false">
                     <router-link class="navbar-item has-text-white" :to="{ name: 'snippets.index' }">Home</router-link>
                     <router-link v-if="Auth.check()" :to="{ name: 'snippets.create' }" class="navbar-item has-text-white">Create Snippet</router-link>
+                    <router-link class="navbar-item has-text-white" :to="{ name: 'tags.index' }">Tags</router-link>
                     <a v-if="Auth.check()" class="navbar-item has-text-white" @click="logout">Logout</a>
                     <router-link v-if="Auth.guest()" :to="{ name: 'login.create' }" class="navbar-item has-text-white" @click="burger_is_on = false">Login</router-link>
                     <router-link v-if="Auth.guest()" :to="{ name: 'register.create' }" class="navbar-item has-text-white" @click="burger_is_on = false">Register</router-link>
