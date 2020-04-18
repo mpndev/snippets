@@ -8,6 +8,8 @@ import VueClipboard from 'vue-clipboard2'
 import VueNotifications from 'vue-notifications'
 import miniToastr from 'mini-toastr'
 import Auth from './Auth'
+import 'bulma/css/bulma.css'
+import 'bulma-helpers/css/bulma-helpers.min.css'
 
 window.Event = new Vue()
 window.Initializer = null

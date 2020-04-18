@@ -1,6 +1,15 @@
 <style>
     .snippet-summary-ring {
-        min-height: 11rem
+        min-height: 140px;
+    }
+    .paginator-ring {
+        height: 64px;
+    }
+    .most-liked-snippets, .most-copied-snippets, .joke-of-the-day {
+        min-height: 276px;
+    }
+    .joke-of-the-day {
+        overflow: scroll;
     }
 </style>
 
@@ -10,18 +19,21 @@
 
         <paginator v-if="has_results" :paginated_data="paginated_data"></paginator>
         <div v-if="show_rings" class="box">
-            <div class="columns is-centered">
+            <div class="columns is-centered paginator-ring">
                 <ring-loader class="column is-narrow"></ring-loader>
             </div>
         </div>
 
         <div class="columns">
-            <div class="column is-2">
-                <div class="box">
+            <div class="column is-2  is-hidden-mobile">
+                <div class="box most-liked-snippets">
                     <most-liked-snippets :most_liked_snippets="most_liked_snippets"></most-liked-snippets>
                 </div>
-                <div class="box">
+                <div class="box most-copied-snippets">
                     <most-copied-snippets :most_copied_snippets="most_copied_snippets"></most-copied-snippets>
+                </div>
+                <div class="box joke-of-the-day">
+                    <joke-of-the-day :joke="joke"></joke-of-the-day>
                 </div>
             </div>
             <div class="column">
@@ -46,8 +58,22 @@
 
         <paginator v-if="has_results" :paginated_data="paginated_data"></paginator>
         <div v-if="show_rings" class="box">
-            <div class="columns is-centered">
+            <div class="columns is-centered paginator-ring">
                 <ring-loader class="column is-narrow"></ring-loader>
+            </div>
+        </div>
+
+        <div class="columns is-hidden-desktop">
+            <div class="column">
+                <div class="box most-liked-snippets">
+                    <most-liked-snippets :most_liked_snippets="most_liked_snippets"></most-liked-snippets>
+                </div>
+                <div class="box most-copied-snippets">
+                    <most-copied-snippets :most_copied_snippets="most_copied_snippets"></most-copied-snippets>
+                </div>
+                <div class="box joke-of-the-day">
+                    <joke-of-the-day :joke="joke"></joke-of-the-day>
+                </div>
             </div>
         </div>
     </div>
@@ -59,13 +85,16 @@
     import Search from "./../../components/Search"
     import MostLikedSnippets from "./../../components/MostLikedSnippets"
     import MostCopiedSnippets from "./../../components/MostCopiedSnippets"
+    import JokeOfTheDay from "./../../components/JokeOfTheDay"
+
     export default {
         components: {
             SnippetSummary: SnippetSummary,
             Paginator: Paginator,
             search: Search,
             MostLikedSnippets: MostLikedSnippets,
-            MostCopiedSnippets: MostCopiedSnippets
+            MostCopiedSnippets: MostCopiedSnippets,
+            JokeOfTheDay: JokeOfTheDay
         },
         data: () => {
             return {
@@ -76,10 +105,28 @@
                 most_liked_snippets: [],
                 most_copied_snippets: [],
                 has_results: false,
-                show_rings: true
+                show_rings: true,
+                joke: {
+                    single: '',
+                    double: {
+                        first: '',
+                        second: ''
+                    }
+                }
             }
         },
         mounted() {
+
+            axios.get('https://sv443.net/jokeapi/category/programming').then(response => {
+                if (response.data.type == 'single') {
+                    this.joke.single = response.data.joke
+                }
+                else if (response.data.type == 'twopart') {
+                    this.joke.double.first = response.data.setup
+                    this.joke.double.second = response.data.delivery
+                }
+            })
+
             let query = this.$router.currentRoute.fullPath.substr(this.$router.currentRoute.path)
             let api_token_param = ''
             if (this.Auth.check()) {

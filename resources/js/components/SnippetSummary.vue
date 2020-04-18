@@ -1,5 +1,11 @@
+<style>
+    .snippet-preview {
+        min-height: 140px;
+    }
+</style>
+
 <template>
-    <div class="columns">
+    <div class="columns snippet-preview">
         <div class="column">
             <div>
                 <p>
@@ -9,12 +15,12 @@
                     <a :href="`/snippets/${snippet.id}`" class="title has-text-dark is-7">{{ parsed_description }}</a>
                 </p>
                 <p class="tags">
-                    <span v-for="tag in sortedTags" class="tag title is-7 is-success is-unselectable" @click="findByTag(tag)">{{ tag.name }}</span>
+                    <span v-for="tag in sortedTags" class="tag title is-7 is-success is-unselectable has-cursor-pointer" @click="findByTag(tag)">{{ tag.name }}</span>
                 </p>
                 <p class="is-unselectable">
                     <span class="tag title is-7 has-background-grey-lighter fa fa-clock">
-                        <span @click="findByDay">&nbsp;{{ snippet.created_at_for_humans }}</span>
-                        <span @click="findByAuthor">&nbsp;by {{ snippet.user.name }}</span>
+                        <span class="has-cursor-pointer" @click="findByDay">&nbsp;{{ snippet.created_at_for_humans }}</span>
+                        <span class="has-cursor-pointer" @click="findByAuthor">&nbsp;by {{ snippet.user.name }}</span>
                     </span>
                 </p>
             </div>

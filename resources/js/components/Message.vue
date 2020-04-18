@@ -4,15 +4,15 @@
         <div class="modal-content box" :class="[background_class, color_class]">
             <div class="columns is-marginless">
                 <div class="column">
-                    <p class="title is-3 has-text-centered">{{ message }}</p>
+                    <p class="title is-4 has-text-centered">{{ message }}</p>
                 </div>
             </div>
             <div class="columns">
                 <div class="column is-offset-2 is-4">
-                    <button v-if="run_callback" class="button is-success is-large is-fullwidth" @click="yes()">YES</button>
+                    <button v-if="run_callback" class="button is-success is-small is-fullwidth" @click="yes()">YES</button>
                 </div>
                 <div class="column is-4">
-                    <button v-if="run_callback" class="button is-danger is-large is-fullwidth" @click="hideMessage()">NO</button>
+                    <button v-if="run_callback" class="button is-danger is-small is-fullwidth" @click="hideMessage()">NO</button>
                 </div>
             </div>
         </div>
