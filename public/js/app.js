@@ -397,7 +397,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     if (this.Auth.check()) {
-      this.options = JSON.parse(this.Auth.user.settings);
+      this.options = this.Auth.getParsedSettings();
     }
 
     this.$emit('editor-options-was-updated', this.options);
@@ -408,12 +408,11 @@ __webpack_require__.r(__webpack_exports__);
     },
     setSettings: function setSettings() {
       if (this.Auth.check()) {
-        this.Auth.user.settings = JSON.stringify(this.options);
-        this.Auth.update(this.Auth.user);
-        axios.post("/api/users/".concat(this.Auth.user.name, "/settings"), {
+        this.Auth.setStringifiedSettings(this.options);
+        axios.post("/api/users/".concat(this.Auth.getName(), "/settings"), {
           '_method': 'PUT',
-          'settings': this.Auth.user.settings,
-          'api_token': this.Auth.user.api_token
+          'settings': this.Auth.getStringifiedSettings(),
+          'api_token': this.Auth.getApiToken()
         });
       }
     }
@@ -682,11 +681,11 @@ __webpack_require__.r(__webpack_exports__);
 
       this.burger_is_on = false;
       axios.post('/api/logout', {
-        api_token: this.Auth.user.api_token,
+        api_token: this.Auth.getApiToken(),
         _method: 'DELETE'
       }).then(function (response) {
         _this.success({
-          message: "See ya later ".concat(_this.Auth.user.name, "!")
+          message: "See ya later ".concat(_this.Auth.getName(), "!")
         });
 
         _this.Auth.logout();
@@ -1095,7 +1094,7 @@ __webpack_require__.r(__webpack_exports__);
         message: 'Do you confirm deletion?',
         type: 'warning',
         callback: function callback() {
-          axios.post('/api/snippets/' + snippet.id + '?api_token=' + _this2.Auth.user.api_token, {
+          axios.post('/api/snippets/' + snippet.id + '?api_token=' + _this2.Auth.getApiToken(), {
             _method: 'DELETE'
           }).then(function (response) {
             _this2.$emit('snippet-was-deleted', snippet.id);
@@ -1132,11 +1131,9 @@ __webpack_require__.r(__webpack_exports__);
       var _this3 = this;
 
       axios.post("/api/snippets/favorite/".concat(snippet.id), {
-        'api_token': this.Auth.user.api_token
+        'api_token': this.Auth.getApiToken()
       }).then(function (response) {
-        _this3.Auth.user.favorite_snippets.push(snippet);
-
-        localStorage.user = JSON.stringify(_this3.Auth.user);
+        _this3.Auth.addToFavoriteSnippets(snippet);
 
         _this3.success({
           message: 'Snippet was added to yours favorite snippets.'
@@ -1153,13 +1150,10 @@ __webpack_require__.r(__webpack_exports__);
       var _this4 = this;
 
       axios.post("/api/snippets/favorite/".concat(snippet.id), {
-        'api_token': this.Auth.user.api_token,
+        'api_token': this.Auth.getApiToken(),
         '_method': 'DELETE'
       }).then(function (response) {
-        _this4.Auth.user.favorite_snippets = _this4.Auth.user.favorite_snippets.filter(function (s) {
-          return s.id != snippet.id;
-        });
-        localStorage.user = JSON.stringify(_this4.Auth.user);
+        _this4.Auth.removeFromFavoriteSnippets(snippet);
 
         _this4.success({
           message: 'Snippet was removed from yours favorite snippets.'
@@ -1700,7 +1694,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       this.resetErrors();
 
       if (this.validateForm()) {
-        var response = axios.post('/api/snippets/?api_token=' + this.Auth.user.api_token, {
+        var response = axios.post('/api/snippets/?api_token=' + this.Auth.getApiToken(), {
           title: this.snippet.title,
           description: this.snippet.description,
           body: this.snippet.body,
@@ -1728,7 +1722,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
           if (_this.tags.length) {
             _this.tags.map(function (tag) {
-              axios.post("/api/tags?api_token=" + _this.Auth.user.api_token, {
+              axios.post("/api/tags?api_token=" + _this.Auth.getApiToken(), {
                 name: tag,
                 snippet: snippet_id
               }).then(function (inner_response) {
@@ -1927,7 +1921,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this = this;
 
       if (this.snippet.id) {
-        if (this.Auth.user.id !== this.snippet.user.id) {
+        if (!this.Auth.isOwner(this.snippet)) {
           return this.$router.push({
             name: 'login.create'
           });
@@ -2003,7 +1997,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.resetErrors();
 
       if (this.validateForm()) {
-        var response = axios.post('/api/snippets/' + this.snippet_copy.id + '/?api_token=' + this.Auth.user.api_token, {
+        var response = axios.post('/api/snippets/' + this.snippet_copy.id + '/?api_token=' + this.Auth.getApiToken(), {
           title: this.snippet.title,
           description: this.snippet_copy.description,
           body: this.snippet_copy.body,
@@ -2023,7 +2017,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
           if (_this3.snippet.tags.length) {
             _this3.snippet.tags.map(function (tag) {
-              axios.post("/api/tags/".concat(tag.id, "/?api_token=") + _this3.Auth.user.api_token, {
+              axios.post("/api/tags/".concat(tag.id, "/?api_token=") + _this3.Auth.getApiToken(), {
                 snippet: _this3.snippet.id,
                 _method: 'DELETE'
               });
@@ -2034,7 +2028,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
           if (_this3.tags.length) {
             _this3.tags.map(function (tag) {
-              axios.post("/api/tags?api_token=" + _this3.Auth.user.api_token, {
+              axios.post("/api/tags?api_token=" + _this3.Auth.getApiToken(), {
                 name: tag,
                 snippet: snippet_id
               }).then(function (inner_response) {
@@ -2065,7 +2059,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         message: 'Do you confirm deletion?',
         type: 'warning',
         callback: function callback() {
-          axios.post('/api/snippets/' + snippet.id + '?api_token=' + _this4.Auth.user.api_token, {
+          axios.post('/api/snippets/' + snippet.id + '?api_token=' + _this4.Auth.getApiToken(), {
             _method: 'DELETE'
           }).then(function (response) {
             _this4.$router.push({
@@ -2316,7 +2310,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.resetErrors();
 
       if (this.validateForm()) {
-        var response = axios.post('/api/snippets/?api_token=' + this.Auth.user.api_token, {
+        var response = axios.post('/api/snippets/?api_token=' + this.Auth.getApiToken(), {
           title: this.snippet.title,
           description: this.snippet.description,
           body: this.snippet.body,
@@ -2338,7 +2332,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
           if (_this3.tags.length) {
             _this3.tags.map(function (tag) {
-              axios.post("/api/tags?api_token=" + _this3.Auth.user.api_token, {
+              axios.post("/api/tags?api_token=" + _this3.Auth.getApiToken(), {
                 name: tag,
                 snippet: snippet_id
               }).then(function (inner_response) {
@@ -2536,7 +2530,7 @@ __webpack_require__.r(__webpack_exports__);
     var api_token_param = '';
 
     if (this.Auth.check()) {
-      api_token_param = 'api_token=' + this.Auth.user.api_token;
+      api_token_param = 'api_token=' + this.Auth.getApiToken();
 
       if (query.length > 1) {
         query = query + '&' + api_token_param;
@@ -2615,7 +2609,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   notifications: __webpack_require__(/*! ../../GlobalNotifications */ "./resources/js/GlobalNotifications.json")
 }); // компонент за бутоните
-// codemirror за едитабъл код (create/edit/show снипет)
 // форм модел
 // сниппет модел
 
@@ -2767,7 +2760,7 @@ __webpack_require__.r(__webpack_exports__);
         message: 'Do you confirm deletion?',
         type: 'warning',
         callback: function callback() {
-          axios.post('/api/snippets/' + snippet.id + '?api_token=' + _this3.Auth.user.api_token, {
+          axios.post('/api/snippets/' + snippet.id + '?api_token=' + _this3.Auth.getApiToken(), {
             _method: 'DELETE'
           }).then(function (response) {
             _this3.$router.push({
@@ -2806,11 +2799,9 @@ __webpack_require__.r(__webpack_exports__);
       var _this4 = this;
 
       axios.post("/api/snippets/favorite/".concat(snippet.id), {
-        'api_token': this.Auth.user.api_token
+        'api_token': this.Auth.getApiToken()
       }).then(function (response) {
-        _this4.Auth.user.favorite_snippets.push(snippet);
-
-        localStorage.user = JSON.stringify(_this4.Auth.user);
+        _this4.Auth.addToFavoriteSnippets(snippet);
 
         _this4.success({
           message: 'Snippet was added to yours favorite snippets.'
@@ -2825,13 +2816,10 @@ __webpack_require__.r(__webpack_exports__);
       var _this5 = this;
 
       axios.post("/api/snippets/favorite/".concat(snippet.id), {
-        'api_token': this.Auth.user.api_token,
+        'api_token': this.Auth.getApiToken(),
         '_method': 'DELETE'
       }).then(function (response) {
-        _this5.Auth.user.favorite_snippets = _this5.Auth.user.favorite_snippets.filter(function (s) {
-          return s.id != snippet.id;
-        });
-        localStorage.user = JSON.stringify(_this5.Auth.user);
+        _this5.Auth.removeFromFavoriteSnippets(snippet);
 
         _this5.success({
           message: 'Snippet was removed from yours favorite snippets.'
@@ -41212,7 +41200,7 @@ var render = function() {
         }
       }),
       _vm._v(" "),
-      _vm.Auth.check() && _vm.Auth.user.id == _vm.snippet.user_id
+      _vm.Auth.check() && _vm.Auth.isOwner(_vm.snippet)
         ? _c("button", {
             staticClass: "button is-warning fa fa-edit is-small",
             attrs: { title: "edit the snippet" },
@@ -41224,7 +41212,7 @@ var render = function() {
           })
         : _vm._e(),
       _vm._v(" "),
-      _vm.Auth.check() && _vm.Auth.user.id == _vm.snippet.user_id
+      _vm.Auth.check() && _vm.Auth.isOwner(_vm.snippet)
         ? _c("button", {
             staticClass: "button is-danger fa fa-trash-alt is-small",
             attrs: { title: "delete the snippet" },
@@ -41248,10 +41236,7 @@ var render = function() {
           })
         : _vm._e(),
       _vm._v(" "),
-      _vm.Auth.check() &&
-      _vm.Auth.user.favorite_snippets.some(function(favorite_snippet) {
-        return favorite_snippet.id === _vm.snippet.id
-      })
+      _vm.Auth.check() && _vm.Auth.isFavoriteSnippet(_vm.snippet)
         ? _c("button", {
             staticClass: "button is-danger fas fa-heart is-outlined is-small",
             attrs: { title: "remove from favorite" },
@@ -41263,10 +41248,7 @@ var render = function() {
           })
         : _vm._e(),
       _vm._v(" "),
-      _vm.Auth.check() &&
-      _vm.Auth.user.favorite_snippets.every(function(favorite_snippet) {
-        return favorite_snippet.id != _vm.snippet.id
-      })
+      _vm.Auth.check() && _vm.Auth.isNotFavoriteSnippet(_vm.snippet)
         ? _c("button", {
             staticClass:
               "button is-dark fas fa-heart-broken is-outlined is-small",
@@ -41637,7 +41619,7 @@ var render = function() {
                 _vm.Auth.check()
                   ? _c("p", [
                       _c("b", [_vm._v("Author:")]),
-                      _vm._v(" " + _vm._s(_vm.Auth.user.name)),
+                      _vm._v(" " + _vm._s(_vm.Auth.getName())),
                       _c("button", {
                         staticClass: "button is-info fa fa-cog is-pulled-right",
                         on: {
@@ -41923,8 +41905,7 @@ var render = function() {
                         }
                       }),
                       _vm._v(" "),
-                      _vm.Auth.check() &&
-                      _vm.Auth.user.id == _vm.snippet.user_id
+                      _vm.Auth.check() && _vm.Auth.isOwner(_vm.snippet)
                         ? _c("button", {
                             staticClass: "button is-danger fa fa-trash-alt",
                             attrs: { title: "delete the snippet" },
@@ -42816,12 +42797,7 @@ var render = function() {
                       })
                     : _vm._e(),
                   _vm._v(" "),
-                  _vm.Auth.check() &&
-                  _vm.Auth.user.favorite_snippets.some(function(
-                    favorite_snippet
-                  ) {
-                    return favorite_snippet.id === _vm.snippet.id
-                  })
+                  _vm.Auth.check() && _vm.Auth.isFavoriteSnippet(_vm.snippet)
                     ? _c("button", {
                         staticClass:
                           "button is-danger fas fa-heart is-outlined",
@@ -42834,12 +42810,7 @@ var render = function() {
                       })
                     : _vm._e(),
                   _vm._v(" "),
-                  _vm.Auth.check() &&
-                  _vm.Auth.user.favorite_snippets.every(function(
-                    favorite_snippet
-                  ) {
-                    return favorite_snippet.id != _vm.snippet.id
-                  })
+                  _vm.Auth.check() && _vm.Auth.isNotFavoriteSnippet(_vm.snippet)
                     ? _c("button", {
                         staticClass:
                           "button is-dark fas fa-heart-broken is-outlined",
@@ -58534,6 +58505,45 @@ var Auth = {
   },
   logout: function logout() {
     this.update(null);
+  },
+  getParsedSettings: function getParsedSettings() {
+    return JSON.parse(this.user.settings);
+  },
+  getStringifiedSettings: function getStringifiedSettings() {
+    return this.user.settings;
+  },
+  setStringifiedSettings: function setStringifiedSettings(settings) {
+    this.user.settings = JSON.stringify(settings);
+    this.update(this.user);
+  },
+  addToFavoriteSnippets: function addToFavoriteSnippets(snippet) {
+    this.user.favorite_snippets.push(snippet);
+    this.update(this.user);
+  },
+  removeFromFavoriteSnippets: function removeFromFavoriteSnippets(snippet) {
+    this.user.favorite_snippets = this.user.favorite_snippets.filter(function (s) {
+      return s.id !== snippet.id;
+    });
+    this.update(this.user);
+  },
+  getApiToken: function getApiToken() {
+    return this.user.api_token;
+  },
+  isOwner: function isOwner(snippet) {
+    return this.user.id === snippet.user.id;
+  },
+  getName: function getName() {
+    return this.user.name;
+  },
+  isFavoriteSnippet: function isFavoriteSnippet(snippet) {
+    return this.user.favorite_snippets.some(function (favorite_snippet) {
+      return favorite_snippet.id === snippet.id;
+    });
+  },
+  isNotFavoriteSnippet: function isNotFavoriteSnippet(snippet) {
+    return this.user.favorite_snippets.every(function (favorite_snippet) {
+      return favorite_snippet.id !== snippet.id;
+    });
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = (Auth);

@@ -236,7 +236,7 @@
         },
         mounted() {
             if (this.Auth.check()) {
-                this.options = JSON.parse(this.Auth.user.settings)
+                this.options = this.Auth.getParsedSettings()
             }
             this.$emit('editor-options-was-updated', this.options)
         },
@@ -246,12 +246,11 @@
             },
             setSettings() {
                 if (this.Auth.check()) {
-                    this.Auth.user.settings = JSON.stringify(this.options)
-                    this.Auth.update(this.Auth.user)
-                    axios.post(`/api/users/${this.Auth.user.name}/settings`, {
+                    this.Auth.setStringifiedSettings(this.options)
+                    axios.post(`/api/users/${this.Auth.getName()}/settings`, {
                         '_method': 'PUT',
-                        'settings': this.Auth.user.settings,
-                        'api_token': this.Auth.user.api_token
+                        'settings': this.Auth.getStringifiedSettings(),
+                        'api_token': this.Auth.getApiToken()
                     })
                 }
             },

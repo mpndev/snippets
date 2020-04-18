@@ -28,11 +28,11 @@
         <div class="column is-narrow">
             <button class="button is-success fa fa-clipboard is-small" title="copy code to the clipboard" @click="copy"></button>
             <button class="button is-info fa fa-eye is-small" title="see the snippet" @click="show(snippet)"></button>
-            <button v-if="Auth.check() && Auth.user.id == snippet.user_id" class="button is-warning fa fa-edit is-small" title="edit the snippet" @click="edit(snippet)"></button>
-            <button v-if="Auth.check() && Auth.user.id == snippet.user_id" class="button is-danger fa fa-trash-alt is-small" title="delete the snippet" @click="destroy(snippet)"></button>
+            <button v-if="Auth.check() && Auth.isOwner(snippet)" class="button is-warning fa fa-edit is-small" title="edit the snippet" @click="edit(snippet)"></button>
+            <button v-if="Auth.check() && Auth.isOwner(snippet)" class="button is-danger fa fa-trash-alt is-small" title="delete the snippet" @click="destroy(snippet)"></button>
             <button v-if="Auth.check()" class="button is-dark fas fa-code-branch is-small" title="fork the snippet" @click="createFork(snippet)"></button>
-            <button v-if="Auth.check() && Auth.user.favorite_snippets.some(favorite_snippet => favorite_snippet.id === snippet.id)" class="button is-danger fas fa-heart is-outlined is-small" title="remove from favorite" @click="removeFromFavoriteSnippets(snippet)"></button>
-            <button v-if="Auth.check() && Auth.user.favorite_snippets.every(favorite_snippet => favorite_snippet.id != snippet.id)" class="button is-dark fas fa-heart-broken is-outlined is-small" title="add to favorite" @click="addToFavoriteSnippets(snippet)"></button>
+            <button v-if="Auth.check() && Auth.isFavoriteSnippet(snippet)" class="button is-danger fas fa-heart is-outlined is-small" title="remove from favorite" @click="removeFromFavoriteSnippets(snippet)"></button>
+            <button v-if="Auth.check() && Auth.isNotFavoriteSnippet(snippet)" class="button is-dark fas fa-heart-broken is-outlined is-small" title="add to favorite" @click="addToFavoriteSnippets(snippet)"></button>
         </div>
     </div>
 </template>
@@ -77,7 +77,7 @@
                     message: 'Do you confirm deletion?',
                     type: 'warning',
                     callback: () => {
-                        axios.post('/api/snippets/' + snippet.id + '?api_token=' + this.Auth.user.api_token, {
+                        axios.post('/api/snippets/' + snippet.id + '?api_token=' + this.Auth.getApiToken(), {
                             _method: 'DELETE'
                         }).then(response => {
                             this.$emit('snippet-was-deleted', snippet.id)
@@ -96,10 +96,9 @@
             },
             addToFavoriteSnippets(snippet) {
                 axios.post(`/api/snippets/favorite/${snippet.id}`, {
-                    'api_token': this.Auth.user.api_token
+                    'api_token': this.Auth.getApiToken()
                 }).then(response => {
-                    this.Auth.user.favorite_snippets.push(snippet)
-                    localStorage.user = JSON.stringify(this.Auth.user)
+                    this.Auth.addToFavoriteSnippets(snippet)
                     this.success({message: 'Snippet was added to yours favorite snippets.'})
                     this.$emit('favorite-was-changed', snippet)
                 }).catch(error => {
@@ -110,11 +109,10 @@
             },
             removeFromFavoriteSnippets(snippet) {
                 axios.post(`/api/snippets/favorite/${snippet.id}`, {
-                    'api_token': this.Auth.user.api_token,
+                    'api_token': this.Auth.getApiToken(),
                     '_method': 'DELETE'
                 }).then(response => {
-                    this.Auth.user.favorite_snippets = this.Auth.user.favorite_snippets.filter(s => s.id != snippet.id)
-                    localStorage.user = JSON.stringify(this.Auth.user)
+                    this.Auth.removeFromFavoriteSnippets(snippet)
                     this.success({message: 'Snippet was removed from yours favorite snippets.'})
                     this.$emit('favorite-was-changed', snippet)
                 }).catch(error => {

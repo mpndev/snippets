@@ -7,7 +7,7 @@
                     <div v-if="snippet.id">
                         <button class="button is-success fa fa-clipboard" title="copy code to the clipboard"></button>
                         <button class="button is-info fa fa-eye" title="show the snippet" @click="show(snippet)"></button>
-                        <button v-if="Auth.check() && Auth.user.id == snippet.user_id" class="button is-danger fa fa-trash-alt" title="delete the snippet" @click="destroy(snippet)"></button>
+                        <button v-if="Auth.check() && Auth.isOwner(snippet)" class="button is-danger fa fa-trash-alt" title="delete the snippet" @click="destroy(snippet)"></button>
                         <button v-if="Auth.check()" class="button is-info fa fa-cog is-pulled-right" @click="show_editor_settings = true"></button>
                     </div>
                     <ring-loader v-else class="is-narrow"></ring-loader>
@@ -124,7 +124,7 @@
         watch: {
             snippet() {
                 if (this.snippet.id) {
-                    if (this.Auth.user.id !== this.snippet.user.id) {
+                    if (!this.Auth.isOwner(this.snippet)) {
                         return this.$router.push({ name: 'login.create' })
                     }
                     this.snippet_copy = {...this.snippet}
@@ -176,7 +176,7 @@
             update() {
                 this.resetErrors()
                 if (this.validateForm()) {
-                    let response = axios.post('/api/snippets/' + this.snippet_copy.id + '/?api_token=' + this.Auth.user.api_token, {
+                    let response = axios.post('/api/snippets/' + this.snippet_copy.id + '/?api_token=' + this.Auth.getApiToken(), {
                         title: this.snippet.title,
                         description: this.snippet_copy.description,
                         body: this.snippet_copy.body,
@@ -191,7 +191,7 @@
                         this.success({message: 'Snippet was updated successful.'})
                         if (this.snippet.tags.length) {
                             this.snippet.tags.map(tag => {
-                                axios.post(`/api/tags/${tag.id}/?api_token=` + this.Auth.user.api_token, {
+                                axios.post(`/api/tags/${tag.id}/?api_token=` + this.Auth.getApiToken(), {
                                     snippet: this.snippet.id,
                                     _method: 'DELETE'
                                 })
@@ -200,7 +200,7 @@
                         let snippet_id = response.data.id
                         if (this.tags.length) {
                             this.tags.map(tag => {
-                                axios.post(`/api/tags?api_token=` + this.Auth.user.api_token, {
+                                axios.post(`/api/tags?api_token=` + this.Auth.getApiToken(), {
                                     name: tag,
                                     snippet: snippet_id
                                 }).then(inner_response => {
@@ -219,7 +219,7 @@
                     message: 'Do you confirm deletion?',
                     type: 'warning',
                     callback: () => {
-                        axios.post('/api/snippets/' + snippet.id + '?api_token=' + this.Auth.user.api_token, {
+                        axios.post('/api/snippets/' + snippet.id + '?api_token=' + this.Auth.getApiToken(), {
                             _method: 'DELETE'
                         }).then(response => {
                             this.$router.push({ name: 'snippets.index' })

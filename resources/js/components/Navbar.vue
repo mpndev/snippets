@@ -43,10 +43,10 @@
             logout() {
                 this.burger_is_on = false
                 axios.post('/api/logout', {
-                    api_token: this.Auth.user.api_token,
+                    api_token: this.Auth.getApiToken(),
                     _method: 'DELETE'
                 }).then(response => {
-                    this.success({message: `See ya later ${this.Auth.user.name}!`})
+                    this.success({message: `See ya later ${this.Auth.getName()}!`})
                     this.Auth.logout()
                     this.$router.push({ name: 'login.create' })
                 }).catch(error => {

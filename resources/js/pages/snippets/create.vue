@@ -5,7 +5,7 @@
             <div class="column is-3">
                 <div class="box">
                     <div>
-                        <p v-if="Auth.check()"><b>Author:</b> {{ Auth.user.name }}<button class="button is-info fa fa-cog is-pulled-right" @click="show_editor_settings = true"></button></p>
+                        <p v-if="Auth.check()"><b>Author:</b> {{ Auth.getName() }}<button class="button is-info fa fa-cog is-pulled-right" @click="show_editor_settings = true"></button></p>
                         <ring-loader v-else class="is-narrow"></ring-loader>
                     </div>
                     <hr>
@@ -132,7 +132,7 @@
             create() {
                 this.resetErrors()
                 if (this.validateForm()) {
-                    let response = axios.post('/api/snippets/?api_token=' + this.Auth.user.api_token, {
+                    let response = axios.post('/api/snippets/?api_token=' + this.Auth.getApiToken(), {
                         title: this.snippet.title,
                         description: this.snippet.description,
                         body: this.snippet.body,
@@ -148,7 +148,7 @@
                         this.success({message: 'Snippet was created successful.'})
                         if (this.tags.length) {
                             this.tags.map(tag => {
-                                axios.post(`/api/tags?api_token=` + this.Auth.user.api_token, {
+                                axios.post(`/api/tags?api_token=` + this.Auth.getApiToken(), {
                                     name: tag,
                                     snippet: snippet_id
                                 }).then(inner_response => {

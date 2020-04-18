@@ -156,7 +156,7 @@
             create() {
                 this.resetErrors()
                 if (this.validateForm()) {
-                    let response = axios.post('/api/snippets/?api_token=' + this.Auth.user.api_token, {
+                    let response = axios.post('/api/snippets/?api_token=' + this.Auth.getApiToken(), {
                         title: this.snippet.title,
                         description: this.snippet.description,
                         body: this.snippet.body,
@@ -172,7 +172,7 @@
                         this.success({message: 'Fork was created successful.'})
                         if (this.tags.length) {
                             this.tags.map(tag => {
-                                axios.post(`/api/tags?api_token=` + this.Auth.user.api_token, {
+                                axios.post(`/api/tags?api_token=` + this.Auth.getApiToken(), {
                                     name: tag,
                                     snippet: snippet_id
                                 }).then(inner_response => {

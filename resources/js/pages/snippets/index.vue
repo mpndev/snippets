@@ -130,7 +130,7 @@
             let query = this.$router.currentRoute.fullPath.substr(this.$router.currentRoute.path)
             let api_token_param = ''
             if (this.Auth.check()) {
-                api_token_param = 'api_token=' + this.Auth.user.api_token
+                api_token_param = 'api_token=' + this.Auth.getApiToken()
                 if (query.length > 1) {
                     query = query + '&' + api_token_param
                 }
@@ -200,7 +200,6 @@
         notifications: require('../../GlobalNotifications')
     }
     // компонент за бутоните
-    // codemirror за едитабъл код (create/edit/show снипет)
     // форм модел
     // сниппет модел
 </script>
