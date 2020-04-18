@@ -2608,9 +2608,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   notifications: __webpack_require__(/*! ../../GlobalNotifications */ "./resources/js/GlobalNotifications.json")
-}); // компонент за бутоните
-// форм модел
-// сниппет модел
+});
 
 /***/ }),
 

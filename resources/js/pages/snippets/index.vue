@@ -199,7 +199,4 @@
         },
         notifications: require('../../GlobalNotifications')
     }
-    // компонент за бутоните
-    // форм модел
-    // сниппет модел
 </script>
