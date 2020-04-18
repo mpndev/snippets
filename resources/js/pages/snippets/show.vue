@@ -66,7 +66,7 @@
                     </div>
                 </div>
             </div>
-            <div class="column is-9">
+            <div class="column is-9" @mousedown.ctrl="runIfLink" @click.meta="runIfLink">
                 <Editor v-if="snippet.id" :snippet="snippet" :options="snippet.settings"></Editor>
             </div>
         </div>
@@ -163,6 +163,12 @@
                 stylesheet.setAttribute("type", "text/css")
                 stylesheet.setAttribute("href", `/css/themes/${theme}.css`)
                 document.getElementsByTagName("head")[0].appendChild(stylesheet);
+            },
+            runIfLink() {
+                const doIt = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/.test(this.snippet.body)
+                if (doIt) {
+                    window.open(this.snippet.body, '_blank')
+                }
             }
         },
         notifications: require('../../GlobalNotifications')
