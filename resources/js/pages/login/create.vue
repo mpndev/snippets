@@ -31,11 +31,6 @@
                 }
             }
         },
-        created() {
-            if (this.Auth.check()) {
-                this.$router.push({ name: 'snippets.index' })
-            }
-        },
         methods: {
             resetErrors() {
                 this.errors.name = []

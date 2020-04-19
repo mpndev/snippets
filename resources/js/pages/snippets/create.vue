@@ -91,11 +91,6 @@
                 show_editor_settings: false
             }
         },
-        created() {
-            if (this.Auth.guest()) {
-                this.$router.push({ name: 'login.create' })
-            }
-        },
         computed: {
             tags() {
                 let processed_fresh_tags = this.fresh_tags.replace(', ', ',')

@@ -56,14 +56,14 @@
         methods: {
             copy() {
                 this.$copyText(this.snippet.body).then(() => {
-                    this.success({message: 'Copied to clipbord.'})
+                    this.$parent.success({message: 'Copied to clipbord.'})
                     axios.post(`/api/snippets/actions/copy/${this.snippet.id}`, {
                         '_method': 'PUT'
                     }).then(response => {
                         this.$emit('snippet-was-copied', response.data)
                     })
                 }, () => {
-                    this.warn({message: 'Cannot copy snippet. Maybe your browser do not allow this.'})
+                    this.$parent.warn({message: 'Cannot copy snippet. Maybe your browser do not allow this.'})
                 })
             },
             show(snippet) {
@@ -81,9 +81,9 @@
                             _method: 'DELETE'
                         }).then(response => {
                             this.$emit('snippet-was-deleted', snippet.id)
-                            this.success({message: 'Snippet is deleted.'})
+                            this.$parent.success({message: 'Snippet is deleted.'})
                         }).catch(error => {
-                            this.error({message: error.toString()})
+                            this.$parent.error({message: error.toString()})
                         })
                     }
                 })
@@ -99,10 +99,10 @@
                     'api_token': this.Auth.getApiToken()
                 }).then(response => {
                     this.Auth.addToFavoriteSnippets(snippet)
-                    this.success({message: 'Snippet was added to yours favorite snippets.'})
+                    this.$parent.success({message: 'Snippet was added to yours favorite snippets.'})
                     this.$emit('favorite-was-changed', snippet)
                 }).catch(error => {
-                    this.error({
+                    this.$parent.error({
                         message: error.toString()
                     })
                 })
@@ -113,10 +113,10 @@
                     '_method': 'DELETE'
                 }).then(response => {
                     this.Auth.removeFromFavoriteSnippets(snippet)
-                    this.success({message: 'Snippet was removed from yours favorite snippets.'})
+                    this.$parent.success({message: 'Snippet was removed from yours favorite snippets.'})
                     this.$emit('favorite-was-changed', snippet)
                 }).catch(error => {
-                    this.error({message: error.toString()})
+                    this.$parent.error({message: error.toString()})
                 })
             },
             findByAuthor() {
@@ -125,7 +125,6 @@
             findByDay() {
                 this.$router.push({ name: 'snippets.index', query: { "snippets-created-at-the-same-day-as": this.snippet.id } })
             }
-        },
-        notifications: require('../GlobalNotifications')
+        }
     }
 </script>

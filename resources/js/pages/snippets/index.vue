@@ -25,7 +25,7 @@
         </div>
 
         <div class="columns">
-            <div class="column is-2  is-hidden-mobile">
+            <div v-if="is_on_desktop" class="column is-2 is-hidden-mobile">
                 <div class="box most-liked-snippets">
                     <most-liked-snippets :most_liked_snippets="most_liked_snippets"></most-liked-snippets>
                 </div>
@@ -63,7 +63,7 @@
             </div>
         </div>
 
-        <div class="columns is-hidden-desktop">
+        <div v-if="!is_on_desktop" class="columns is-hidden-desktop">
             <div class="column">
                 <div class="box most-liked-snippets">
                     <most-liked-snippets :most_liked_snippets="most_liked_snippets"></most-liked-snippets>
@@ -115,8 +115,12 @@
                 }
             }
         },
+        computed: {
+            is_on_desktop() {
+                return this.$root.screen.width > 1024
+            }
+        },
         mounted() {
-
             axios.get('https://sv443.net/jokeapi/category/programming').then(response => {
                 if (response.data.type == 'single') {
                     this.joke.single = response.data.joke

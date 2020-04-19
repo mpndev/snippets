@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import axios from 'axios'
 import VueRouter from 'vue-router'
 import routes from './routes'
 import Navbar from './components/Navbar'
@@ -11,6 +12,7 @@ import Auth from './Auth'
 import 'bulma/css/bulma.css'
 import 'bulma-helpers/css/bulma-helpers.min.css'
 
+window.axios = axios
 window.Event = new Vue()
 window.Initializer = null
 window.Auth = Auth
@@ -46,5 +48,26 @@ let app = new Vue({
     router: new VueRouter(routes),
     components: {
         navbar: Navbar
+    },
+    data: () => {
+        return {
+            screen: {
+                width: 0,
+                height: 0
+            }
+        }
+    },
+    created() {
+        window.addEventListener('resize', this.handleResize);
+        this.handleResize();
+    },
+    destroyed() {
+        window.removeEventListener('resize', this.handleResize);
+    },
+    methods: {
+        handleResize() {
+            this.screen.width = window.innerWidth;
+            this.screen.height = window.innerHeight;
+        }
     }
 })

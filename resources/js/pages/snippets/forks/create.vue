@@ -93,18 +93,13 @@
             }
         },
         mounted() {
-            if (this.Auth.guest()) {
-                this.$router.push({ name: 'login.create' })
-            }
-            else {
-                axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(response => {
-                    response.data.settings = JSON.parse(response.data.settings)
-                    this.parent = response.data
-                }).catch(error => {
-                    this.$router.push({ name: 'snippets.index' })
-                    this.error({message: error.toString()})
-                })
-            }
+            axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(response => {
+                response.data.settings = JSON.parse(response.data.settings)
+                this.parent = response.data
+            }).catch(error => {
+                this.$router.push({ name: 'snippets.index' })
+                this.error({message: error.toString()})
+            })
         },
         watch: {
             parent() {

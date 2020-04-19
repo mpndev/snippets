@@ -14,46 +14,107 @@ export default {
         {
             path: '/',
             component: SnippetsIndex,
-            name: 'snippets.index'
+            name: 'snippets.index',
+            beforeEnter: (to, from, next) => {
+                next()
+                document.querySelector('title').innerHTML = 'all snippets'
+            }
         },
         {
             path: '/snippets/create',
             component: SnippetsCreate,
-            name: 'snippets.create'
+            name: 'snippets.create',
+            beforeEnter: (to, from, next) => {
+                if (Auth.guest()) {
+                    next({ name: 'snippets.index' })
+                }
+                else {
+                    document.querySelector('title').innerHTML = 'create a snippet'
+                    next()
+                }
+            }
         },
         {
             path: '/snippets/:snippet/edit',
             component: SnippetsEdit,
-            name: 'snippets.edit'
+            name: 'snippets.edit',
+            beforeEnter: (to, from, next) => {
+                if (Auth.guest()) {
+                    next({ name: 'snippets.index' })
+                }
+                else {
+                    document.querySelector('title').innerHTML = 'edit the snippet'
+                    next()
+                }
+            }
         },
         {
             path: '/snippets/:snippet',
             component: SnippetsShow,
-            name: 'snippets.show'
+            name: 'snippets.show',
+            beforeEnter: (to, from, next) => {
+                document.querySelector('title').innerHTML = 'snippet'
+                next()
+            }
         },
         {
             path: '/snippets/:snippet/forks/create',
             component: SnippetsForksCreate,
-            name: 'snippets.forks.create'
+            name: 'snippets.forks.create',
+            beforeEnter: (to, from, next) => {
+                if (Auth.guest()) {
+                    next({ name: 'snippets.index' })
+                }
+                else {
+                    document.querySelector('title').innerHTML = 'create a fork'
+                    next()
+                }
+            }
         },
         {
             path: '/login',
             component: LoginCreate,
-            name: 'login.create'
+            name: 'login.create',
+            beforeEnter: (to, from, next) => {
+                if (Auth.check()) {
+                    next({ name: 'snippets.index' })
+                }
+                else {
+                    document.querySelector('title').innerHTML = 'login'
+                    next()
+                }
+            }
         },
         {
             path: '/register',
             component: RegisterCreate,
-            name: 'register.create'
+            name: 'register.create',
+            beforeEnter: (to, from, next) => {
+                if (Auth.check()) {
+                    next({ name: 'snippets.index' })
+                }
+                else {
+                    document.querySelector('title').innerHTML = 'registration'
+                    next()
+                }
+            }
         },
         {
             path: '/tags',
             component: Tags,
-            name: 'tags.index'
+            name: 'tags.index',
+            beforeEnter: (to, from, next) => {
+                document.querySelector('title').innerHTML = 'tags'
+                next()
+            }
         },
         {
             path: '*',
-            component: NotFound
+            component: NotFound,
+            beforeEnter: (to, from, next) => {
+                document.querySelector('title').innerHTML = '404 not found!'
+                next()
+            }
         }
     ]
 }

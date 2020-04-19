@@ -116,11 +116,6 @@
                 show_editor_settings: false
             }
         },
-        created() {
-            if (this.Auth.guest()) {
-                return this.$router.push({ name: 'login.create' })
-            }
-        },
         watch: {
             snippet() {
                 if (this.snippet.id) {
