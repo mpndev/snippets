@@ -11,6 +11,7 @@ import miniToastr from 'mini-toastr'
 import Auth from './Auth'
 import 'bulma/css/bulma.css'
 import 'bulma-helpers/css/bulma-helpers.min.css'
+import TextHighlight from 'vue-text-highlight'
 
 window.axios = axios
 window.Event = new Vue()
@@ -40,8 +41,8 @@ VueNotifications.config.timeout = 6000
 Vue.use(VueNotifications, options)
 
 Vue.component('ring-loader', RingLoader)
-
 Vue.component('message', Message)
+Vue.component('text-highlight', TextHighlight)
 
 let app = new Vue({
     el: '#app',

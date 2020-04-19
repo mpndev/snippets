@@ -9,10 +9,14 @@
         <div class="column">
             <div>
                 <p>
-                    <a :href="`/snippets/${snippet.id}`" class="title has-text-dark is-6">{{ snippet.title }}</a>
+                    <a :href="`/snippets/${snippet.id}`" class="title has-text-dark is-6">
+                        <text-highlight :queries="($route.query && $route.query.search) ? [$route.query.search] : []">{{ snippet.title }}</text-highlight>
+                    </a>
                 </p>
                 <p>
-                    <a :href="`/snippets/${snippet.id}`" class="title has-text-dark is-7">{{ parsed_description }}</a>
+                    <a :href="`/snippets/${snippet.id}`" class="title has-text-dark is-7">
+                        <text-highlight :queries="($route.query && $route.query.search) ? [$route.query.search] : []">{{ parsed_description }}</text-highlight>
+                    </a>
                 </p>
                 <p class="tags">
                     <span v-for="tag in sortedTags" class="tag title is-7 is-success is-unselectable has-cursor-pointer" @click="findByTag(tag)">{{ tag.name }}</span>
