@@ -163,10 +163,11 @@
                 document.getElementsByTagName("head")[0].appendChild(stylesheet);
             },
             runIfLink() {
-                const doIt = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/.test(this.snippet.body)
-                if (doIt) {
-                    window.open(this.snippet.body, '_blank')
-                }
+                this.snippet.body.split(' ').map(word => {
+                    if (/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/.test(word.trim())) {
+                        window.open(word, '_blank')
+                    }
+                })
             }
         },
         notifications: require('../../GlobalNotifications')

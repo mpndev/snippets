@@ -4625,11 +4625,11 @@ __webpack_require__.r(__webpack_exports__);
       document.getElementsByTagName("head")[0].appendChild(stylesheet);
     },
     runIfLink: function runIfLink() {
-      var doIt = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/.test(this.snippet.body);
-
-      if (doIt) {
-        window.open(this.snippet.body, '_blank');
-      }
+      this.snippet.body.split(' ').map(function (word) {
+        if (/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/.test(word.trim())) {
+          window.open(word, '_blank');
+        }
+      });
     }
   },
   notifications: __webpack_require__(/*! ../../GlobalNotifications */ "./resources/js/GlobalNotifications.json")
