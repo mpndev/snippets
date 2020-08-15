@@ -143,81 +143,57 @@ class Snippet extends Model
         return $this;
     }
 
-    public function scopeOwned($query, $do_it = false, $id = null)
+    public function scopeOwned($query, $id)
     {
-        if ($do_it && $id) {
-            $query = $query->Where('user_id', $id);
-        }
-
-        return $query;
+        return $query->Where('user_id', $id);
     }
 
-    public function scopeForked($query, $do_it = false, $id = null)
+    public function scopeForked($query, $id)
     {
-        if ($do_it && $id) {
-            $snippets = User::find($id)->snippets;
-            $snippets_ids = [];
-            foreach($snippets as $snippet) {
-                if ($snippet->have_forks) {
-                    $snippets_ids[] = $snippet->id;
-                }
+        $snippets = User::find($id)->snippets;
+        $snippets_ids = [];
+        foreach($snippets as $snippet) {
+            if ($snippet->have_forks) {
+                $snippets_ids[] = $snippet->id;
             }
-            $query = $query->whereIn('id', $snippets_ids);
         }
-
-        return $query;
+        return $query = $query->whereIn('id', $snippets_ids);
     }
 
-    public function scopeForks($query, $do_it = false, $id = null)
+    public function scopeForks($query, $id)
     {
-        if ($do_it && $id) {
-            $ids = [];
-            $snippets = User::find($id)->snippets()->get();
-            foreach($snippets as $snippet) {
-                $ids[] = $snippet->id;
-            }
-            $query = $query->whereIn('fork_id', $ids);
+        $ids = [];
+        $snippets = User::find($id)->snippets()->get();
+        foreach($snippets as $snippet) {
+            $ids[] = $snippet->id;
         }
-
-        return $query;
+        return $query = $query->whereIn('fork_id', $ids);
     }
 
-    public function scopeFavorite($query, $do_it = false, $id = null)
+    public function scopeFavorite($query, $id)
     {
-        if ($do_it && $id) {
-            $ids = [];
-            $snippets = User::find($id)->favoriteSnippets;
-            foreach($snippets as $snippet) {
-                $ids[] = $snippet->id;
-            }
-
-            $query = $query->whereIn('id', $ids);
+        $ids = [];
+        $snippets = User::find($id)->favoriteSnippets;
+        foreach($snippets as $snippet) {
+            $ids[] = $snippet->id;
         }
 
-        return $query;
+        return $query = $query->whereIn('id', $ids);
     }
 
-    public function scopeMostLikedSnippets($query, $do_it = false)
+    public function scopeMostLikedSnippets($query)
     {
-        if ($do_it) {
-            $query = $query->withCount('fans')->orderBy('fans_count', 'desc');
-        }
-
-        return $query;
+        return $query = $query->withCount('fans')->orderBy('fans_count', 'desc');
     }
 
-    public function scopeMostCopiedSnippets($query, $do_it = false)
+    public function scopeMostCopiedSnippets($query)
     {
-        if ($do_it) {
-            $query = $query->orderByDesc(function($q) {
-                $q->select('times_copied')
-                    ->from('actions')
-                    ->orderBy('times_copied', 'desc')
-                    ->whereColumn('snippet_id', 'snippets.id');
-            });
-        }
-
-        return $query;
+        return $query->orderByDesc(function($q) {
+            $q->select('times_copied')
+                ->from('actions')
+                ->orderBy('times_copied', 'desc')
+                ->whereColumn('snippet_id', 'snippets.id');
+        });
     }
 
     public function addTag(Tag $tag)
@@ -242,39 +218,27 @@ class Snippet extends Model
         return $this->tags()->where('name', $tag->name)->exists();
     }
 
-    public function scopeWithTags($query, $tags_names = false)
+    public function scopeWithTags($query, $tags_names)
     {
-        if ($tags_names) {
-            $names = explode(',', str_replace(' ', '', $tags_names));
-            $names = array_filter($names, function($name) {
-                return !!strlen($name);
-            });
+        $names = explode(',', str_replace(' ', '', $tags_names));
+        $names = array_filter($names, function($name) {
+            return !!strlen($name);
+        });
 
-            $query = $query->whereHas('tags', function($q) use ($names) {
-                $q->whereIn('name', $names);
-            }, '=', count($names));
-        }
-
-        return $query;
+        return $query = $query->whereHas('tags', function($q) use ($names) {
+            $q->whereIn('name', $names);
+        }, '=', count($names));
     }
 
-    public function scopeByAuthor($query, $do_it = false)
+    public function scopeByAuthor($query, $id)
     {
-        if ($do_it) {
-            $query = $query->where('user_id', $do_it);
-        }
-
-        return $query;
+        return $query->where('user_id', $id);
     }
 
-    public function scopeByDay($query, $do_it = false)
+    public function scopeByDay($query, $id)
     {
-        if ($do_it) {
-            $constrain_snippet = Snippet::find($do_it);
-            $query = $query->whereDate('created_at', $constrain_snippet->created_at);
-        }
-
-        return $query;
+        $constrain_snippet = Snippet::find($id);
+        return $query = $query->whereDate('created_at', $constrain_snippet->created_at);
     }
 
     public function getCreatedAtForHumansAttribute()

@@ -23,7 +23,7 @@ class SnippetsController extends Controller
     {
         $snippets = SnippetsRepository::getWithAllConstraints();
 
-        return response()->json($snippets->toArray(), 206);
+        return response()->json($snippets, 206);
     }
 
     public function show(Snippet $snippet)

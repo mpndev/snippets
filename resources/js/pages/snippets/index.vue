@@ -159,7 +159,7 @@
             })
         },
         methods: {
-            snippetWasDeleted(id) {
+            snippetWasDeleted() {
                 if (this.paginated_data.data.length > 1) {
                     this.$router.go(0)
                 }

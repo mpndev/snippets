@@ -4347,7 +4347,7 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   methods: {
-    snippetWasDeleted: function snippetWasDeleted(id) {
+    snippetWasDeleted: function snippetWasDeleted() {
       if (this.paginated_data.data.length > 1) {
         this.$router.go(0);
       } else {
