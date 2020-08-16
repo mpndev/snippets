@@ -121,7 +121,7 @@
             }
         },
         mounted() {
-            axios.get('https://sv443.net/jokeapi/category/programming').then(response => {
+            axios.get('https://sv443.net/jokeapi/v2/joke/Programming').then(response => {
                 if (response.data.type == 'single') {
                     this.joke.single = response.data.joke
                 }

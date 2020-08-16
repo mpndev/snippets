@@ -4305,7 +4305,7 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this = this;
 
-    axios.get('https://sv443.net/jokeapi/category/programming').then(function (response) {
+    axios.get('https://sv443.net/jokeapi/v2/joke/Programming').then(function (response) {
       if (response.data.type == 'single') {
         _this.joke.single = response.data.joke;
       } else if (response.data.type == 'twopart') {
