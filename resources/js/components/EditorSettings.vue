@@ -3,13 +3,13 @@
         <div class="modal-background" @click="updateOptions"></div>
         <div class="modal-content box">
             <header class="modal-card-head">
-                <p class="modal-card-title">editor settings</p>
+                <p class="modal-card-title">{{ $t('editor settings') }}</p>
                 <button class="delete" aria-label="close" @click="updateOptions"></button>
             </header>
             <section class="modal-card-body">
                 <div class="columns level has-background-grey-light is-marginless has-text-link">
                     <div class="column is-3">
-                        <p>Language</p>
+                        <p>{{ $t('Language') }}</p>
                     </div>
                     <div class="column">
                         <div class="field">
@@ -25,7 +25,7 @@
                 </div>
                 <div class="columns level has-background-grey-lighter is-marginless has-text-link">
                     <div class="column is-3">
-                        <p>Theme</p>
+                        <p>{{ $t('Theme') }}</p>
                     </div>
                     <div class="column">
                         <div class="field">
@@ -41,7 +41,7 @@
                 </div>
                 <div class="columns level has-background-grey-light is-marginless has-text-link">
                     <div class="column is-3">
-                        <p>Cursor blink rate</p>
+                        <p>{{ $t('Cursor blink rate') }}</p>
                     </div>
                     <div class="column is-2">
                         <div class="field">
@@ -51,7 +51,7 @@
                         </div>
                     </div>
                     <div class="column is-3 is-offset-2">
-                        <p>Cursor height</p>
+                        <p>{{ $t('Cursor height') }}</p>
                     </div>
                     <div class="column is-2">
                         <div class="field">
@@ -63,7 +63,7 @@
                 </div>
                 <div class="columns level has-background-grey-lighter is-marginless has-text-link">
                     <div class="column is-3">
-                        <p>Indent unit</p>
+                        <p>{{ $t('Indent unit') }}</p>
                     </div>
                     <div class="column is-2">
                         <div class="field">
@@ -73,7 +73,7 @@
                         </div>
                     </div>
                     <div class="column is-3 is-offset-2">
-                        <p>Tab size</p>
+                        <p>{{ $t('Tab size') }}</p>
                     </div>
                     <div class="column is-2">
                         <div class="field">
@@ -85,7 +85,7 @@
                 </div>
                 <div class="columns level has-background-grey-light is-marginless has-text-link">
                     <div class="column is-3">
-                        <p>Smart Indent</p>
+                        <p>{{ $t('Smart Indent') }}</p>
                     </div>
                     <div class="column">
                         <div class="field">
@@ -95,7 +95,7 @@
                         </div>
                     </div>
                     <div class="column is-3 is-offset-2">
-                        <p>Indent with tabs</p>
+                        <p>{{ $t('Indent with tabs') }}</p>
                     </div>
                     <div class="column">
                         <div class="field">
@@ -107,7 +107,7 @@
                 </div>
                 <div class="columns level has-background-grey-lighter is-marginless has-text-link">
                     <div class="column is-3">
-                        <p>Electric chars</p>
+                        <p>{{ $t('Electric chars') }}</p>
                     </div>
                     <div class="column">
                         <div class="field">
@@ -117,7 +117,7 @@
                         </div>
                     </div>
                     <div class="column is-3 is-offset-2">
-                        <p>Line wrapping</p>
+                        <p>{{ $t('Line wrapping') }}</p>
                     </div>
                     <div class="column">
                         <div class="field">
@@ -129,7 +129,7 @@
                 </div>
                 <div class="columns level has-background-grey-light is-marginless has-text-link">
                     <div class="column is-3">
-                        <p>Line numbers</p>
+                        <p>{{ $t('Line numbers') }}</p>
                     </div>
                     <div class="column">
                         <div class="field">
@@ -139,7 +139,7 @@
                         </div>
                     </div>
                     <div class="column is-3 is-offset-2">
-                        <p>Spellcheck</p>
+                        <p>{{ $t('Spellcheck') }}</p>
                     </div>
                     <div class="column">
                         <div class="field">
@@ -151,7 +151,7 @@
                 </div>
                 <div class="columns level has-background-grey-lighter is-marginless has-text-link">
                     <div class="column is-3">
-                        <p>Autocorrect</p>
+                        <p>{{ $t('Autocorrect') }}</p>
                     </div>
                     <div class="column">
                         <div class="field">
@@ -165,13 +165,13 @@
                     <div class="column is-half">
                         <label class="radio">
                             <input type="radio" name="direction" value="ltr" v-model="options.direction">
-                            Direction left to right
+                            {{ $t('Direction left to right') }}
                         </label>
                     </div>
                     <div class="column is-half">
                         <label class="radio">
                             <input type="radio" name="direction" value="rtl" v-model="options.direction">
-                            Direction right to left
+                            {{ $t('Direction right to left') }}
                         </label>
                     </div>
                 </div>

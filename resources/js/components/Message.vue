@@ -9,10 +9,10 @@
             </div>
             <div class="columns">
                 <div class="column is-offset-2 is-4">
-                    <button v-if="run_callback" class="button is-success is-small is-fullwidth" @click="yes()">YES</button>
+                    <button v-if="run_callback" class="button is-success is-small is-fullwidth" @click="yes()">{{ $t('YES') }}</button>
                 </div>
                 <div class="column is-4">
-                    <button v-if="run_callback" class="button is-danger is-small is-fullwidth" @click="hideMessage()">NO</button>
+                    <button v-if="run_callback" class="button is-danger is-small is-fullwidth" @click="hideMessage()">{{ $t('NO') }}</button>
                 </div>
             </div>
         </div>

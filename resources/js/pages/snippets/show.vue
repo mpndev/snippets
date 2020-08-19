@@ -4,43 +4,43 @@
             <div class="column is-3">
                 <div class="box">
                     <div v-if="snippet.id">
-                        <button class="button is-success fa fa-clipboard" title="copy code to the clipboard" @click="copy"></button>
-                        <button v-if="Auth.check() && Auth.user.id == snippet.user_id" class="button is-warning fa fa-edit" title="edit the snippet" @click="edit(snippet)"></button>
-                        <button v-if="Auth.check() && Auth.user.id == snippet.user_id" class="button is-danger fa fa-trash-alt" title="delete the snippet" @click="destroy(snippet)"></button>
-                        <button v-if="Auth.check()" class="button is-dark fas fa-code-branch" title="fork the snippet" @click="createFork(snippet)"></button>
-                        <button v-if="Auth.check() && Auth.isFavoriteSnippet(snippet)" class="button is-danger fas fa-heart is-outlined" title="remove from favorite" @click="removeFromFavoriteSnippets(snippet)"></button>
-                        <button v-if="Auth.check() && Auth.isNotFavoriteSnippet(snippet)" class="button is-dark fas fa-heart-broken is-outlined" title="add to favorite" @click="addToFavoriteSnippets(snippet)"></button>
+                        <button class="button is-success fa fa-clipboard" :title="$t('copy code to the clipboard')" @click="copy"></button>
+                        <button v-if="Auth.check() && Auth.user.id == snippet.user_id" class="button is-warning fa fa-edit" :title="$t('edit the snippet')" @click="edit(snippet)"></button>
+                        <button v-if="Auth.check() && Auth.user.id == snippet.user_id" class="button is-danger fa fa-trash-alt" :title="$t('delete the snippet')" @click="destroy(snippet)"></button>
+                        <button v-if="Auth.check()" class="button is-dark fas fa-code-branch" :title="$t('fork the snippet')" @click="createFork(snippet)"></button>
+                        <button v-if="Auth.check() && Auth.isFavoriteSnippet(snippet)" class="button is-danger fas fa-heart is-outlined" :title="$t('remove from favorite')" @click="removeFromFavoriteSnippets(snippet)"></button>
+                        <button v-if="Auth.check() && Auth.isNotFavoriteSnippet(snippet)" class="button is-dark fas fa-heart-broken is-outlined" :title="$t('add to favorite')" @click="addToFavoriteSnippets(snippet)"></button>
                     </div>
                     <ring-loader v-else class="is-narrow"></ring-loader>
                     <hr>
                     <div>
-                        <p v-if="snippet.user"><b>Author:</b> {{ snippet.user.name }}</p>
+                        <p v-if="snippet.user"><b>{{ $t('Author') }}:</b> {{ snippet.user.name }}</p>
                         <ring-loader v-else class="is-narrow"></ring-loader>
                     </div>
                     <hr>
                     <div>
-                        <p v-if="snippet.id"><b>Title:</b> {{ snippet.title }}</p>
+                        <p v-if="snippet.id"><b>{{ $t('Title') }}:</b> {{ snippet.title }}</p>
                         <ring-loader v-else class="is-narrow"></ring-loader>
                     </div>
                     <hr>
                     <div>
-                        <p v-if="snippet.id"><b>Description:</b> {{ snippet.description }}</p>
+                        <p v-if="snippet.id"><b>{{ $t('Description') }}:</b> {{ snippet.description }}</p>
                         <ring-loader v-else class="is-narrow"></ring-loader>
                     </div>
                     <hr>
                     <div>
-                        <p v-if="snippet.id"><b>Created: </b> {{ snippet.created_at_for_humans }}</p>
+                        <p v-if="snippet.id"><b>{{ $t('Created') }}: </b> {{ snippet.created_at_for_humans }}</p>
                         <ring-loader v-else class="is-narrow"></ring-loader>
                     </div>
                     <hr>
                     <div>
-                        <p v-if="snippet.id"><b>Last update: </b> {{ snippet.updated_at_for_humans }}</p>
+                        <p v-if="snippet.id"><b>{{ $t('Last update') }}: </b> {{ snippet.updated_at_for_humans }}</p>
                         <ring-loader v-else class="is-narrow"></ring-loader>
                     </div>
                     <hr>
                     <div>
                         <div v-if="snippet.tags" class="tags">
-                            <span><b>Tags:</b></span>
+                            <span><b>{{ $t('Tags') }}:</b></span>
                             <span v-if="snippet.tags.length > 0" v-for="tag in snippet.tags" class="tag is-success is-unselectable" @click="findByTag(tag)">
                                 {{ tag.name }}
                             </span>
@@ -51,16 +51,16 @@
                     <hr>
                     <div>
                         <div v-if="snippet.id">
-                            <p v-if="snippet.forks_quantity > 0" v-for="fork in snippet.forks"><b>Fork:</b> <a :href="'/snippets/' + fork.id">{{ fork.title }}</a></p>
-                            <p v-if="snippet.forks_quantity == 0"><b>Forks:</b>0</p>
+                            <p v-if="snippet.forks_quantity > 0" v-for="fork in snippet.forks"><b>{{ $t('Fork') }}:</b> <a :href="'/snippets/' + fork.id">{{ fork.title }}</a></p>
+                            <p v-if="snippet.forks_quantity == 0"><b>{{ $t('Forks') }}:</b>0</p>
                         </div>
                         <ring-loader v-if="!snippet.id" class="is-narrow"></ring-loader>
                     </div>
                     <hr>
                     <div>
                         <div v-if="snippet.id">
-                            <p v-if="snippet.parent"><b>Forked from:</b> <a :href="'/snippets/' + snippet.parent.id">{{ snippet.parent.title }}</a></p>
-                            <p v-if="snippet.parent == undefined"><b>Do not have parent fork</b></p>
+                            <p v-if="snippet.parent"><b>{{ $t('Forked from') }}:</b> <a :href="'/snippets/' + snippet.parent.id">{{ snippet.parent.title }}</a></p>
+                            <p v-if="snippet.parent == undefined"><b>{{ $t('Do not have parent fork') }}</b></p>
                         </div>
                         <ring-loader v-if="!snippet.id" class="is-narrow"></ring-loader>
                     </div>
@@ -87,6 +87,7 @@
             }
         },
         mounted() {
+            document.querySelector('title').innerHTML = this.$t('snippet')
             axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(response => {
                 response.data.settings = JSON.parse(response.data.settings)
                 this.snippet = response.data
@@ -102,9 +103,9 @@
         methods: {
             copy() {
                 this.$copyText(this.snippet.body).then(() => {
-                    this.success({message: 'Copied to clipbord.'})
+                    this.success({message: this.$t('Copied to clipbord.')})
                 }, () => {
-                    this.warn({message: 'Maybe your browser do not allow this.'})
+                    this.warn({message: this.$t('Maybe your browser do not allow this.')})
                 })
             },
             edit(snippet) {
@@ -112,14 +113,14 @@
             },
             destroy(snippet) {
                 Event.$emit('show-message', {
-                    message: 'Do you confirm deletion?',
+                    message: this.$t('Do you confirm deletion?'),
                     type: 'warning',
                     callback: () => {
                         axios.post('/api/snippets/' + snippet.id + '?api_token=' + this.Auth.getApiToken(), {
                             _method: 'DELETE'
                         }).then(response => {
                             this.$router.push({ name: 'snippets.index' })
-                            this.success({message: 'Snippet was successful deleted. Also all of his tag and fans.'})
+                            this.success({message: this.$t('Snippet was successful deleted. Also all of his tag and fans.')})
                         }).catch(error => {
                             this.error({message: error.toString()})
                         })
@@ -137,7 +138,7 @@
                     'api_token': this.Auth.getApiToken()
                 }).then(response => {
                     this.Auth.addToFavoriteSnippets(snippet)
-                    this.success({message: 'Snippet was added to yours favorite snippets.'})
+                    this.success({message: this.$t('Snippet was added to yours favorite snippets.')})
                 }).catch(error => {
                     this.error({message: error.toString()})
                 })
@@ -148,7 +149,7 @@
                     '_method': 'DELETE'
                 }).then(response => {
                     this.Auth.removeFromFavoriteSnippets(snippet)
-                    this.success({message: 'Snippet was removed from yours favorite snippets.'})
+                    this.success({message: this.$t('Snippet was removed from yours favorite snippets.')})
                 }).catch(error => {
                     this.error({message: error.toString()})
                 })

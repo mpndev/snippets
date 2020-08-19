@@ -24,19 +24,19 @@
                 <p class="is-unselectable">
                     <span class="tag title is-7 has-background-grey-lighter fa fa-clock">
                         <span class="has-cursor-pointer" @click="findByDay">&nbsp;{{ snippet.created_at_for_humans }}</span>
-                        <span class="has-cursor-pointer" @click="findByAuthor">&nbsp;by {{ snippet.user.name }}</span>
+                        <span class="has-cursor-pointer" @click="findByAuthor">&nbsp;{{ $t('by') }} {{ snippet.user.name }}</span>
                     </span>
                 </p>
             </div>
         </div>
         <div class="column is-narrow">
-            <button class="button is-success fa fa-clipboard is-small" title="copy code to the clipboard" @click="copy"></button>
-            <button class="button is-info fa fa-eye is-small" title="see the snippet" @click="show(snippet)"></button>
-            <button v-if="Auth.check() && Auth.isOwner(snippet)" class="button is-warning fa fa-edit is-small" title="edit the snippet" @click="edit(snippet)"></button>
-            <button v-if="Auth.check() && Auth.isOwner(snippet)" class="button is-danger fa fa-trash-alt is-small" title="delete the snippet" @click="destroy(snippet)"></button>
-            <button v-if="Auth.check()" class="button is-dark fas fa-code-branch is-small" title="fork the snippet" @click="createFork(snippet)"></button>
-            <button v-if="Auth.check() && Auth.isFavoriteSnippet(snippet)" class="button is-danger fas fa-heart is-outlined is-small" title="remove from favorite" @click="removeFromFavoriteSnippets(snippet)"></button>
-            <button v-if="Auth.check() && Auth.isNotFavoriteSnippet(snippet)" class="button is-dark fas fa-heart-broken is-outlined is-small" title="add to favorite" @click="addToFavoriteSnippets(snippet)"></button>
+            <button class="button is-success fa fa-clipboard is-small" :title="$t('copy code to the clipboard')" @click="copy"></button>
+            <button class="button is-info fa fa-eye is-small" :title="$t('see the snippet')" @click="show(snippet)"></button>
+            <button v-if="Auth.check() && Auth.isOwner(snippet)" class="button is-warning fa fa-edit is-small" :title="$t('edit the snippet')" @click="edit(snippet)"></button>
+            <button v-if="Auth.check() && Auth.isOwner(snippet)" class="button is-danger fa fa-trash-alt is-small" :title="$t('delete the snippet')" @click="destroy(snippet)"></button>
+            <button v-if="Auth.check()" class="button is-dark fas fa-code-branch is-small" :title="$t('fork the snippet')" @click="createFork(snippet)"></button>
+            <button v-if="Auth.check() && Auth.isFavoriteSnippet(snippet)" class="button is-danger fas fa-heart is-outlined is-small" :title="$t('remove from favorite')" @click="removeFromFavoriteSnippets(snippet)"></button>
+            <button v-if="Auth.check() && Auth.isNotFavoriteSnippet(snippet)" class="button is-dark fas fa-heart-broken is-outlined is-small" :title="$t('add to favorite')" @click="addToFavoriteSnippets(snippet)"></button>
         </div>
     </div>
 </template>
@@ -60,14 +60,14 @@
         methods: {
             copy() {
                 this.$copyText(this.snippet.body).then(() => {
-                    this.$parent.success({message: 'Copied to clipbord.'})
+                    this.$parent.success({message: this.$t('Copied to clipbord.')})
                     axios.post(`/api/snippets/actions/copy/${this.snippet.id}`, {
                         '_method': 'PUT'
                     }).then(response => {
                         this.$emit('snippet-was-copied', response.data)
                     })
                 }, () => {
-                    this.$parent.warn({message: 'Cannot copy snippet. Maybe your browser do not allow this.'})
+                    this.$parent.warn({message: `${this.$t('Cannot copy snippet.')} ${this.$t('Maybe your browser do not allow this.')}`})
                 })
             },
             show(snippet) {
@@ -78,14 +78,14 @@
             },
             destroy(snippet) {
                 Event.$emit('show-message', {
-                    message: 'Do you confirm deletion?',
+                    message: this.$t('Do you confirm deletion?'),
                     type: 'warning',
                     callback: () => {
                         axios.post('/api/snippets/' + snippet.id + '?api_token=' + this.Auth.getApiToken(), {
                             _method: 'DELETE'
                         }).then(response => {
                             this.$emit('snippet-was-deleted', snippet.id)
-                            this.$parent.success({message: 'Snippet is deleted.'})
+                            this.$parent.success({message: this.$t('Snippet is deleted.')})
                         }).catch(error => {
                             this.$parent.error({message: error.toString()})
                         })
@@ -103,7 +103,7 @@
                     'api_token': this.Auth.getApiToken()
                 }).then(response => {
                     this.Auth.addToFavoriteSnippets(snippet)
-                    this.$parent.success({message: 'Snippet was added to yours favorite snippets.'})
+                    this.$parent.success({message: this.$t('Snippet was added to yours favorite snippets.')})
                     this.$emit('favorite-was-changed', snippet)
                 }).catch(error => {
                     this.$parent.error({
@@ -117,7 +117,7 @@
                     '_method': 'DELETE'
                 }).then(response => {
                     this.Auth.removeFromFavoriteSnippets(snippet)
-                    this.$parent.success({message: 'Snippet was removed from yours favorite snippets.'})
+                    this.$parent.success({message: this.$t('Snippet was removed from yours favorite snippets.')})
                     this.$emit('favorite-was-changed', snippet)
                 }).catch(error => {
                     this.$parent.error({message: error.toString()})

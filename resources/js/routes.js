@@ -14,11 +14,7 @@ export default {
         {
             path: '/',
             component: SnippetsIndex,
-            name: 'snippets.index',
-            beforeEnter: (to, from, next) => {
-                next()
-                document.querySelector('title').innerHTML = 'all snippets'
-            }
+            name: 'snippets.index'
         },
         {
             path: '/snippets/create',
@@ -29,7 +25,6 @@ export default {
                     next({ name: 'snippets.index' })
                 }
                 else {
-                    document.querySelector('title').innerHTML = 'create a snippet'
                     next()
                 }
             }
@@ -43,7 +38,6 @@ export default {
                     next({ name: 'snippets.index' })
                 }
                 else {
-                    document.querySelector('title').innerHTML = 'edit the snippet'
                     next()
                 }
             }
@@ -53,7 +47,6 @@ export default {
             component: SnippetsShow,
             name: 'snippets.show',
             beforeEnter: (to, from, next) => {
-                document.querySelector('title').innerHTML = 'snippet'
                 next()
             }
         },
@@ -66,7 +59,6 @@ export default {
                     next({ name: 'snippets.index' })
                 }
                 else {
-                    document.querySelector('title').innerHTML = 'create a fork'
                     next()
                 }
             }
@@ -80,7 +72,6 @@ export default {
                     next({ name: 'snippets.index' })
                 }
                 else {
-                    document.querySelector('title').innerHTML = 'login'
                     next()
                 }
             }
@@ -94,7 +85,6 @@ export default {
                     next({ name: 'snippets.index' })
                 }
                 else {
-                    document.querySelector('title').innerHTML = 'registration'
                     next()
                 }
             }
@@ -104,15 +94,14 @@ export default {
             component: Tags,
             name: 'tags.index',
             beforeEnter: (to, from, next) => {
-                document.querySelector('title').innerHTML = 'tags'
                 next()
             }
         },
         {
             path: '*',
+            name: 'not.found',
             component: NotFound,
             beforeEnter: (to, from, next) => {
-                document.querySelector('title').innerHTML = '404 not found!'
                 next()
             }
         }

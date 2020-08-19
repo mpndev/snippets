@@ -7,7 +7,7 @@
         </div>
         <div class="columns is-centered">
             <div class="column is-8">
-                <p class="box title is-1">Hmmm, the page you looking for is not found.</p>
+                <p class="box title is-1">{{ $t('Hmmm, the page you looking for is not found.') }}</p>
             </div>
         </div>
         <div class="columns is-centered">
@@ -19,5 +19,9 @@
 </template>
 
 <script>
-    export default {}
+    export default {
+        mounted() {
+            document.querySelector('title').innerHTML = this.$t('404 not found!')
+        }
+    }
 </script>

@@ -5,48 +5,48 @@
             <div class="column is-3">
                 <div class="box">
                     <div v-if="snippet.id">
-                        <button class="button is-success fa fa-clipboard" title="copy code to the clipboard"></button>
-                        <button class="button is-info fa fa-eye" title="show the snippet" @click="show(snippet)"></button>
-                        <button v-if="Auth.check() && Auth.isOwner(snippet)" class="button is-danger fa fa-trash-alt" title="delete the snippet" @click="destroy(snippet)"></button>
+                        <button class="button is-success fa fa-clipboard" :title="$t('copy code to the clipboard')"></button>
+                        <button class="button is-info fa fa-eye" :title="$t('show the snippet')" @click="show(snippet)"></button>
+                        <button v-if="Auth.check() && Auth.isOwner(snippet)" class="button is-danger fa fa-trash-alt" :title="$t('delete the snippet')" @click="destroy(snippet)"></button>
                         <button v-if="Auth.check()" class="button is-info fa fa-cog is-pulled-right" @click="show_editor_settings = true"></button>
                     </div>
                     <ring-loader v-else class="is-narrow"></ring-loader>
                     <hr>
                     <div>
-                        <p v-if="snippet.user"><b>Author:</b> {{ snippet.user.name }}</p>
+                        <p v-if="snippet.user"><b>{{ $t('Author') }}:</b> {{ snippet.user.name }}</p>
                         <ring-loader v-else class="is-narrow"></ring-loader>
                     </div>
                     <hr>
                     <div>
-                        <p v-if="snippet.id"><b>Title:</b> {{ snippet.title }}</p>
+                        <p v-if="snippet.id"><b>{{ $t('Title') }}:</b> {{ snippet.title }}</p>
                         <ring-loader v-else class="is-narrow"></ring-loader>
                     </div>
                     <hr>
                     <div class="field">
                         <div v-if="snippet.id" class="control">
-                            <label for="description">Description:</label>
-                            <input class="input" id="description" type="text" placeholder="max symbols 2000" v-model="snippet_copy.description">
+                            <label for="description">$t('Description'):</label>
+                            <input class="input" id="description" type="text" :placeholder="$t('max symbols 2000')" v-model="snippet_copy.description">
                             <span v-for="error in errors.description" class="title is-6 has-text-danger">{{ error }}</span>
                         </div>
                         <ring-loader v-else class="is-narrow"></ring-loader>
                     </div>
                     <hr>
                     <div>
-                        <p v-if="snippet.id"><b>Created: </b> {{ snippet.created_at_for_humans }}</p>
+                        <p v-if="snippet.id"><b>{{ $t('Created') }}: </b> {{ snippet.created_at_for_humans }}</p>
                         <ring-loader v-else class="is-narrow"></ring-loader>
                     </div>
                     <hr>
                     <div>
-                        <p v-if="snippet.id"><b>Last update: </b> {{ snippet.updated_at_for_humans }}</p>
+                        <p v-if="snippet.id"><b>{{ $t('Last update') }}: </b> {{ snippet.updated_at_for_humans }}</p>
                         <ring-loader v-else class="is-narrow"></ring-loader>
                     </div>
                     <hr>
                     <div>
                         <div v-if="snippet.id" class="field">
                             <div class="control">
-                                <div><b>Tags:</b></div>
+                                <div><b>{{ $t('Tags') }}:</b></div>
                                 <label for="tags"></label>
-                                <input class="input" id="tags" type="text" placeholder="php, c#, full stack, bash'" v-model="fresh_tags">
+                                <input class="input" id="tags" type="text" :placeholder="$t('php, c#, full stack, bash')" v-model="fresh_tags">
                             </div>
                         </div>
                         <div class="field">
@@ -61,16 +61,16 @@
                     <hr>
                     <div>
                         <div v-if="snippet.id">
-                            <p v-if="snippet.forks_quantity > 0" v-for="fork in snippet.forks"><b>Fork:</b> <a :href="'/snippets/' + fork.id">{{ fork.title }}</a></p>
-                            <p v-if="snippet.forks_quantity == 0"><b>Forks:</b>0</p>
+                            <p v-if="snippet.forks_quantity > 0" v-for="fork in snippet.forks"><b>{{ $t('Fork') }}:</b> <a :href="'/snippets/' + fork.id">{{ fork.title }}</a></p>
+                            <p v-if="snippet.forks_quantity == 0"><b>{{ $t('Forks') }}:</b>0</p>
                         </div>
                         <ring-loader v-if="!snippet.id" class="is-narrow"></ring-loader>
                     </div>
                     <hr>
                     <div>
                         <div v-if="snippet.id">
-                            <p v-if="snippet.parent"><b>Forked from:</b> <a :href="'/snippets/' + snippet.parent.id">{{ snippet.parent.title }}</a></p>
-                            <p v-if="snippet.parent == undefined"><b>Do not have parent fork</b></p>
+                            <p v-if="snippet.parent"><b>{{ $t('Forked from') }}:</b> <a :href="'/snippets/' + snippet.parent.id">{{ snippet.parent.title }}</a></p>
+                            <p v-if="snippet.parent == undefined"><b>{{ $t('Do not have parent fork') }}</b></p>
                         </div>
                         <ring-loader v-if="!snippet.id" class="is-narrow"></ring-loader>
                     </div>
@@ -85,7 +85,7 @@
                 </div>
                 <div class="columns">
                     <div class="column">
-                        <button class="button is-success is-large is-fullwidth" @click="update()">UPDATE</button>
+                        <button class="button is-success is-large is-fullwidth" @click="update()">{{ $t('UPDATE') }}</button>
                     </div>
                 </div>
             </div>
@@ -139,6 +139,7 @@
             }
         },
         mounted() {
+            document.querySelector('title').innerHTML = this.$t('edit the snippet')
             axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(response => {
                 response.data.settings = JSON.parse(response.data.settings)
                 this.snippet = response.data
@@ -150,13 +151,13 @@
         methods:{
             validateForm() {
                 if (this.snippet.description.trim().length > 2000) {
-                    this.errors.description.push('Description cannot be more then 2000 symbols.')
+                    this.errors.description.push(this.$t('Description cannot be more then 2000 symbols.'))
                 }
                 if (this.snippet.body.length < 1) {
-                    this.errors.body.push('Snippet is required.')
+                    this.errors.body.push(this.$t('Snippet is required.'))
                 }
                 if (this.snippet.body.length > 100000) {
-                    this.errors.body.push('Snippet cannot be more then 100 000 symbols.')
+                    this.errors.body.push(this.$t('Snippet cannot be more then 100 000 symbols.'))
                 }
 
                 return (this.errors.description.length + this.errors.body.length) < 1
@@ -183,7 +184,7 @@
                         this.error({message: error.toString()})
                     })
                     response.then(response => {
-                        this.success({message: 'Snippet was updated successful.'})
+                        this.success({message: this.$t('Snippet was updated successful.')})
                         if (this.snippet.tags.length) {
                             this.snippet.tags.map(tag => {
                                 axios.post(`/api/tags/${tag.id}/?api_token=` + this.Auth.getApiToken(), {
@@ -211,14 +212,14 @@
             },
             destroy(snippet) {
                 Event.$emit('show-message', {
-                    message: 'Do you confirm deletion?',
+                    message: this.$t('Do you confirm deletion?'),
                     type: 'warning',
                     callback: () => {
                         axios.post('/api/snippets/' + snippet.id + '?api_token=' + this.Auth.getApiToken(), {
                             _method: 'DELETE'
                         }).then(response => {
                             this.$router.push({ name: 'snippets.index' })
-                            this.success({message: 'Snippet was successful deleted. Also all of his tag and fans.'})
+                            this.success({message: this.$t('Snippet was successful deleted. Also all of his tag and fans.')})
                         }).catch(error => {
                             this.error({message: error.toString()})
                         })

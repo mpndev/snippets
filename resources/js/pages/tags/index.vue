@@ -29,7 +29,7 @@
     <div v-if="tagsCollection.length">
         <div class="columns is-centered">
             <div class="column is-3">
-                <h2 class="box title is-2 has-text-centered has-text-primary">All available tags</h2>
+                <h2 class="box title is-2 has-text-centered has-text-primary">{{ $t('All available tags') }}</h2>
             </div>
         </div>
         <div class="section">
@@ -60,6 +60,7 @@ export default {
         }
     },
     mounted() {
+        document.querySelector('title').innerHTML = this.$t('tags')
         axios.get('/api/tags').then(response => {
             this.tags = response.data
         })

@@ -8,7 +8,7 @@
 </style>
 
 <template>
-    <codemirror id="body" :options="options" placeholder="min symbols 1, max symbols 100 000" v-model="newCode" @input="onCmCodeChange"></codemirror>
+    <codemirror id="body" :options="options" :placeholder="$t('min symbols 1, max symbols 100 000')" v-model="newCode" @input="onCmCodeChange"></codemirror>
 </template>
 
 <script>

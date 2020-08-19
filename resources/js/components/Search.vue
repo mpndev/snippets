@@ -3,25 +3,25 @@
         <div class="columns">
             <div class="column is-4">
                 <div class="tags">
-                    <span v-if="Auth.check()" class="tag is-rounded has-cursor-pointer is-unselectable" :class="{'is-info': my_snippets}" @click="toggleFilter('my_snippets')">my snippets</span>
-                    <span v-if="Auth.check()" class="tag is-rounded has-cursor-pointer is-unselectable" :class="{'is-info': favorite_snippets}" @click="toggleFilter('favorite_snippets')">my favorite snippets</span>
-                    <span v-if="Auth.check()" class="tag is-rounded has-cursor-pointer is-unselectable" :class="{'is-info': forked_snippets}" @click="toggleFilter('forked_snippets')">my snippets that was extended</span>
-                    <span v-if="Auth.check()" class="tag is-rounded has-cursor-pointer is-unselectable" :class="{'is-info': forks_snippets}" @click="toggleFilter('forks_snippets')">snippets that extends my snippets</span>
-                    <span class="tag is-rounded has-cursor-pointer is-unselectable" :class="{'is-info': latest}" @click="toggleFilter('latest')">latest</span>
-                    <span v-if="show_reset_filters_button" class="tag is-rounded has-cursor-pointer is-unselectable is-warning" @click="resetFilters">reset filters</span>
+                    <span v-if="Auth.check()" class="tag is-rounded has-cursor-pointer is-unselectable" :class="{'is-info': my_snippets}" @click="toggleFilter('my_snippets')">{{ $t('my snippets') }}</span>
+                    <span v-if="Auth.check()" class="tag is-rounded has-cursor-pointer is-unselectable" :class="{'is-info': favorite_snippets}" @click="toggleFilter('favorite_snippets')">{{ $t('my favorite snippets') }}</span>
+                    <span v-if="Auth.check()" class="tag is-rounded has-cursor-pointer is-unselectable" :class="{'is-info': forked_snippets}" @click="toggleFilter('forked_snippets')">{{ $t('my snippets that was extended') }}</span>
+                    <span v-if="Auth.check()" class="tag is-rounded has-cursor-pointer is-unselectable" :class="{'is-info': forks_snippets}" @click="toggleFilter('forks_snippets')">{{ $t('snippets that extends my snippets') }}</span>
+                    <span class="tag is-rounded has-cursor-pointer is-unselectable" :class="{'is-info': latest}" @click="toggleFilter('latest')">{{ $t('latest') }}</span>
+                    <span v-if="show_reset_filters_button" class="tag is-rounded has-cursor-pointer is-unselectable is-warning" @click="resetFilters">{{ $t('reset filters') }}</span>
                 </div>
             </div>
             <div class="column is-4">
                 <div class="field">
                     <label>
-                        <textarea id="tags" class="textarea" cols="30" rows="2" placeholder="Filter by tags. Separate them with comma: js, bash, drupal 8, php" v-model="tags" @keyup="debauncedTagsSearch"></textarea>
+                        <textarea id="tags" class="textarea" cols="30" rows="2" :placeholder="$t('Filter by tags. Separate them with comma: js, bash, drupal 8, php')" v-model="tags" @keyup="debauncedTagsSearch"></textarea>
                     </label>
                 </div>
             </div>
             <div class="column is-3 is-offset-1 field has-addon">
                 <div class="field has-addons">
                     <div class="control is-expanded">
-                        <input id="search" class="input is-rounded" type="text" placeholder="looking for..." v-model="search" @keyup="debauncedSearch" @keyup.enter="searchRun('search')">
+                        <input id="search" class="input is-rounded" type="text" :placeholder="$t('looking for...')" v-model="search" @keyup="debauncedSearch" @keyup.enter="searchRun('search')">
                     </div>
                 </div>
                 <p class="title is-7 has-text-info is-unselectable">{{search_button_text}}</p>
@@ -118,21 +118,21 @@
                 let text = ''
                 let is_first = true
                 let options = [
-                    this.my_snippets ? ' was created from you' : '',
-                    this.favorite_snippets ? 'you like' : '',
-                    this.forked_snippets ? 'have forks' : '',
-                    this.forks_snippets ? 'extends my snippets' : '',
-                    this.search ? 'contains string - "'+this.search+'" in title, body or description' : '',
-                    this.tags ? 'have tags: "'+this.tags+'"' : '',
-                    this.latest ? ' are ordered by creation time' : '',
-                    this.snippets_by_author ? ' belongs to specific author' : '',
-                    this.snippets_by_day ? ' are created on specific day' : ''
+                    this.my_snippets ? this.$t(' was created from you') : '',
+                    this.favorite_snippets ? this.$t('you like') : '',
+                    this.forked_snippets ? this.$t('have forks') : '',
+                    this.forks_snippets ? this.$t('extends my snippets') : '',
+                    this.search ? `${this.$t('contains string')} - "${this.search}" ${this.$t('in title, body or description')}` : '',
+                    this.tags ? `${this.$t('have tags')}: "${this.tags}"` : '',
+                    this.latest ? this.$t(' are ordered by creation time') : '',
+                    this.snippets_by_author ? this.$t(' belongs to specific author') : '',
+                    this.snippets_by_day ? this.$t(' are created on specific day') : ''
                 ]
                 if (options.some(option => option.length > 0)) {
-                    text += 'Looking for snipiites that '
+                    text += this.$t('Looking for snipiites that ')
                     options.map(option => {
                         if (option.length) {
-                            text += (!is_first ? ' and ' : '')+option
+                            text += (!is_first ? this.$t(' and ') : '')+option
                             is_first = false
                         }
                     })

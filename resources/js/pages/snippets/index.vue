@@ -44,7 +44,7 @@
                     <div v-if="!has_results" class="columns is-centered">
                         <div v-if="!show_rings" class="column">
                             <div class="colun"></div>
-                            <p class="title has-text-centered is-3">No results found.</p>
+                            <p class="title has-text-centered is-3">{{ $t('No results found.') }}</p>
                         </div>
                     </div>
                     <div v-if="show_rings" v-for="i in 5" class="box">
@@ -121,6 +121,7 @@
             }
         },
         mounted() {
+            document.querySelector('title').innerHTML = this.$t('all snippets')
             axios.get('https://sv443.net/jokeapi/v2/joke/Programming').then(response => {
                 if (response.data.type == 'single') {
                     this.joke.single = response.data.joke

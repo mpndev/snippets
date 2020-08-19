@@ -7,7 +7,7 @@
 <template>
     <aside v-if="most_liked_snippets.length" class="menu">
         <p class="menu-label title is-6">
-            Top 5 liked snippets:
+            {{ $t('Top 5 liked snippets') }}:
         </p>
         <ul class="menu-list">
             <li v-for="snippet in most_liked_snippets">

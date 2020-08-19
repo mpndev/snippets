@@ -1,20 +1,20 @@
 <template>
     <div>
         <div class="field">
-            <label class="label">Name</label>
+            <label class="label">{{ $t('Name') }}</label>
             <div class="control">
                 <input class="input" type="text" v-model="name" @focusin="resetErrors">
                 <p class="has-text-danger" v-for="error in errors.name">{{ error }}</p>
             </div>
         </div>
         <div class="field">
-            <label class="label">Password</label>
+            <label class="label">{{ $t('Password') }}</label>
             <div class="control">
                 <input class="input" type="password" v-model="password" @focusin="resetErrors">
             </div>
         </div>
         <div class="control">
-            <button class="button is-link" @click="login">Login</button>
+            <button class="button is-link" @click="login">{{ $t('Login') }}</button>
         </div>
     </div>
 </template>
@@ -31,6 +31,9 @@
                 }
             }
         },
+        mounted() {
+            document.querySelector('title').innerHTML = this.$t('login')
+        },
         methods: {
             resetErrors() {
                 this.errors.name = []
@@ -42,7 +45,7 @@
                     name: this.name,
                     password: this.password
                 }).then(response => {
-                    this.success({message: `Welcome ${response.data.name}!`})
+                    this.success({message: `${this.$t('Welcome')} ${response.data.name}!`})
                     this.Auth.update(response.data)
                     this.$router.push({ name: 'snippets.index' })
                 }).catch(error => {

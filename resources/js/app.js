@@ -12,6 +12,15 @@ import Auth from './Auth'
 import 'bulma/css/bulma.css'
 import 'bulma-helpers/css/bulma-helpers.min.css'
 import TextHighlight from 'vue-text-highlight'
+import VueI18n from "vue-i18n"
+import translations from "./translations.json"
+
+Vue.use(VueI18n)
+const lang = localStorage.getItem('locale') || 'bg'
+const i18n = new VueI18n({
+    locale: lang,
+    messages: translations
+})
 
 window.axios = axios
 window.Event = new Vue()
@@ -46,6 +55,7 @@ Vue.component('text-highlight', TextHighlight)
 
 let app = new Vue({
     el: '#app',
+    i18n: i18n,
     router: new VueRouter(routes),
     components: {
         navbar: Navbar

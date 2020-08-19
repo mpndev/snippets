@@ -2498,7 +2498,7 @@ __webpack_require__.r(__webpack_exports__);
         _method: 'DELETE'
       }).then(function (response) {
         _this.success({
-          message: "See ya later ".concat(_this.Auth.getName(), "!")
+          message: "".concat(_this.$t('See ya later'), " ").concat(_this.Auth.getName(), "!")
         });
 
         _this.Auth.logout();
@@ -2747,17 +2747,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return query;
     },
     search_button_text: function search_button_text() {
+      var _this = this;
+
       var text = '';
       var is_first = true;
-      var options = [this.my_snippets ? ' was created from you' : '', this.favorite_snippets ? 'you like' : '', this.forked_snippets ? 'have forks' : '', this.forks_snippets ? 'extends my snippets' : '', this.search ? 'contains string - "' + this.search + '" in title, body or description' : '', this.tags ? 'have tags: "' + this.tags + '"' : '', this.latest ? ' are ordered by creation time' : '', this.snippets_by_author ? ' belongs to specific author' : '', this.snippets_by_day ? ' are created on specific day' : ''];
+      var options = [this.my_snippets ? this.$t(' was created from you') : '', this.favorite_snippets ? this.$t('you like') : '', this.forked_snippets ? this.$t('have forks') : '', this.forks_snippets ? this.$t('extends my snippets') : '', this.search ? "".concat(this.$t('contains string'), " - \"").concat(this.search, "\" ").concat(this.$t('in title, body or description')) : '', this.tags ? "".concat(this.$t('have tags'), ": \"").concat(this.tags, "\"") : '', this.latest ? this.$t(' are ordered by creation time') : '', this.snippets_by_author ? this.$t(' belongs to specific author') : '', this.snippets_by_day ? this.$t(' are created on specific day') : ''];
 
       if (options.some(function (option) {
         return option.length > 0;
       })) {
-        text += 'Looking for snipiites that ';
+        text += this.$t('Looking for snipiites that ');
         options.map(function (option) {
           if (option.length) {
-            text += (!is_first ? ' and ' : '') + option;
+            text += (!is_first ? _this.$t(' and ') : '') + option;
             is_first = false;
           }
         });
@@ -2874,7 +2876,7 @@ __webpack_require__.r(__webpack_exports__);
 
       this.$copyText(this.snippet.body).then(function () {
         _this.$parent.success({
-          message: 'Copied to clipbord.'
+          message: _this.$t('Copied to clipbord.')
         });
 
         axios.post("/api/snippets/actions/copy/".concat(_this.snippet.id), {
@@ -2884,7 +2886,7 @@ __webpack_require__.r(__webpack_exports__);
         });
       }, function () {
         _this.$parent.warn({
-          message: 'Cannot copy snippet. Maybe your browser do not allow this.'
+          message: "".concat(_this.$t('Cannot copy snippet.'), " ").concat(_this.$t('Maybe your browser do not allow this.'))
         });
       });
     },
@@ -2908,7 +2910,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       Event.$emit('show-message', {
-        message: 'Do you confirm deletion?',
+        message: this.$t('Do you confirm deletion?'),
         type: 'warning',
         callback: function callback() {
           axios.post('/api/snippets/' + snippet.id + '?api_token=' + _this2.Auth.getApiToken(), {
@@ -2917,7 +2919,7 @@ __webpack_require__.r(__webpack_exports__);
             _this2.$emit('snippet-was-deleted', snippet.id);
 
             _this2.$parent.success({
-              message: 'Snippet is deleted.'
+              message: _this2.$t('Snippet is deleted.')
             });
           })["catch"](function (error) {
             _this2.$parent.error({
@@ -2953,7 +2955,7 @@ __webpack_require__.r(__webpack_exports__);
         _this3.Auth.addToFavoriteSnippets(snippet);
 
         _this3.$parent.success({
-          message: 'Snippet was added to yours favorite snippets.'
+          message: _this3.$t('Snippet was added to yours favorite snippets.')
         });
 
         _this3.$emit('favorite-was-changed', snippet);
@@ -2973,7 +2975,7 @@ __webpack_require__.r(__webpack_exports__);
         _this4.Auth.removeFromFavoriteSnippets(snippet);
 
         _this4.$parent.success({
-          message: 'Snippet was removed from yours favorite snippets.'
+          message: _this4.$t('Snippet was removed from yours favorite snippets.')
         });
 
         _this4.$emit('favorite-was-changed', snippet);
@@ -3033,7 +3035,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({});
+/* harmony default export */ __webpack_exports__["default"] = ({
+  mounted: function mounted() {
+    document.querySelector('title').innerHTML = this.$t('404 not found!');
+  }
+});
 
 /***/ }),
 
@@ -3078,6 +3084,9 @@ __webpack_require__.r(__webpack_exports__);
       }
     };
   },
+  mounted: function mounted() {
+    document.querySelector('title').innerHTML = this.$t('login');
+  },
   methods: {
     resetErrors: function resetErrors() {
       this.errors.name = [];
@@ -3091,7 +3100,7 @@ __webpack_require__.r(__webpack_exports__);
         password: this.password
       }).then(function (response) {
         _this.success({
-          message: "Welcome ".concat(response.data.name, "!")
+          message: "".concat(_this.$t('Welcome'), " ").concat(response.data.name, "!")
         });
 
         _this.Auth.update(response.data);
@@ -3191,6 +3200,9 @@ __webpack_require__.r(__webpack_exports__);
       }
     };
   },
+  mounted: function mounted() {
+    document.querySelector('title').innerHTML = this.$t('registration');
+  },
   methods: {
     resetErrors: function resetErrors() {
       this.errors.name = [];
@@ -3199,19 +3211,19 @@ __webpack_require__.r(__webpack_exports__);
     },
     validateFields: function validateFields() {
       if (this.name.length < 2) {
-        this.errors.name.push('Name must be more then 1 symbols.');
+        this.errors.name.push(this.$t('Name must be more then 1 symbols.'));
       }
 
       if (this.name.length > 255) {
-        this.errors.name.push('Name must be less then 256 symbols.');
+        this.errors.name.push(this.$t('Name must be less then 256 symbols.'));
       }
 
       if (this.password.length < 8) {
-        this.errors.password.push('Password must be more then 7 symbols.');
+        this.errors.password.push(this.$t('Password must be more then 7 symbols.'));
       }
 
       if (this.password !== this.password_confirmation) {
-        this.errors.password_confirmation.push('Password Confirmation and Password must be the same.');
+        this.errors.password_confirmation.push(this.$t('Password Confirmation and Password must be the same.'));
       }
     },
     register: function register() {
@@ -3454,26 +3466,29 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return _toConsumableArray(new Set(tags));
     }
   },
+  mounted: function mounted() {
+    document.querySelector('title').innerHTML = this.$t('create a snippet');
+  },
   methods: {
     validateForm: function validateForm() {
       if (this.snippet.title.trim().length < 1) {
-        this.errors.title.push('Title is required.');
+        this.errors.title.push(this.$t('Title is required.'));
       }
 
       if (this.snippet.title.trim().length > 255) {
-        this.errors.title.push('Title cannot be more then 255 symbols.');
+        this.errors.title.push(this.$t('Title cannot be more then 255 symbols.'));
       }
 
       if (this.snippet.description.trim().length > 2000) {
-        this.errors.description.push('Description cannot be more then 2000 symbols.');
+        this.errors.description.push(this.$t('Description cannot be more then 2000 symbols.'));
       }
 
       if (this.snippet.body.length < 1) {
-        this.errors.body.push('Snippet is required.');
+        this.errors.body.push(this.$t('Snippet is required.'));
       }
 
       if (this.snippet.body.length > 100000) {
-        this.errors.body.push('Snippet cannot be more then 100 000 symbols.');
+        this.errors.body.push(this.$t('Snippet cannot be more then 100 000 symbols.'));
       }
 
       return this.errors.title.length + this.errors.description.length + this.errors.body.length < 1;
@@ -3512,7 +3527,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           });
 
           _this.success({
-            message: 'Snippet was created successful.'
+            message: _this.$t('Snippet was created successful.')
           });
 
           if (_this.tags.length) {
@@ -3522,7 +3537,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 snippet: snippet_id
               }).then(function (inner_response) {
                 _this.success({
-                  message: "\"".concat(inner_response.data.name, "\" tag was added to the snippet.")
+                  message: "\"".concat(inner_response.data.name, "\" ").concat(_this.$t('tag was added to the snippet.'))
                 });
               })["catch"](function (inner_error) {
                 _this.error({
@@ -3738,6 +3753,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   mounted: function mounted() {
     var _this2 = this;
 
+    document.querySelector('title').innerHTML = this.$t('edit the snippet');
     axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(function (response) {
       response.data.settings = JSON.parse(response.data.settings);
       _this2.snippet = response.data;
@@ -3754,15 +3770,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   methods: {
     validateForm: function validateForm() {
       if (this.snippet.description.trim().length > 2000) {
-        this.errors.description.push('Description cannot be more then 2000 symbols.');
+        this.errors.description.push(this.$t('Description cannot be more then 2000 symbols.'));
       }
 
       if (this.snippet.body.length < 1) {
-        this.errors.body.push('Snippet is required.');
+        this.errors.body.push(this.$t('Snippet is required.'));
       }
 
       if (this.snippet.body.length > 100000) {
-        this.errors.body.push('Snippet cannot be more then 100 000 symbols.');
+        this.errors.body.push(this.$t('Snippet cannot be more then 100 000 symbols.'));
       }
 
       return this.errors.description.length + this.errors.body.length < 1;
@@ -3800,7 +3816,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         });
         response.then(function (response) {
           _this3.success({
-            message: 'Snippet was updated successful.'
+            message: _this3.$t('Snippet was updated successful.')
           });
 
           if (_this3.snippet.tags.length) {
@@ -3844,7 +3860,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this4 = this;
 
       Event.$emit('show-message', {
-        message: 'Do you confirm deletion?',
+        message: this.$t('Do you confirm deletion?'),
         type: 'warning',
         callback: function callback() {
           axios.post('/api/snippets/' + snippet.id + '?api_token=' + _this4.Auth.getApiToken(), {
@@ -3855,7 +3871,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             });
 
             _this4.success({
-              message: 'Snippet was successful deleted. Also all of his tag and fans.'
+              message: _this4.$t('Snippet was successful deleted. Also all of his tag and fans.')
             });
           })["catch"](function (error) {
             _this4.error({
@@ -4014,6 +4030,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   mounted: function mounted() {
     var _this = this;
 
+    document.querySelector('title').innerHTML = this.$t('create a fork');
     axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(function (response) {
       response.data.settings = JSON.parse(response.data.settings);
       _this.parent = response.data;
@@ -4056,27 +4073,27 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   methods: {
     validateForm: function validateForm() {
       if (this.snippet.title.trim().length < 1) {
-        this.errors.title.push('Title is required.');
+        this.errors.title.push(this.$t('Title is required.'));
       }
 
       if (this.snippet.title.trim().length > 255) {
-        this.errors.title.push('Title cannot be more then 255 symbols.');
+        this.errors.title.push(this.$t('Title cannot be more then 255 symbols.'));
       }
 
       if (this.snippet.title == this.parent.title) {
-        this.errors.title.push('Fork title cannot be the same as the parent snippet title.');
+        this.errors.title.push(this.$t('Fork title cannot be the same as the parent snippet title.'));
       }
 
       if (this.snippet.description.trim().length > 2000) {
-        this.errors.description.push('Description cannot be more then 2000 symbols.');
+        this.errors.description.push(this.$t('Description cannot be more then 2000 symbols.'));
       }
 
       if (this.snippet.body.length < 1) {
-        this.errors.body.push('Snippet is required.');
+        this.errors.body.push(this.$t('Snippet is required.'));
       }
 
       if (this.snippet.body.length > 100000) {
-        this.errors.body.push('Snippet cannot be more then 100 000 symbols.');
+        this.errors.body.push(this.$t('Snippet cannot be more then 100 000 symbols.'));
       }
 
       return this.errors.title.length + this.errors.description.length + this.errors.body.length < 1;
@@ -4109,7 +4126,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           var snippet_id = response.data.id;
 
           _this3.success({
-            message: 'Fork was created successful.'
+            message: _this3.$t('Fork was created successful.')
           });
 
           if (_this3.tags.length) {
@@ -4119,7 +4136,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 snippet: snippet_id
               }).then(function (inner_response) {
                 _this3.success({
-                  message: "\"".concat(inner_response.data.name, "\" tag was added to the snippet.")
+                  message: "\"".concat(inner_response.data.name, "\" ").concat(_this3.$t('tag was added to the snippet.'))
                 });
               })["catch"](function (inner_error) {
                 _this3.error({
@@ -4305,6 +4322,7 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this = this;
 
+    document.querySelector('title').innerHTML = this.$t('all snippets');
     axios.get('https://sv443.net/jokeapi/v2/joke/Programming').then(function (response) {
       if (response.data.type == 'single') {
         _this.joke.single = response.data.joke;
@@ -4498,6 +4516,7 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this = this;
 
+    document.querySelector('title').innerHTML = this.$t('snippet');
     axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(function (response) {
       response.data.settings = JSON.parse(response.data.settings);
       _this.snippet = response.data;
@@ -4522,11 +4541,11 @@ __webpack_require__.r(__webpack_exports__);
 
       this.$copyText(this.snippet.body).then(function () {
         _this2.success({
-          message: 'Copied to clipbord.'
+          message: _this2.$t('Copied to clipbord.')
         });
       }, function () {
         _this2.warn({
-          message: 'Maybe your browser do not allow this.'
+          message: _this2.$t('Maybe your browser do not allow this.')
         });
       });
     },
@@ -4542,7 +4561,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this3 = this;
 
       Event.$emit('show-message', {
-        message: 'Do you confirm deletion?',
+        message: this.$t('Do you confirm deletion?'),
         type: 'warning',
         callback: function callback() {
           axios.post('/api/snippets/' + snippet.id + '?api_token=' + _this3.Auth.getApiToken(), {
@@ -4553,7 +4572,7 @@ __webpack_require__.r(__webpack_exports__);
             });
 
             _this3.success({
-              message: 'Snippet was successful deleted. Also all of his tag and fans.'
+              message: _this3.$t('Snippet was successful deleted. Also all of his tag and fans.')
             });
           })["catch"](function (error) {
             _this3.error({
@@ -4589,7 +4608,7 @@ __webpack_require__.r(__webpack_exports__);
         _this4.Auth.addToFavoriteSnippets(snippet);
 
         _this4.success({
-          message: 'Snippet was added to yours favorite snippets.'
+          message: _this4.$t('Snippet was added to yours favorite snippets.')
         });
       })["catch"](function (error) {
         _this4.error({
@@ -4607,7 +4626,7 @@ __webpack_require__.r(__webpack_exports__);
         _this5.Auth.removeFromFavoriteSnippets(snippet);
 
         _this5.success({
-          message: 'Snippet was removed from yours favorite snippets.'
+          message: _this5.$t('Snippet was removed from yours favorite snippets.')
         });
       })["catch"](function (error) {
         _this5.error({
@@ -4709,6 +4728,7 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this = this;
 
+    document.querySelector('title').innerHTML = this.$t('tags');
     axios.get('/api/tags').then(function (response) {
       _this.tags = response.data;
     });
@@ -40834,6 +40854,2168 @@ if (true) {
 
 /***/ }),
 
+/***/ "./node_modules/vue-i18n/dist/vue-i18n.esm.js":
+/*!****************************************************!*\
+  !*** ./node_modules/vue-i18n/dist/vue-i18n.esm.js ***!
+  \****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/*!
+ * vue-i18n v8.21.0 
+ * (c) 2020 kazuya kawaguchi
+ * Released under the MIT License.
+ */
+/*  */
+
+/**
+ * constants
+ */
+
+var numberFormatKeys = [
+  'style',
+  'currency',
+  'currencyDisplay',
+  'useGrouping',
+  'minimumIntegerDigits',
+  'minimumFractionDigits',
+  'maximumFractionDigits',
+  'minimumSignificantDigits',
+  'maximumSignificantDigits',
+  'localeMatcher',
+  'formatMatcher',
+  'unit'
+];
+
+/**
+ * utilities
+ */
+
+function warn (msg, err) {
+  if (typeof console !== 'undefined') {
+    console.warn('[vue-i18n] ' + msg);
+    /* istanbul ignore if */
+    if (err) {
+      console.warn(err.stack);
+    }
+  }
+}
+
+function error (msg, err) {
+  if (typeof console !== 'undefined') {
+    console.error('[vue-i18n] ' + msg);
+    /* istanbul ignore if */
+    if (err) {
+      console.error(err.stack);
+    }
+  }
+}
+
+var isArray = Array.isArray;
+
+function isObject (obj) {
+  return obj !== null && typeof obj === 'object'
+}
+
+function isBoolean (val) {
+  return typeof val === 'boolean'
+}
+
+function isString (val) {
+  return typeof val === 'string'
+}
+
+var toString = Object.prototype.toString;
+var OBJECT_STRING = '[object Object]';
+function isPlainObject (obj) {
+  return toString.call(obj) === OBJECT_STRING
+}
+
+function isNull (val) {
+  return val === null || val === undefined
+}
+
+function isFunction (val) {
+  return typeof val === 'function'
+}
+
+function parseArgs () {
+  var args = [], len = arguments.length;
+  while ( len-- ) args[ len ] = arguments[ len ];
+
+  var locale = null;
+  var params = null;
+  if (args.length === 1) {
+    if (isObject(args[0]) || isArray(args[0])) {
+      params = args[0];
+    } else if (typeof args[0] === 'string') {
+      locale = args[0];
+    }
+  } else if (args.length === 2) {
+    if (typeof args[0] === 'string') {
+      locale = args[0];
+    }
+    /* istanbul ignore if */
+    if (isObject(args[1]) || isArray(args[1])) {
+      params = args[1];
+    }
+  }
+
+  return { locale: locale, params: params }
+}
+
+function looseClone (obj) {
+  return JSON.parse(JSON.stringify(obj))
+}
+
+function remove (arr, item) {
+  if (arr.length) {
+    var index = arr.indexOf(item);
+    if (index > -1) {
+      return arr.splice(index, 1)
+    }
+  }
+}
+
+function includes (arr, item) {
+  return !!~arr.indexOf(item)
+}
+
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+function hasOwn (obj, key) {
+  return hasOwnProperty.call(obj, key)
+}
+
+function merge (target) {
+  var arguments$1 = arguments;
+
+  var output = Object(target);
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments$1[i];
+    if (source !== undefined && source !== null) {
+      var key = (void 0);
+      for (key in source) {
+        if (hasOwn(source, key)) {
+          if (isObject(source[key])) {
+            output[key] = merge(output[key], source[key]);
+          } else {
+            output[key] = source[key];
+          }
+        }
+      }
+    }
+  }
+  return output
+}
+
+function looseEqual (a, b) {
+  if (a === b) { return true }
+  var isObjectA = isObject(a);
+  var isObjectB = isObject(b);
+  if (isObjectA && isObjectB) {
+    try {
+      var isArrayA = isArray(a);
+      var isArrayB = isArray(b);
+      if (isArrayA && isArrayB) {
+        return a.length === b.length && a.every(function (e, i) {
+          return looseEqual(e, b[i])
+        })
+      } else if (!isArrayA && !isArrayB) {
+        var keysA = Object.keys(a);
+        var keysB = Object.keys(b);
+        return keysA.length === keysB.length && keysA.every(function (key) {
+          return looseEqual(a[key], b[key])
+        })
+      } else {
+        /* istanbul ignore next */
+        return false
+      }
+    } catch (e) {
+      /* istanbul ignore next */
+      return false
+    }
+  } else if (!isObjectA && !isObjectB) {
+    return String(a) === String(b)
+  } else {
+    return false
+  }
+}
+
+/*  */
+
+function extend (Vue) {
+  if (!Vue.prototype.hasOwnProperty('$i18n')) {
+    // $FlowFixMe
+    Object.defineProperty(Vue.prototype, '$i18n', {
+      get: function get () { return this._i18n }
+    });
+  }
+
+  Vue.prototype.$t = function (key) {
+    var values = [], len = arguments.length - 1;
+    while ( len-- > 0 ) values[ len ] = arguments[ len + 1 ];
+
+    var i18n = this.$i18n;
+    return i18n._t.apply(i18n, [ key, i18n.locale, i18n._getMessages(), this ].concat( values ))
+  };
+
+  Vue.prototype.$tc = function (key, choice) {
+    var values = [], len = arguments.length - 2;
+    while ( len-- > 0 ) values[ len ] = arguments[ len + 2 ];
+
+    var i18n = this.$i18n;
+    return i18n._tc.apply(i18n, [ key, i18n.locale, i18n._getMessages(), this, choice ].concat( values ))
+  };
+
+  Vue.prototype.$te = function (key, locale) {
+    var i18n = this.$i18n;
+    return i18n._te(key, i18n.locale, i18n._getMessages(), locale)
+  };
+
+  Vue.prototype.$d = function (value) {
+    var ref;
+
+    var args = [], len = arguments.length - 1;
+    while ( len-- > 0 ) args[ len ] = arguments[ len + 1 ];
+    return (ref = this.$i18n).d.apply(ref, [ value ].concat( args ))
+  };
+
+  Vue.prototype.$n = function (value) {
+    var ref;
+
+    var args = [], len = arguments.length - 1;
+    while ( len-- > 0 ) args[ len ] = arguments[ len + 1 ];
+    return (ref = this.$i18n).n.apply(ref, [ value ].concat( args ))
+  };
+}
+
+/*  */
+
+var mixin = {
+  beforeCreate: function beforeCreate () {
+    var options = this.$options;
+    options.i18n = options.i18n || (options.__i18n ? {} : null);
+
+    if (options.i18n) {
+      if (options.i18n instanceof VueI18n) {
+        // init locale messages via custom blocks
+        if (options.__i18n) {
+          try {
+            var localeMessages = {};
+            options.__i18n.forEach(function (resource) {
+              localeMessages = merge(localeMessages, JSON.parse(resource));
+            });
+            Object.keys(localeMessages).forEach(function (locale) {
+              options.i18n.mergeLocaleMessage(locale, localeMessages[locale]);
+            });
+          } catch (e) {
+            if (true) {
+              error("Cannot parse locale messages via custom blocks.", e);
+            }
+          }
+        }
+        this._i18n = options.i18n;
+        this._i18nWatcher = this._i18n.watchI18nData();
+      } else if (isPlainObject(options.i18n)) {
+        var rootI18n = this.$root && this.$root.$i18n && this.$root.$i18n instanceof VueI18n
+          ? this.$root.$i18n
+          : null;
+        // component local i18n
+        if (rootI18n) {
+          options.i18n.root = this.$root;
+          options.i18n.formatter = rootI18n.formatter;
+          options.i18n.fallbackLocale = rootI18n.fallbackLocale;
+          options.i18n.formatFallbackMessages = rootI18n.formatFallbackMessages;
+          options.i18n.silentTranslationWarn = rootI18n.silentTranslationWarn;
+          options.i18n.silentFallbackWarn = rootI18n.silentFallbackWarn;
+          options.i18n.pluralizationRules = rootI18n.pluralizationRules;
+          options.i18n.preserveDirectiveContent = rootI18n.preserveDirectiveContent;
+        }
+
+        // init locale messages via custom blocks
+        if (options.__i18n) {
+          try {
+            var localeMessages$1 = {};
+            options.__i18n.forEach(function (resource) {
+              localeMessages$1 = merge(localeMessages$1, JSON.parse(resource));
+            });
+            options.i18n.messages = localeMessages$1;
+          } catch (e) {
+            if (true) {
+              warn("Cannot parse locale messages via custom blocks.", e);
+            }
+          }
+        }
+
+        var ref = options.i18n;
+        var sharedMessages = ref.sharedMessages;
+        if (sharedMessages && isPlainObject(sharedMessages)) {
+          options.i18n.messages = merge(options.i18n.messages, sharedMessages);
+        }
+
+        this._i18n = new VueI18n(options.i18n);
+        this._i18nWatcher = this._i18n.watchI18nData();
+
+        if (options.i18n.sync === undefined || !!options.i18n.sync) {
+          this._localeWatcher = this.$i18n.watchLocale();
+        }
+
+        if (rootI18n) {
+          rootI18n.onComponentInstanceCreated(this._i18n);
+        }
+      } else {
+        if (true) {
+          warn("Cannot be interpreted 'i18n' option.");
+        }
+      }
+    } else if (this.$root && this.$root.$i18n && this.$root.$i18n instanceof VueI18n) {
+      // root i18n
+      this._i18n = this.$root.$i18n;
+    } else if (options.parent && options.parent.$i18n && options.parent.$i18n instanceof VueI18n) {
+      // parent i18n
+      this._i18n = options.parent.$i18n;
+    }
+  },
+
+  beforeMount: function beforeMount () {
+    var options = this.$options;
+    options.i18n = options.i18n || (options.__i18n ? {} : null);
+
+    if (options.i18n) {
+      if (options.i18n instanceof VueI18n) {
+        // init locale messages via custom blocks
+        this._i18n.subscribeDataChanging(this);
+        this._subscribing = true;
+      } else if (isPlainObject(options.i18n)) {
+        this._i18n.subscribeDataChanging(this);
+        this._subscribing = true;
+      } else {
+        if (true) {
+          warn("Cannot be interpreted 'i18n' option.");
+        }
+      }
+    } else if (this.$root && this.$root.$i18n && this.$root.$i18n instanceof VueI18n) {
+      this._i18n.subscribeDataChanging(this);
+      this._subscribing = true;
+    } else if (options.parent && options.parent.$i18n && options.parent.$i18n instanceof VueI18n) {
+      this._i18n.subscribeDataChanging(this);
+      this._subscribing = true;
+    }
+  },
+
+  beforeDestroy: function beforeDestroy () {
+    if (!this._i18n) { return }
+
+    var self = this;
+    this.$nextTick(function () {
+      if (self._subscribing) {
+        self._i18n.unsubscribeDataChanging(self);
+        delete self._subscribing;
+      }
+
+      if (self._i18nWatcher) {
+        self._i18nWatcher();
+        self._i18n.destroyVM();
+        delete self._i18nWatcher;
+      }
+
+      if (self._localeWatcher) {
+        self._localeWatcher();
+        delete self._localeWatcher;
+      }
+    });
+  }
+};
+
+/*  */
+
+var interpolationComponent = {
+  name: 'i18n',
+  functional: true,
+  props: {
+    tag: {
+      type: [String, Boolean, Object],
+      default: 'span'
+    },
+    path: {
+      type: String,
+      required: true
+    },
+    locale: {
+      type: String
+    },
+    places: {
+      type: [Array, Object]
+    }
+  },
+  render: function render (h, ref) {
+    var data = ref.data;
+    var parent = ref.parent;
+    var props = ref.props;
+    var slots = ref.slots;
+
+    var $i18n = parent.$i18n;
+    if (!$i18n) {
+      if (true) {
+        warn('Cannot find VueI18n instance!');
+      }
+      return
+    }
+
+    var path = props.path;
+    var locale = props.locale;
+    var places = props.places;
+    var params = slots();
+    var children = $i18n.i(
+      path,
+      locale,
+      onlyHasDefaultPlace(params) || places
+        ? useLegacyPlaces(params.default, places)
+        : params
+    );
+
+    var tag = (!!props.tag && props.tag !== true) || props.tag === false ? props.tag : 'span';
+    return tag ? h(tag, data, children) : children
+  }
+};
+
+function onlyHasDefaultPlace (params) {
+  var prop;
+  for (prop in params) {
+    if (prop !== 'default') { return false }
+  }
+  return Boolean(prop)
+}
+
+function useLegacyPlaces (children, places) {
+  var params = places ? createParamsFromPlaces(places) : {};
+
+  if (!children) { return params }
+
+  // Filter empty text nodes
+  children = children.filter(function (child) {
+    return child.tag || child.text.trim() !== ''
+  });
+
+  var everyPlace = children.every(vnodeHasPlaceAttribute);
+  if ( true && everyPlace) {
+    warn('`place` attribute is deprecated in next major version. Please switch to Vue slots.');
+  }
+
+  return children.reduce(
+    everyPlace ? assignChildPlace : assignChildIndex,
+    params
+  )
+}
+
+function createParamsFromPlaces (places) {
+  if (true) {
+    warn('`places` prop is deprecated in next major version. Please switch to Vue slots.');
+  }
+
+  return Array.isArray(places)
+    ? places.reduce(assignChildIndex, {})
+    : Object.assign({}, places)
+}
+
+function assignChildPlace (params, child) {
+  if (child.data && child.data.attrs && child.data.attrs.place) {
+    params[child.data.attrs.place] = child;
+  }
+  return params
+}
+
+function assignChildIndex (params, child, index) {
+  params[index] = child;
+  return params
+}
+
+function vnodeHasPlaceAttribute (vnode) {
+  return Boolean(vnode.data && vnode.data.attrs && vnode.data.attrs.place)
+}
+
+/*  */
+
+var numberComponent = {
+  name: 'i18n-n',
+  functional: true,
+  props: {
+    tag: {
+      type: [String, Boolean, Object],
+      default: 'span'
+    },
+    value: {
+      type: Number,
+      required: true
+    },
+    format: {
+      type: [String, Object]
+    },
+    locale: {
+      type: String
+    }
+  },
+  render: function render (h, ref) {
+    var props = ref.props;
+    var parent = ref.parent;
+    var data = ref.data;
+
+    var i18n = parent.$i18n;
+
+    if (!i18n) {
+      if (true) {
+        warn('Cannot find VueI18n instance!');
+      }
+      return null
+    }
+
+    var key = null;
+    var options = null;
+
+    if (isString(props.format)) {
+      key = props.format;
+    } else if (isObject(props.format)) {
+      if (props.format.key) {
+        key = props.format.key;
+      }
+
+      // Filter out number format options only
+      options = Object.keys(props.format).reduce(function (acc, prop) {
+        var obj;
+
+        if (includes(numberFormatKeys, prop)) {
+          return Object.assign({}, acc, ( obj = {}, obj[prop] = props.format[prop], obj ))
+        }
+        return acc
+      }, null);
+    }
+
+    var locale = props.locale || i18n.locale;
+    var parts = i18n._ntp(props.value, locale, key, options);
+
+    var values = parts.map(function (part, index) {
+      var obj;
+
+      var slot = data.scopedSlots && data.scopedSlots[part.type];
+      return slot ? slot(( obj = {}, obj[part.type] = part.value, obj.index = index, obj.parts = parts, obj )) : part.value
+    });
+
+    var tag = (!!props.tag && props.tag !== true) || props.tag === false ? props.tag : 'span';
+    return tag
+      ? h(tag, {
+        attrs: data.attrs,
+        'class': data['class'],
+        staticClass: data.staticClass
+      }, values)
+      : values
+  }
+};
+
+/*  */
+
+function bind (el, binding, vnode) {
+  if (!assert(el, vnode)) { return }
+
+  t(el, binding, vnode);
+}
+
+function update (el, binding, vnode, oldVNode) {
+  if (!assert(el, vnode)) { return }
+
+  var i18n = vnode.context.$i18n;
+  if (localeEqual(el, vnode) &&
+    (looseEqual(binding.value, binding.oldValue) &&
+     looseEqual(el._localeMessage, i18n.getLocaleMessage(i18n.locale)))) { return }
+
+  t(el, binding, vnode);
+}
+
+function unbind (el, binding, vnode, oldVNode) {
+  var vm = vnode.context;
+  if (!vm) {
+    warn('Vue instance does not exists in VNode context');
+    return
+  }
+
+  var i18n = vnode.context.$i18n || {};
+  if (!binding.modifiers.preserve && !i18n.preserveDirectiveContent) {
+    el.textContent = '';
+  }
+  el._vt = undefined;
+  delete el['_vt'];
+  el._locale = undefined;
+  delete el['_locale'];
+  el._localeMessage = undefined;
+  delete el['_localeMessage'];
+}
+
+function assert (el, vnode) {
+  var vm = vnode.context;
+  if (!vm) {
+    warn('Vue instance does not exists in VNode context');
+    return false
+  }
+
+  if (!vm.$i18n) {
+    warn('VueI18n instance does not exists in Vue instance');
+    return false
+  }
+
+  return true
+}
+
+function localeEqual (el, vnode) {
+  var vm = vnode.context;
+  return el._locale === vm.$i18n.locale
+}
+
+function t (el, binding, vnode) {
+  var ref$1, ref$2;
+
+  var value = binding.value;
+
+  var ref = parseValue(value);
+  var path = ref.path;
+  var locale = ref.locale;
+  var args = ref.args;
+  var choice = ref.choice;
+  if (!path && !locale && !args) {
+    warn('value type not supported');
+    return
+  }
+
+  if (!path) {
+    warn('`path` is required in v-t directive');
+    return
+  }
+
+  var vm = vnode.context;
+  if (choice != null) {
+    el._vt = el.textContent = (ref$1 = vm.$i18n).tc.apply(ref$1, [ path, choice ].concat( makeParams(locale, args) ));
+  } else {
+    el._vt = el.textContent = (ref$2 = vm.$i18n).t.apply(ref$2, [ path ].concat( makeParams(locale, args) ));
+  }
+  el._locale = vm.$i18n.locale;
+  el._localeMessage = vm.$i18n.getLocaleMessage(vm.$i18n.locale);
+}
+
+function parseValue (value) {
+  var path;
+  var locale;
+  var args;
+  var choice;
+
+  if (isString(value)) {
+    path = value;
+  } else if (isPlainObject(value)) {
+    path = value.path;
+    locale = value.locale;
+    args = value.args;
+    choice = value.choice;
+  }
+
+  return { path: path, locale: locale, args: args, choice: choice }
+}
+
+function makeParams (locale, args) {
+  var params = [];
+
+  locale && params.push(locale);
+  if (args && (Array.isArray(args) || isPlainObject(args))) {
+    params.push(args);
+  }
+
+  return params
+}
+
+var Vue;
+
+function install (_Vue) {
+  /* istanbul ignore if */
+  if ( true && install.installed && _Vue === Vue) {
+    warn('already installed.');
+    return
+  }
+  install.installed = true;
+
+  Vue = _Vue;
+
+  var version = (Vue.version && Number(Vue.version.split('.')[0])) || -1;
+  /* istanbul ignore if */
+  if ( true && version < 2) {
+    warn(("vue-i18n (" + (install.version) + ") need to use Vue 2.0 or later (Vue: " + (Vue.version) + ")."));
+    return
+  }
+
+  extend(Vue);
+  Vue.mixin(mixin);
+  Vue.directive('t', { bind: bind, update: update, unbind: unbind });
+  Vue.component(interpolationComponent.name, interpolationComponent);
+  Vue.component(numberComponent.name, numberComponent);
+
+  // use simple mergeStrategies to prevent i18n instance lose '__proto__'
+  var strats = Vue.config.optionMergeStrategies;
+  strats.i18n = function (parentVal, childVal) {
+    return childVal === undefined
+      ? parentVal
+      : childVal
+  };
+}
+
+/*  */
+
+var BaseFormatter = function BaseFormatter () {
+  this._caches = Object.create(null);
+};
+
+BaseFormatter.prototype.interpolate = function interpolate (message, values) {
+  if (!values) {
+    return [message]
+  }
+  var tokens = this._caches[message];
+  if (!tokens) {
+    tokens = parse(message);
+    this._caches[message] = tokens;
+  }
+  return compile(tokens, values)
+};
+
+
+
+var RE_TOKEN_LIST_VALUE = /^(?:\d)+/;
+var RE_TOKEN_NAMED_VALUE = /^(?:\w)+/;
+
+function parse (format) {
+  var tokens = [];
+  var position = 0;
+
+  var text = '';
+  while (position < format.length) {
+    var char = format[position++];
+    if (char === '{') {
+      if (text) {
+        tokens.push({ type: 'text', value: text });
+      }
+
+      text = '';
+      var sub = '';
+      char = format[position++];
+      while (char !== undefined && char !== '}') {
+        sub += char;
+        char = format[position++];
+      }
+      var isClosed = char === '}';
+
+      var type = RE_TOKEN_LIST_VALUE.test(sub)
+        ? 'list'
+        : isClosed && RE_TOKEN_NAMED_VALUE.test(sub)
+          ? 'named'
+          : 'unknown';
+      tokens.push({ value: sub, type: type });
+    } else if (char === '%') {
+      // when found rails i18n syntax, skip text capture
+      if (format[(position)] !== '{') {
+        text += char;
+      }
+    } else {
+      text += char;
+    }
+  }
+
+  text && tokens.push({ type: 'text', value: text });
+
+  return tokens
+}
+
+function compile (tokens, values) {
+  var compiled = [];
+  var index = 0;
+
+  var mode = Array.isArray(values)
+    ? 'list'
+    : isObject(values)
+      ? 'named'
+      : 'unknown';
+  if (mode === 'unknown') { return compiled }
+
+  while (index < tokens.length) {
+    var token = tokens[index];
+    switch (token.type) {
+      case 'text':
+        compiled.push(token.value);
+        break
+      case 'list':
+        compiled.push(values[parseInt(token.value, 10)]);
+        break
+      case 'named':
+        if (mode === 'named') {
+          compiled.push((values)[token.value]);
+        } else {
+          if (true) {
+            warn(("Type of token '" + (token.type) + "' and format of value '" + mode + "' don't match!"));
+          }
+        }
+        break
+      case 'unknown':
+        if (true) {
+          warn("Detect 'unknown' type of token!");
+        }
+        break
+    }
+    index++;
+  }
+
+  return compiled
+}
+
+/*  */
+
+/**
+ *  Path parser
+ *  - Inspired:
+ *    Vue.js Path parser
+ */
+
+// actions
+var APPEND = 0;
+var PUSH = 1;
+var INC_SUB_PATH_DEPTH = 2;
+var PUSH_SUB_PATH = 3;
+
+// states
+var BEFORE_PATH = 0;
+var IN_PATH = 1;
+var BEFORE_IDENT = 2;
+var IN_IDENT = 3;
+var IN_SUB_PATH = 4;
+var IN_SINGLE_QUOTE = 5;
+var IN_DOUBLE_QUOTE = 6;
+var AFTER_PATH = 7;
+var ERROR = 8;
+
+var pathStateMachine = [];
+
+pathStateMachine[BEFORE_PATH] = {
+  'ws': [BEFORE_PATH],
+  'ident': [IN_IDENT, APPEND],
+  '[': [IN_SUB_PATH],
+  'eof': [AFTER_PATH]
+};
+
+pathStateMachine[IN_PATH] = {
+  'ws': [IN_PATH],
+  '.': [BEFORE_IDENT],
+  '[': [IN_SUB_PATH],
+  'eof': [AFTER_PATH]
+};
+
+pathStateMachine[BEFORE_IDENT] = {
+  'ws': [BEFORE_IDENT],
+  'ident': [IN_IDENT, APPEND],
+  '0': [IN_IDENT, APPEND],
+  'number': [IN_IDENT, APPEND]
+};
+
+pathStateMachine[IN_IDENT] = {
+  'ident': [IN_IDENT, APPEND],
+  '0': [IN_IDENT, APPEND],
+  'number': [IN_IDENT, APPEND],
+  'ws': [IN_PATH, PUSH],
+  '.': [BEFORE_IDENT, PUSH],
+  '[': [IN_SUB_PATH, PUSH],
+  'eof': [AFTER_PATH, PUSH]
+};
+
+pathStateMachine[IN_SUB_PATH] = {
+  "'": [IN_SINGLE_QUOTE, APPEND],
+  '"': [IN_DOUBLE_QUOTE, APPEND],
+  '[': [IN_SUB_PATH, INC_SUB_PATH_DEPTH],
+  ']': [IN_PATH, PUSH_SUB_PATH],
+  'eof': ERROR,
+  'else': [IN_SUB_PATH, APPEND]
+};
+
+pathStateMachine[IN_SINGLE_QUOTE] = {
+  "'": [IN_SUB_PATH, APPEND],
+  'eof': ERROR,
+  'else': [IN_SINGLE_QUOTE, APPEND]
+};
+
+pathStateMachine[IN_DOUBLE_QUOTE] = {
+  '"': [IN_SUB_PATH, APPEND],
+  'eof': ERROR,
+  'else': [IN_DOUBLE_QUOTE, APPEND]
+};
+
+/**
+ * Check if an expression is a literal value.
+ */
+
+var literalValueRE = /^\s?(?:true|false|-?[\d.]+|'[^']*'|"[^"]*")\s?$/;
+function isLiteral (exp) {
+  return literalValueRE.test(exp)
+}
+
+/**
+ * Strip quotes from a string
+ */
+
+function stripQuotes (str) {
+  var a = str.charCodeAt(0);
+  var b = str.charCodeAt(str.length - 1);
+  return a === b && (a === 0x22 || a === 0x27)
+    ? str.slice(1, -1)
+    : str
+}
+
+/**
+ * Determine the type of a character in a keypath.
+ */
+
+function getPathCharType (ch) {
+  if (ch === undefined || ch === null) { return 'eof' }
+
+  var code = ch.charCodeAt(0);
+
+  switch (code) {
+    case 0x5B: // [
+    case 0x5D: // ]
+    case 0x2E: // .
+    case 0x22: // "
+    case 0x27: // '
+      return ch
+
+    case 0x5F: // _
+    case 0x24: // $
+    case 0x2D: // -
+      return 'ident'
+
+    case 0x09: // Tab
+    case 0x0A: // Newline
+    case 0x0D: // Return
+    case 0xA0:  // No-break space
+    case 0xFEFF:  // Byte Order Mark
+    case 0x2028:  // Line Separator
+    case 0x2029:  // Paragraph Separator
+      return 'ws'
+  }
+
+  return 'ident'
+}
+
+/**
+ * Format a subPath, return its plain form if it is
+ * a literal string or number. Otherwise prepend the
+ * dynamic indicator (*).
+ */
+
+function formatSubPath (path) {
+  var trimmed = path.trim();
+  // invalid leading 0
+  if (path.charAt(0) === '0' && isNaN(path)) { return false }
+
+  return isLiteral(trimmed) ? stripQuotes(trimmed) : '*' + trimmed
+}
+
+/**
+ * Parse a string path into an array of segments
+ */
+
+function parse$1 (path) {
+  var keys = [];
+  var index = -1;
+  var mode = BEFORE_PATH;
+  var subPathDepth = 0;
+  var c;
+  var key;
+  var newChar;
+  var type;
+  var transition;
+  var action;
+  var typeMap;
+  var actions = [];
+
+  actions[PUSH] = function () {
+    if (key !== undefined) {
+      keys.push(key);
+      key = undefined;
+    }
+  };
+
+  actions[APPEND] = function () {
+    if (key === undefined) {
+      key = newChar;
+    } else {
+      key += newChar;
+    }
+  };
+
+  actions[INC_SUB_PATH_DEPTH] = function () {
+    actions[APPEND]();
+    subPathDepth++;
+  };
+
+  actions[PUSH_SUB_PATH] = function () {
+    if (subPathDepth > 0) {
+      subPathDepth--;
+      mode = IN_SUB_PATH;
+      actions[APPEND]();
+    } else {
+      subPathDepth = 0;
+      if (key === undefined) { return false }
+      key = formatSubPath(key);
+      if (key === false) {
+        return false
+      } else {
+        actions[PUSH]();
+      }
+    }
+  };
+
+  function maybeUnescapeQuote () {
+    var nextChar = path[index + 1];
+    if ((mode === IN_SINGLE_QUOTE && nextChar === "'") ||
+      (mode === IN_DOUBLE_QUOTE && nextChar === '"')) {
+      index++;
+      newChar = '\\' + nextChar;
+      actions[APPEND]();
+      return true
+    }
+  }
+
+  while (mode !== null) {
+    index++;
+    c = path[index];
+
+    if (c === '\\' && maybeUnescapeQuote()) {
+      continue
+    }
+
+    type = getPathCharType(c);
+    typeMap = pathStateMachine[mode];
+    transition = typeMap[type] || typeMap['else'] || ERROR;
+
+    if (transition === ERROR) {
+      return // parse error
+    }
+
+    mode = transition[0];
+    action = actions[transition[1]];
+    if (action) {
+      newChar = transition[2];
+      newChar = newChar === undefined
+        ? c
+        : newChar;
+      if (action() === false) {
+        return
+      }
+    }
+
+    if (mode === AFTER_PATH) {
+      return keys
+    }
+  }
+}
+
+
+
+
+
+var I18nPath = function I18nPath () {
+  this._cache = Object.create(null);
+};
+
+/**
+ * External parse that check for a cache hit first
+ */
+I18nPath.prototype.parsePath = function parsePath (path) {
+  var hit = this._cache[path];
+  if (!hit) {
+    hit = parse$1(path);
+    if (hit) {
+      this._cache[path] = hit;
+    }
+  }
+  return hit || []
+};
+
+/**
+ * Get path value from path string
+ */
+I18nPath.prototype.getPathValue = function getPathValue (obj, path) {
+  if (!isObject(obj)) { return null }
+
+  var paths = this.parsePath(path);
+  if (paths.length === 0) {
+    return null
+  } else {
+    var length = paths.length;
+    var last = obj;
+    var i = 0;
+    while (i < length) {
+      var value = last[paths[i]];
+      if (value === undefined) {
+        return null
+      }
+      last = value;
+      i++;
+    }
+
+    return last
+  }
+};
+
+/*  */
+
+
+
+var htmlTagMatcher = /<\/?[\w\s="/.':;#-\/]+>/;
+var linkKeyMatcher = /(?:@(?:\.[a-z]+)?:(?:[\w\-_|.]+|\([\w\-_|.]+\)))/g;
+var linkKeyPrefixMatcher = /^@(?:\.([a-z]+))?:/;
+var bracketsMatcher = /[()]/g;
+var defaultModifiers = {
+  'upper': function (str) { return str.toLocaleUpperCase(); },
+  'lower': function (str) { return str.toLocaleLowerCase(); },
+  'capitalize': function (str) { return ("" + (str.charAt(0).toLocaleUpperCase()) + (str.substr(1))); }
+};
+
+var defaultFormatter = new BaseFormatter();
+
+var VueI18n = function VueI18n (options) {
+  var this$1 = this;
+  if ( options === void 0 ) options = {};
+
+  // Auto install if it is not done yet and `window` has `Vue`.
+  // To allow users to avoid auto-installation in some cases,
+  // this code should be placed here. See #290
+  /* istanbul ignore if */
+  if (!Vue && typeof window !== 'undefined' && window.Vue) {
+    install(window.Vue);
+  }
+
+  var locale = options.locale || 'en-US';
+  var fallbackLocale = options.fallbackLocale === false
+    ? false
+    : options.fallbackLocale || 'en-US';
+  var messages = options.messages || {};
+  var dateTimeFormats = options.dateTimeFormats || {};
+  var numberFormats = options.numberFormats || {};
+
+  this._vm = null;
+  this._formatter = options.formatter || defaultFormatter;
+  this._modifiers = options.modifiers || {};
+  this._missing = options.missing || null;
+  this._root = options.root || null;
+  this._sync = options.sync === undefined ? true : !!options.sync;
+  this._fallbackRoot = options.fallbackRoot === undefined
+    ? true
+    : !!options.fallbackRoot;
+  this._formatFallbackMessages = options.formatFallbackMessages === undefined
+    ? false
+    : !!options.formatFallbackMessages;
+  this._silentTranslationWarn = options.silentTranslationWarn === undefined
+    ? false
+    : options.silentTranslationWarn;
+  this._silentFallbackWarn = options.silentFallbackWarn === undefined
+    ? false
+    : !!options.silentFallbackWarn;
+  this._dateTimeFormatters = {};
+  this._numberFormatters = {};
+  this._path = new I18nPath();
+  this._dataListeners = [];
+  this._componentInstanceCreatedListener = options.componentInstanceCreatedListener || null;
+  this._preserveDirectiveContent = options.preserveDirectiveContent === undefined
+    ? false
+    : !!options.preserveDirectiveContent;
+  this.pluralizationRules = options.pluralizationRules || {};
+  this._warnHtmlInMessage = options.warnHtmlInMessage || 'off';
+  this._postTranslation = options.postTranslation || null;
+
+  /**
+   * @param choice {number} a choice index given by the input to $tc: `$tc('path.to.rule', choiceIndex)`
+   * @param choicesLength {number} an overall amount of available choices
+   * @returns a final choice index
+  */
+  this.getChoiceIndex = function (choice, choicesLength) {
+    var thisPrototype = Object.getPrototypeOf(this$1);
+    if (thisPrototype && thisPrototype.getChoiceIndex) {
+      var prototypeGetChoiceIndex = (thisPrototype.getChoiceIndex);
+      return (prototypeGetChoiceIndex).call(this$1, choice, choicesLength)
+    }
+
+    // Default (old) getChoiceIndex implementation - english-compatible
+    var defaultImpl = function (_choice, _choicesLength) {
+      _choice = Math.abs(_choice);
+
+      if (_choicesLength === 2) {
+        return _choice
+          ? _choice > 1
+            ? 1
+            : 0
+          : 1
+      }
+
+      return _choice ? Math.min(_choice, 2) : 0
+    };
+
+    if (this$1.locale in this$1.pluralizationRules) {
+      return this$1.pluralizationRules[this$1.locale].apply(this$1, [choice, choicesLength])
+    } else {
+      return defaultImpl(choice, choicesLength)
+    }
+  };
+
+
+  this._exist = function (message, key) {
+    if (!message || !key) { return false }
+    if (!isNull(this$1._path.getPathValue(message, key))) { return true }
+    // fallback for flat key
+    if (message[key]) { return true }
+    return false
+  };
+
+  if (this._warnHtmlInMessage === 'warn' || this._warnHtmlInMessage === 'error') {
+    Object.keys(messages).forEach(function (locale) {
+      this$1._checkLocaleMessage(locale, this$1._warnHtmlInMessage, messages[locale]);
+    });
+  }
+
+  this._initVM({
+    locale: locale,
+    fallbackLocale: fallbackLocale,
+    messages: messages,
+    dateTimeFormats: dateTimeFormats,
+    numberFormats: numberFormats
+  });
+};
+
+var prototypeAccessors = { vm: { configurable: true },messages: { configurable: true },dateTimeFormats: { configurable: true },numberFormats: { configurable: true },availableLocales: { configurable: true },locale: { configurable: true },fallbackLocale: { configurable: true },formatFallbackMessages: { configurable: true },missing: { configurable: true },formatter: { configurable: true },silentTranslationWarn: { configurable: true },silentFallbackWarn: { configurable: true },preserveDirectiveContent: { configurable: true },warnHtmlInMessage: { configurable: true },postTranslation: { configurable: true } };
+
+VueI18n.prototype._checkLocaleMessage = function _checkLocaleMessage (locale, level, message) {
+  var paths = [];
+
+  var fn = function (level, locale, message, paths) {
+    if (isPlainObject(message)) {
+      Object.keys(message).forEach(function (key) {
+        var val = message[key];
+        if (isPlainObject(val)) {
+          paths.push(key);
+          paths.push('.');
+          fn(level, locale, val, paths);
+          paths.pop();
+          paths.pop();
+        } else {
+          paths.push(key);
+          fn(level, locale, val, paths);
+          paths.pop();
+        }
+      });
+    } else if (isArray(message)) {
+      message.forEach(function (item, index) {
+        if (isPlainObject(item)) {
+          paths.push(("[" + index + "]"));
+          paths.push('.');
+          fn(level, locale, item, paths);
+          paths.pop();
+          paths.pop();
+        } else {
+          paths.push(("[" + index + "]"));
+          fn(level, locale, item, paths);
+          paths.pop();
+        }
+      });
+    } else if (isString(message)) {
+      var ret = htmlTagMatcher.test(message);
+      if (ret) {
+        var msg = "Detected HTML in message '" + message + "' of keypath '" + (paths.join('')) + "' at '" + locale + "'. Consider component interpolation with '<i18n>' to avoid XSS. See https://bit.ly/2ZqJzkp";
+        if (level === 'warn') {
+          warn(msg);
+        } else if (level === 'error') {
+          error(msg);
+        }
+      }
+    }
+  };
+
+  fn(level, locale, message, paths);
+};
+
+VueI18n.prototype._initVM = function _initVM (data) {
+  var silent = Vue.config.silent;
+  Vue.config.silent = true;
+  this._vm = new Vue({ data: data });
+  Vue.config.silent = silent;
+};
+
+VueI18n.prototype.destroyVM = function destroyVM () {
+  this._vm.$destroy();
+};
+
+VueI18n.prototype.subscribeDataChanging = function subscribeDataChanging (vm) {
+  this._dataListeners.push(vm);
+};
+
+VueI18n.prototype.unsubscribeDataChanging = function unsubscribeDataChanging (vm) {
+  remove(this._dataListeners, vm);
+};
+
+VueI18n.prototype.watchI18nData = function watchI18nData () {
+  var self = this;
+  return this._vm.$watch('$data', function () {
+    var i = self._dataListeners.length;
+    while (i--) {
+      Vue.nextTick(function () {
+        self._dataListeners[i] && self._dataListeners[i].$forceUpdate();
+      });
+    }
+  }, { deep: true })
+};
+
+VueI18n.prototype.watchLocale = function watchLocale () {
+  /* istanbul ignore if */
+  if (!this._sync || !this._root) { return null }
+  var target = this._vm;
+  return this._root.$i18n.vm.$watch('locale', function (val) {
+    target.$set(target, 'locale', val);
+    target.$forceUpdate();
+  }, { immediate: true })
+};
+
+VueI18n.prototype.onComponentInstanceCreated = function onComponentInstanceCreated (newI18n) {
+  if (this._componentInstanceCreatedListener) {
+    this._componentInstanceCreatedListener(newI18n, this);
+  }
+};
+
+prototypeAccessors.vm.get = function () { return this._vm };
+
+prototypeAccessors.messages.get = function () { return looseClone(this._getMessages()) };
+prototypeAccessors.dateTimeFormats.get = function () { return looseClone(this._getDateTimeFormats()) };
+prototypeAccessors.numberFormats.get = function () { return looseClone(this._getNumberFormats()) };
+prototypeAccessors.availableLocales.get = function () { return Object.keys(this.messages).sort() };
+
+prototypeAccessors.locale.get = function () { return this._vm.locale };
+prototypeAccessors.locale.set = function (locale) {
+  this._vm.$set(this._vm, 'locale', locale);
+};
+
+prototypeAccessors.fallbackLocale.get = function () { return this._vm.fallbackLocale };
+prototypeAccessors.fallbackLocale.set = function (locale) {
+  this._localeChainCache = {};
+  this._vm.$set(this._vm, 'fallbackLocale', locale);
+};
+
+prototypeAccessors.formatFallbackMessages.get = function () { return this._formatFallbackMessages };
+prototypeAccessors.formatFallbackMessages.set = function (fallback) { this._formatFallbackMessages = fallback; };
+
+prototypeAccessors.missing.get = function () { return this._missing };
+prototypeAccessors.missing.set = function (handler) { this._missing = handler; };
+
+prototypeAccessors.formatter.get = function () { return this._formatter };
+prototypeAccessors.formatter.set = function (formatter) { this._formatter = formatter; };
+
+prototypeAccessors.silentTranslationWarn.get = function () { return this._silentTranslationWarn };
+prototypeAccessors.silentTranslationWarn.set = function (silent) { this._silentTranslationWarn = silent; };
+
+prototypeAccessors.silentFallbackWarn.get = function () { return this._silentFallbackWarn };
+prototypeAccessors.silentFallbackWarn.set = function (silent) { this._silentFallbackWarn = silent; };
+
+prototypeAccessors.preserveDirectiveContent.get = function () { return this._preserveDirectiveContent };
+prototypeAccessors.preserveDirectiveContent.set = function (preserve) { this._preserveDirectiveContent = preserve; };
+
+prototypeAccessors.warnHtmlInMessage.get = function () { return this._warnHtmlInMessage };
+prototypeAccessors.warnHtmlInMessage.set = function (level) {
+    var this$1 = this;
+
+  var orgLevel = this._warnHtmlInMessage;
+  this._warnHtmlInMessage = level;
+  if (orgLevel !== level && (level === 'warn' || level === 'error')) {
+    var messages = this._getMessages();
+    Object.keys(messages).forEach(function (locale) {
+      this$1._checkLocaleMessage(locale, this$1._warnHtmlInMessage, messages[locale]);
+    });
+  }
+};
+
+prototypeAccessors.postTranslation.get = function () { return this._postTranslation };
+prototypeAccessors.postTranslation.set = function (handler) { this._postTranslation = handler; };
+
+VueI18n.prototype._getMessages = function _getMessages () { return this._vm.messages };
+VueI18n.prototype._getDateTimeFormats = function _getDateTimeFormats () { return this._vm.dateTimeFormats };
+VueI18n.prototype._getNumberFormats = function _getNumberFormats () { return this._vm.numberFormats };
+
+VueI18n.prototype._warnDefault = function _warnDefault (locale, key, result, vm, values, interpolateMode) {
+  if (!isNull(result)) { return result }
+  if (this._missing) {
+    var missingRet = this._missing.apply(null, [locale, key, vm, values]);
+    if (isString(missingRet)) {
+      return missingRet
+    }
+  } else {
+    if ( true && !this._isSilentTranslationWarn(key)) {
+      warn(
+        "Cannot translate the value of keypath '" + key + "'. " +
+        'Use the value of keypath as default.'
+      );
+    }
+  }
+
+  if (this._formatFallbackMessages) {
+    var parsedArgs = parseArgs.apply(void 0, values);
+    return this._render(key, interpolateMode, parsedArgs.params, key)
+  } else {
+    return key
+  }
+};
+
+VueI18n.prototype._isFallbackRoot = function _isFallbackRoot (val) {
+  return !val && !isNull(this._root) && this._fallbackRoot
+};
+
+VueI18n.prototype._isSilentFallbackWarn = function _isSilentFallbackWarn (key) {
+  return this._silentFallbackWarn instanceof RegExp
+    ? this._silentFallbackWarn.test(key)
+    : this._silentFallbackWarn
+};
+
+VueI18n.prototype._isSilentFallback = function _isSilentFallback (locale, key) {
+  return this._isSilentFallbackWarn(key) && (this._isFallbackRoot() || locale !== this.fallbackLocale)
+};
+
+VueI18n.prototype._isSilentTranslationWarn = function _isSilentTranslationWarn (key) {
+  return this._silentTranslationWarn instanceof RegExp
+    ? this._silentTranslationWarn.test(key)
+    : this._silentTranslationWarn
+};
+
+VueI18n.prototype._interpolate = function _interpolate (
+  locale,
+  message,
+  key,
+  host,
+  interpolateMode,
+  values,
+  visitedLinkStack
+) {
+  if (!message) { return null }
+
+  var pathRet = this._path.getPathValue(message, key);
+  if (isArray(pathRet) || isPlainObject(pathRet)) { return pathRet }
+
+  var ret;
+  if (isNull(pathRet)) {
+    /* istanbul ignore else */
+    if (isPlainObject(message)) {
+      ret = message[key];
+      if (!(isString(ret) || isFunction(ret))) {
+        if ( true && !this._isSilentTranslationWarn(key) && !this._isSilentFallback(locale, key)) {
+          warn(("Value of key '" + key + "' is not a string or function !"));
+        }
+        return null
+      }
+    } else {
+      return null
+    }
+  } else {
+    /* istanbul ignore else */
+    if (isString(pathRet) || isFunction(pathRet)) {
+      ret = pathRet;
+    } else {
+      if ( true && !this._isSilentTranslationWarn(key) && !this._isSilentFallback(locale, key)) {
+        warn(("Value of key '" + key + "' is not a string or function!"));
+      }
+      return null
+    }
+  }
+
+  // Check for the existence of links within the translated string
+  if (isString(ret) && (ret.indexOf('@:') >= 0 || ret.indexOf('@.') >= 0)) {
+    ret = this._link(locale, message, ret, host, 'raw', values, visitedLinkStack);
+  }
+
+  return this._render(ret, interpolateMode, values, key)
+};
+
+VueI18n.prototype._link = function _link (
+  locale,
+  message,
+  str,
+  host,
+  interpolateMode,
+  values,
+  visitedLinkStack
+) {
+  var ret = str;
+
+  // Match all the links within the local
+  // We are going to replace each of
+  // them with its translation
+  var matches = ret.match(linkKeyMatcher);
+  for (var idx in matches) {
+    // ie compatible: filter custom array
+    // prototype method
+    if (!matches.hasOwnProperty(idx)) {
+      continue
+    }
+    var link = matches[idx];
+    var linkKeyPrefixMatches = link.match(linkKeyPrefixMatcher);
+    var linkPrefix = linkKeyPrefixMatches[0];
+      var formatterName = linkKeyPrefixMatches[1];
+
+    // Remove the leading @:, @.case: and the brackets
+    var linkPlaceholder = link.replace(linkPrefix, '').replace(bracketsMatcher, '');
+
+    if (includes(visitedLinkStack, linkPlaceholder)) {
+      if (true) {
+        warn(("Circular reference found. \"" + link + "\" is already visited in the chain of " + (visitedLinkStack.reverse().join(' <- '))));
+      }
+      return ret
+    }
+    visitedLinkStack.push(linkPlaceholder);
+
+    // Translate the link
+    var translated = this._interpolate(
+      locale, message, linkPlaceholder, host,
+      interpolateMode === 'raw' ? 'string' : interpolateMode,
+      interpolateMode === 'raw' ? undefined : values,
+      visitedLinkStack
+    );
+
+    if (this._isFallbackRoot(translated)) {
+      if ( true && !this._isSilentTranslationWarn(linkPlaceholder)) {
+        warn(("Fall back to translate the link placeholder '" + linkPlaceholder + "' with root locale."));
+      }
+      /* istanbul ignore if */
+      if (!this._root) { throw Error('unexpected error') }
+      var root = this._root.$i18n;
+      translated = root._translate(
+        root._getMessages(), root.locale, root.fallbackLocale,
+        linkPlaceholder, host, interpolateMode, values
+      );
+    }
+    translated = this._warnDefault(
+      locale, linkPlaceholder, translated, host,
+      isArray(values) ? values : [values],
+      interpolateMode
+    );
+
+    if (this._modifiers.hasOwnProperty(formatterName)) {
+      translated = this._modifiers[formatterName](translated);
+    } else if (defaultModifiers.hasOwnProperty(formatterName)) {
+      translated = defaultModifiers[formatterName](translated);
+    }
+
+    visitedLinkStack.pop();
+
+    // Replace the link with the translated
+    ret = !translated ? ret : ret.replace(link, translated);
+  }
+
+  return ret
+};
+
+VueI18n.prototype._createMessageContext = function _createMessageContext (values) {
+  var _list = isArray(values) ? values : [];
+  var _named = isObject(values) ? values : {};
+  var list = function (index) { return _list[index]; };
+  var named = function (key) { return _named[key]; };
+  return {
+    list: list,
+    named: named
+  }
+};
+
+VueI18n.prototype._render = function _render (message, interpolateMode, values, path) {
+  if (isFunction(message)) {
+    return message(this._createMessageContext(values))
+  }
+
+  var ret = this._formatter.interpolate(message, values, path);
+
+  // If the custom formatter refuses to work - apply the default one
+  if (!ret) {
+    ret = defaultFormatter.interpolate(message, values, path);
+  }
+
+  // if interpolateMode is **not** 'string' ('row'),
+  // return the compiled data (e.g. ['foo', VNode, 'bar']) with formatter
+  return interpolateMode === 'string' && !isString(ret) ? ret.join('') : ret
+};
+
+VueI18n.prototype._appendItemToChain = function _appendItemToChain (chain, item, blocks) {
+  var follow = false;
+  if (!includes(chain, item)) {
+    follow = true;
+    if (item) {
+      follow = item[item.length - 1] !== '!';
+      item = item.replace(/!/g, '');
+      chain.push(item);
+      if (blocks && blocks[item]) {
+        follow = blocks[item];
+      }
+    }
+  }
+  return follow
+};
+
+VueI18n.prototype._appendLocaleToChain = function _appendLocaleToChain (chain, locale, blocks) {
+  var follow;
+  var tokens = locale.split('-');
+  do {
+    var item = tokens.join('-');
+    follow = this._appendItemToChain(chain, item, blocks);
+    tokens.splice(-1, 1);
+  } while (tokens.length && (follow === true))
+  return follow
+};
+
+VueI18n.prototype._appendBlockToChain = function _appendBlockToChain (chain, block, blocks) {
+  var follow = true;
+  for (var i = 0; (i < block.length) && (isBoolean(follow)); i++) {
+    var locale = block[i];
+    if (isString(locale)) {
+      follow = this._appendLocaleToChain(chain, locale, blocks);
+    }
+  }
+  return follow
+};
+
+VueI18n.prototype._getLocaleChain = function _getLocaleChain (start, fallbackLocale) {
+  if (start === '') { return [] }
+
+  if (!this._localeChainCache) {
+    this._localeChainCache = {};
+  }
+
+  var chain = this._localeChainCache[start];
+  if (!chain) {
+    if (!fallbackLocale) {
+      fallbackLocale = this.fallbackLocale;
+    }
+    chain = [];
+
+    // first block defined by start
+    var block = [start];
+
+    // while any intervening block found
+    while (isArray(block)) {
+      block = this._appendBlockToChain(
+        chain,
+        block,
+        fallbackLocale
+      );
+    }
+
+    // last block defined by default
+    var defaults;
+    if (isArray(fallbackLocale)) {
+      defaults = fallbackLocale;
+    } else if (isObject(fallbackLocale)) {
+      /* $FlowFixMe */
+      if (fallbackLocale['default']) {
+        defaults = fallbackLocale['default'];
+      } else {
+        defaults = null;
+      }
+    } else {
+      defaults = fallbackLocale;
+    }
+
+    // convert defaults to array
+    if (isString(defaults)) {
+      block = [defaults];
+    } else {
+      block = defaults;
+    }
+    if (block) {
+      this._appendBlockToChain(
+        chain,
+        block,
+        null
+      );
+    }
+    this._localeChainCache[start] = chain;
+  }
+  return chain
+};
+
+VueI18n.prototype._translate = function _translate (
+  messages,
+  locale,
+  fallback,
+  key,
+  host,
+  interpolateMode,
+  args
+) {
+  var chain = this._getLocaleChain(locale, fallback);
+  var res;
+  for (var i = 0; i < chain.length; i++) {
+    var step = chain[i];
+    res =
+      this._interpolate(step, messages[step], key, host, interpolateMode, args, [key]);
+    if (!isNull(res)) {
+      if (step !== locale && "development" !== 'production' && !this._isSilentTranslationWarn(key) && !this._isSilentFallbackWarn(key)) {
+        warn(("Fall back to translate the keypath '" + key + "' with '" + step + "' locale."));
+      }
+      return res
+    }
+  }
+  return null
+};
+
+VueI18n.prototype._t = function _t (key, _locale, messages, host) {
+    var ref;
+
+    var values = [], len = arguments.length - 4;
+    while ( len-- > 0 ) values[ len ] = arguments[ len + 4 ];
+  if (!key) { return '' }
+
+  var parsedArgs = parseArgs.apply(void 0, values);
+  var locale = parsedArgs.locale || _locale;
+
+  var ret = this._translate(
+    messages, locale, this.fallbackLocale, key,
+    host, 'string', parsedArgs.params
+  );
+  if (this._isFallbackRoot(ret)) {
+    if ( true && !this._isSilentTranslationWarn(key) && !this._isSilentFallbackWarn(key)) {
+      warn(("Fall back to translate the keypath '" + key + "' with root locale."));
+    }
+    /* istanbul ignore if */
+    if (!this._root) { throw Error('unexpected error') }
+    return (ref = this._root).$t.apply(ref, [ key ].concat( values ))
+  } else {
+    ret = this._warnDefault(locale, key, ret, host, values, 'string');
+    if (this._postTranslation && ret !== null && ret !== undefined) {
+      ret = this._postTranslation(ret, key);
+    }
+    return ret
+  }
+};
+
+VueI18n.prototype.t = function t (key) {
+    var ref;
+
+    var values = [], len = arguments.length - 1;
+    while ( len-- > 0 ) values[ len ] = arguments[ len + 1 ];
+  return (ref = this)._t.apply(ref, [ key, this.locale, this._getMessages(), null ].concat( values ))
+};
+
+VueI18n.prototype._i = function _i (key, locale, messages, host, values) {
+  var ret =
+    this._translate(messages, locale, this.fallbackLocale, key, host, 'raw', values);
+  if (this._isFallbackRoot(ret)) {
+    if ( true && !this._isSilentTranslationWarn(key)) {
+      warn(("Fall back to interpolate the keypath '" + key + "' with root locale."));
+    }
+    if (!this._root) { throw Error('unexpected error') }
+    return this._root.$i18n.i(key, locale, values)
+  } else {
+    return this._warnDefault(locale, key, ret, host, [values], 'raw')
+  }
+};
+
+VueI18n.prototype.i = function i (key, locale, values) {
+  /* istanbul ignore if */
+  if (!key) { return '' }
+
+  if (!isString(locale)) {
+    locale = this.locale;
+  }
+
+  return this._i(key, locale, this._getMessages(), null, values)
+};
+
+VueI18n.prototype._tc = function _tc (
+  key,
+  _locale,
+  messages,
+  host,
+  choice
+) {
+    var ref;
+
+    var values = [], len = arguments.length - 5;
+    while ( len-- > 0 ) values[ len ] = arguments[ len + 5 ];
+  if (!key) { return '' }
+  if (choice === undefined) {
+    choice = 1;
+  }
+
+  var predefined = { 'count': choice, 'n': choice };
+  var parsedArgs = parseArgs.apply(void 0, values);
+  parsedArgs.params = Object.assign(predefined, parsedArgs.params);
+  values = parsedArgs.locale === null ? [parsedArgs.params] : [parsedArgs.locale, parsedArgs.params];
+  return this.fetchChoice((ref = this)._t.apply(ref, [ key, _locale, messages, host ].concat( values )), choice)
+};
+
+VueI18n.prototype.fetchChoice = function fetchChoice (message, choice) {
+  /* istanbul ignore if */
+  if (!message && !isString(message)) { return null }
+  var choices = message.split('|');
+
+  choice = this.getChoiceIndex(choice, choices.length);
+  if (!choices[choice]) { return message }
+  return choices[choice].trim()
+};
+
+VueI18n.prototype.tc = function tc (key, choice) {
+    var ref;
+
+    var values = [], len = arguments.length - 2;
+    while ( len-- > 0 ) values[ len ] = arguments[ len + 2 ];
+  return (ref = this)._tc.apply(ref, [ key, this.locale, this._getMessages(), null, choice ].concat( values ))
+};
+
+VueI18n.prototype._te = function _te (key, locale, messages) {
+    var args = [], len = arguments.length - 3;
+    while ( len-- > 0 ) args[ len ] = arguments[ len + 3 ];
+
+  var _locale = parseArgs.apply(void 0, args).locale || locale;
+  return this._exist(messages[_locale], key)
+};
+
+VueI18n.prototype.te = function te (key, locale) {
+  return this._te(key, this.locale, this._getMessages(), locale)
+};
+
+VueI18n.prototype.getLocaleMessage = function getLocaleMessage (locale) {
+  return looseClone(this._vm.messages[locale] || {})
+};
+
+VueI18n.prototype.setLocaleMessage = function setLocaleMessage (locale, message) {
+  if (this._warnHtmlInMessage === 'warn' || this._warnHtmlInMessage === 'error') {
+    this._checkLocaleMessage(locale, this._warnHtmlInMessage, message);
+  }
+  this._vm.$set(this._vm.messages, locale, message);
+};
+
+VueI18n.prototype.mergeLocaleMessage = function mergeLocaleMessage (locale, message) {
+  if (this._warnHtmlInMessage === 'warn' || this._warnHtmlInMessage === 'error') {
+    this._checkLocaleMessage(locale, this._warnHtmlInMessage, message);
+  }
+  this._vm.$set(this._vm.messages, locale, merge({}, this._vm.messages[locale] || {}, message));
+};
+
+VueI18n.prototype.getDateTimeFormat = function getDateTimeFormat (locale) {
+  return looseClone(this._vm.dateTimeFormats[locale] || {})
+};
+
+VueI18n.prototype.setDateTimeFormat = function setDateTimeFormat (locale, format) {
+  this._vm.$set(this._vm.dateTimeFormats, locale, format);
+  this._clearDateTimeFormat(locale, format);
+};
+
+VueI18n.prototype.mergeDateTimeFormat = function mergeDateTimeFormat (locale, format) {
+  this._vm.$set(this._vm.dateTimeFormats, locale, merge(this._vm.dateTimeFormats[locale] || {}, format));
+  this._clearDateTimeFormat(locale, format);
+};
+
+VueI18n.prototype._clearDateTimeFormat = function _clearDateTimeFormat (locale, format) {
+  for (var key in format) {
+    var id = locale + "__" + key;
+
+    if (!this._dateTimeFormatters.hasOwnProperty(id)) {
+      continue
+    }
+
+    delete this._dateTimeFormatters[id];
+  }
+};
+
+VueI18n.prototype._localizeDateTime = function _localizeDateTime (
+  value,
+  locale,
+  fallback,
+  dateTimeFormats,
+  key
+) {
+  var _locale = locale;
+  var formats = dateTimeFormats[_locale];
+
+  var chain = this._getLocaleChain(locale, fallback);
+  for (var i = 0; i < chain.length; i++) {
+    var current = _locale;
+    var step = chain[i];
+    formats = dateTimeFormats[step];
+    _locale = step;
+    // fallback locale
+    if (isNull(formats) || isNull(formats[key])) {
+      if (step !== locale && "development" !== 'production' && !this._isSilentTranslationWarn(key) && !this._isSilentFallbackWarn(key)) {
+        warn(("Fall back to '" + step + "' datetime formats from '" + current + "' datetime formats."));
+      }
+    } else {
+      break
+    }
+  }
+
+  if (isNull(formats) || isNull(formats[key])) {
+    return null
+  } else {
+    var format = formats[key];
+    var id = _locale + "__" + key;
+    var formatter = this._dateTimeFormatters[id];
+    if (!formatter) {
+      formatter = this._dateTimeFormatters[id] = new Intl.DateTimeFormat(_locale, format);
+    }
+    return formatter.format(value)
+  }
+};
+
+VueI18n.prototype._d = function _d (value, locale, key) {
+  /* istanbul ignore if */
+  if ( true && !VueI18n.availabilities.dateTimeFormat) {
+    warn('Cannot format a Date value due to not supported Intl.DateTimeFormat.');
+    return ''
+  }
+
+  if (!key) {
+    return new Intl.DateTimeFormat(locale).format(value)
+  }
+
+  var ret =
+    this._localizeDateTime(value, locale, this.fallbackLocale, this._getDateTimeFormats(), key);
+  if (this._isFallbackRoot(ret)) {
+    if ( true && !this._isSilentTranslationWarn(key) && !this._isSilentFallbackWarn(key)) {
+      warn(("Fall back to datetime localization of root: key '" + key + "'."));
+    }
+    /* istanbul ignore if */
+    if (!this._root) { throw Error('unexpected error') }
+    return this._root.$i18n.d(value, key, locale)
+  } else {
+    return ret || ''
+  }
+};
+
+VueI18n.prototype.d = function d (value) {
+    var args = [], len = arguments.length - 1;
+    while ( len-- > 0 ) args[ len ] = arguments[ len + 1 ];
+
+  var locale = this.locale;
+  var key = null;
+
+  if (args.length === 1) {
+    if (isString(args[0])) {
+      key = args[0];
+    } else if (isObject(args[0])) {
+      if (args[0].locale) {
+        locale = args[0].locale;
+      }
+      if (args[0].key) {
+        key = args[0].key;
+      }
+    }
+  } else if (args.length === 2) {
+    if (isString(args[0])) {
+      key = args[0];
+    }
+    if (isString(args[1])) {
+      locale = args[1];
+    }
+  }
+
+  return this._d(value, locale, key)
+};
+
+VueI18n.prototype.getNumberFormat = function getNumberFormat (locale) {
+  return looseClone(this._vm.numberFormats[locale] || {})
+};
+
+VueI18n.prototype.setNumberFormat = function setNumberFormat (locale, format) {
+  this._vm.$set(this._vm.numberFormats, locale, format);
+  this._clearNumberFormat(locale, format);
+};
+
+VueI18n.prototype.mergeNumberFormat = function mergeNumberFormat (locale, format) {
+  this._vm.$set(this._vm.numberFormats, locale, merge(this._vm.numberFormats[locale] || {}, format));
+  this._clearNumberFormat(locale, format);
+};
+
+VueI18n.prototype._clearNumberFormat = function _clearNumberFormat (locale, format) {
+  for (var key in format) {
+    var id = locale + "__" + key;
+
+    if (!this._numberFormatters.hasOwnProperty(id)) {
+      continue
+    }
+
+    delete this._numberFormatters[id];
+  }
+};
+
+VueI18n.prototype._getNumberFormatter = function _getNumberFormatter (
+  value,
+  locale,
+  fallback,
+  numberFormats,
+  key,
+  options
+) {
+  var _locale = locale;
+  var formats = numberFormats[_locale];
+
+  var chain = this._getLocaleChain(locale, fallback);
+  for (var i = 0; i < chain.length; i++) {
+    var current = _locale;
+    var step = chain[i];
+    formats = numberFormats[step];
+    _locale = step;
+    // fallback locale
+    if (isNull(formats) || isNull(formats[key])) {
+      if (step !== locale && "development" !== 'production' && !this._isSilentTranslationWarn(key) && !this._isSilentFallbackWarn(key)) {
+        warn(("Fall back to '" + step + "' number formats from '" + current + "' number formats."));
+      }
+    } else {
+      break
+    }
+  }
+
+  if (isNull(formats) || isNull(formats[key])) {
+    return null
+  } else {
+    var format = formats[key];
+
+    var formatter;
+    if (options) {
+      // If options specified - create one time number formatter
+      formatter = new Intl.NumberFormat(_locale, Object.assign({}, format, options));
+    } else {
+      var id = _locale + "__" + key;
+      formatter = this._numberFormatters[id];
+      if (!formatter) {
+        formatter = this._numberFormatters[id] = new Intl.NumberFormat(_locale, format);
+      }
+    }
+    return formatter
+  }
+};
+
+VueI18n.prototype._n = function _n (value, locale, key, options) {
+  /* istanbul ignore if */
+  if (!VueI18n.availabilities.numberFormat) {
+    if (true) {
+      warn('Cannot format a Number value due to not supported Intl.NumberFormat.');
+    }
+    return ''
+  }
+
+  if (!key) {
+    var nf = !options ? new Intl.NumberFormat(locale) : new Intl.NumberFormat(locale, options);
+    return nf.format(value)
+  }
+
+  var formatter = this._getNumberFormatter(value, locale, this.fallbackLocale, this._getNumberFormats(), key, options);
+  var ret = formatter && formatter.format(value);
+  if (this._isFallbackRoot(ret)) {
+    if ( true && !this._isSilentTranslationWarn(key) && !this._isSilentFallbackWarn(key)) {
+      warn(("Fall back to number localization of root: key '" + key + "'."));
+    }
+    /* istanbul ignore if */
+    if (!this._root) { throw Error('unexpected error') }
+    return this._root.$i18n.n(value, Object.assign({}, { key: key, locale: locale }, options))
+  } else {
+    return ret || ''
+  }
+};
+
+VueI18n.prototype.n = function n (value) {
+    var args = [], len = arguments.length - 1;
+    while ( len-- > 0 ) args[ len ] = arguments[ len + 1 ];
+
+  var locale = this.locale;
+  var key = null;
+  var options = null;
+
+  if (args.length === 1) {
+    if (isString(args[0])) {
+      key = args[0];
+    } else if (isObject(args[0])) {
+      if (args[0].locale) {
+        locale = args[0].locale;
+      }
+      if (args[0].key) {
+        key = args[0].key;
+      }
+
+      // Filter out number format options only
+      options = Object.keys(args[0]).reduce(function (acc, key) {
+          var obj;
+
+        if (includes(numberFormatKeys, key)) {
+          return Object.assign({}, acc, ( obj = {}, obj[key] = args[0][key], obj ))
+        }
+        return acc
+      }, null);
+    }
+  } else if (args.length === 2) {
+    if (isString(args[0])) {
+      key = args[0];
+    }
+    if (isString(args[1])) {
+      locale = args[1];
+    }
+  }
+
+  return this._n(value, locale, key, options)
+};
+
+VueI18n.prototype._ntp = function _ntp (value, locale, key, options) {
+  /* istanbul ignore if */
+  if (!VueI18n.availabilities.numberFormat) {
+    if (true) {
+      warn('Cannot format to parts a Number value due to not supported Intl.NumberFormat.');
+    }
+    return []
+  }
+
+  if (!key) {
+    var nf = !options ? new Intl.NumberFormat(locale) : new Intl.NumberFormat(locale, options);
+    return nf.formatToParts(value)
+  }
+
+  var formatter = this._getNumberFormatter(value, locale, this.fallbackLocale, this._getNumberFormats(), key, options);
+  var ret = formatter && formatter.formatToParts(value);
+  if (this._isFallbackRoot(ret)) {
+    if ( true && !this._isSilentTranslationWarn(key)) {
+      warn(("Fall back to format number to parts of root: key '" + key + "' ."));
+    }
+    /* istanbul ignore if */
+    if (!this._root) { throw Error('unexpected error') }
+    return this._root.$i18n._ntp(value, locale, key, options)
+  } else {
+    return ret || []
+  }
+};
+
+Object.defineProperties( VueI18n.prototype, prototypeAccessors );
+
+var availabilities;
+// $FlowFixMe
+Object.defineProperty(VueI18n, 'availabilities', {
+  get: function get () {
+    if (!availabilities) {
+      var intlDefined = typeof Intl !== 'undefined';
+      availabilities = {
+        dateTimeFormat: intlDefined && typeof Intl.DateTimeFormat !== 'undefined',
+        numberFormat: intlDefined && typeof Intl.NumberFormat !== 'undefined'
+      };
+    }
+
+    return availabilities
+  }
+});
+
+VueI18n.install = install;
+VueI18n.version = '8.21.0';
+
+/* harmony default export */ __webpack_exports__["default"] = (VueI18n);
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/index.js?!./node_modules/vue-spinner/src/RingLoader.vue?vue&type=script&lang=js&":
 /*!********************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-spinner/src/RingLoader.vue?vue&type=script&lang=js& ***!
@@ -40969,7 +43151,7 @@ var render = function() {
     attrs: {
       id: "body",
       options: _vm.options,
-      placeholder: "min symbols 1, max symbols 100 000"
+      placeholder: _vm.$t("min symbols 1, max symbols 100 000")
     },
     on: { input: _vm.onCmCodeChange },
     model: {
@@ -41018,7 +43200,7 @@ var render = function() {
       _c("div", { staticClass: "modal-content box" }, [
         _c("header", { staticClass: "modal-card-head" }, [
           _c("p", { staticClass: "modal-card-title" }, [
-            _vm._v("editor settings")
+            _vm._v(_vm._s(_vm.$t("editor settings")))
           ]),
           _vm._v(" "),
           _c("button", {
@@ -41036,7 +43218,9 @@ var render = function() {
                 "columns level has-background-grey-light is-marginless has-text-link"
             },
             [
-              _vm._m(0),
+              _c("div", { staticClass: "column is-3" }, [
+                _c("p", [_vm._v(_vm._s(_vm.$t("Language")))])
+              ]),
               _vm._v(" "),
               _c("div", { staticClass: "column" }, [
                 _c("div", { staticClass: "field" }, [
@@ -41099,7 +43283,9 @@ var render = function() {
                 "columns level has-background-grey-lighter is-marginless has-text-link"
             },
             [
-              _vm._m(1),
+              _c("div", { staticClass: "column is-3" }, [
+                _c("p", [_vm._v(_vm._s(_vm.$t("Theme")))])
+              ]),
               _vm._v(" "),
               _c("div", { staticClass: "column" }, [
                 _c("div", { staticClass: "field" }, [
@@ -41158,7 +43344,9 @@ var render = function() {
                 "columns level has-background-grey-light is-marginless has-text-link"
             },
             [
-              _vm._m(2),
+              _c("div", { staticClass: "column is-3" }, [
+                _c("p", [_vm._v(_vm._s(_vm.$t("Cursor blink rate")))])
+              ]),
               _vm._v(" "),
               _c("div", { staticClass: "column is-2" }, [
                 _c("div", { staticClass: "field" }, [
@@ -41192,7 +43380,9 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _vm._m(3),
+              _c("div", { staticClass: "column is-3 is-offset-2" }, [
+                _c("p", [_vm._v(_vm._s(_vm.$t("Cursor height")))])
+              ]),
               _vm._v(" "),
               _c("div", { staticClass: "column is-2" }, [
                 _c("div", { staticClass: "field" }, [
@@ -41235,7 +43425,9 @@ var render = function() {
                 "columns level has-background-grey-lighter is-marginless has-text-link"
             },
             [
-              _vm._m(4),
+              _c("div", { staticClass: "column is-3" }, [
+                _c("p", [_vm._v(_vm._s(_vm.$t("Indent unit")))])
+              ]),
               _vm._v(" "),
               _c("div", { staticClass: "column is-2" }, [
                 _c("div", { staticClass: "field" }, [
@@ -41269,7 +43461,9 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _vm._m(5),
+              _c("div", { staticClass: "column is-3 is-offset-2" }, [
+                _c("p", [_vm._v(_vm._s(_vm.$t("Tab size")))])
+              ]),
               _vm._v(" "),
               _c("div", { staticClass: "column is-2" }, [
                 _c("div", { staticClass: "field" }, [
@@ -41308,7 +43502,9 @@ var render = function() {
                 "columns level has-background-grey-light is-marginless has-text-link"
             },
             [
-              _vm._m(6),
+              _c("div", { staticClass: "column is-3" }, [
+                _c("p", [_vm._v(_vm._s(_vm.$t("Smart Indent")))])
+              ]),
               _vm._v(" "),
               _c("div", { staticClass: "column" }, [
                 _c("div", { staticClass: "field" }, [
@@ -41361,7 +43557,9 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _vm._m(7),
+              _c("div", { staticClass: "column is-3 is-offset-2" }, [
+                _c("p", [_vm._v(_vm._s(_vm.$t("Indent with tabs")))])
+              ]),
               _vm._v(" "),
               _c("div", { staticClass: "column" }, [
                 _c("div", { staticClass: "field" }, [
@@ -41423,7 +43621,9 @@ var render = function() {
                 "columns level has-background-grey-lighter is-marginless has-text-link"
             },
             [
-              _vm._m(8),
+              _c("div", { staticClass: "column is-3" }, [
+                _c("p", [_vm._v(_vm._s(_vm.$t("Electric chars")))])
+              ]),
               _vm._v(" "),
               _c("div", { staticClass: "column" }, [
                 _c("div", { staticClass: "field" }, [
@@ -41476,7 +43676,9 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _vm._m(9),
+              _c("div", { staticClass: "column is-3 is-offset-2" }, [
+                _c("p", [_vm._v(_vm._s(_vm.$t("Line wrapping")))])
+              ]),
               _vm._v(" "),
               _c("div", { staticClass: "column" }, [
                 _c("div", { staticClass: "field" }, [
@@ -41538,7 +43740,9 @@ var render = function() {
                 "columns level has-background-grey-light is-marginless has-text-link"
             },
             [
-              _vm._m(10),
+              _c("div", { staticClass: "column is-3" }, [
+                _c("p", [_vm._v(_vm._s(_vm.$t("Line numbers")))])
+              ]),
               _vm._v(" "),
               _c("div", { staticClass: "column" }, [
                 _c("div", { staticClass: "field" }, [
@@ -41591,7 +43795,9 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _vm._m(11),
+              _c("div", { staticClass: "column is-3 is-offset-2" }, [
+                _c("p", [_vm._v(_vm._s(_vm.$t("Spellcheck")))])
+              ]),
               _vm._v(" "),
               _c("div", { staticClass: "column" }, [
                 _c("div", { staticClass: "field" }, [
@@ -41653,7 +43859,9 @@ var render = function() {
                 "columns level has-background-grey-lighter is-marginless has-text-link"
             },
             [
-              _vm._m(12),
+              _c("div", { staticClass: "column is-3" }, [
+                _c("p", [_vm._v(_vm._s(_vm.$t("Autocorrect")))])
+              ]),
               _vm._v(" "),
               _c("div", { staticClass: "column" }, [
                 _c("div", { staticClass: "field" }, [
@@ -41735,7 +43943,9 @@ var render = function() {
                     }
                   }),
                   _vm._v(
-                    "\n                        Direction left to right\n                    "
+                    "\n                        " +
+                      _vm._s(_vm.$t("Direction left to right")) +
+                      "\n                    "
                   )
                 ])
               ]),
@@ -41760,7 +43970,9 @@ var render = function() {
                     }
                   }),
                   _vm._v(
-                    "\n                        Direction right to left\n                    "
+                    "\n                        " +
+                      _vm._s(_vm.$t("Direction right to left")) +
+                      "\n                    "
                   )
                 ])
               ])
@@ -41771,112 +43983,7 @@ var render = function() {
     ]
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "column is-3" }, [
-      _c("p", [_vm._v("Language")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "column is-3" }, [
-      _c("p", [_vm._v("Theme")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "column is-3" }, [
-      _c("p", [_vm._v("Cursor blink rate")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "column is-3 is-offset-2" }, [
-      _c("p", [_vm._v("Cursor height")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "column is-3" }, [
-      _c("p", [_vm._v("Indent unit")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "column is-3 is-offset-2" }, [
-      _c("p", [_vm._v("Tab size")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "column is-3" }, [
-      _c("p", [_vm._v("Smart Indent")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "column is-3 is-offset-2" }, [
-      _c("p", [_vm._v("Indent with tabs")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "column is-3" }, [
-      _c("p", [_vm._v("Electric chars")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "column is-3 is-offset-2" }, [
-      _c("p", [_vm._v("Line wrapping")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "column is-3" }, [
-      _c("p", [_vm._v("Line numbers")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "column is-3 is-offset-2" }, [
-      _c("p", [_vm._v("Spellcheck")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "column is-3" }, [
-      _c("p", [_vm._v("Autocorrect")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -41901,7 +44008,7 @@ var render = function() {
   return _vm.joke.single.length || _vm.joke.double.first.length
     ? _c("div", [
         _c("p", { staticClass: "menu-label title is-6" }, [
-          _vm._v("\n        Joke of the day:\n    ")
+          _vm._v("\n        " + _vm._s(_vm.$t("Joke of the day")) + ":\n    ")
         ]),
         _vm._v(" "),
         _c(
@@ -41995,7 +44102,7 @@ var render = function() {
                       }
                     }
                   },
-                  [_vm._v("YES")]
+                  [_vm._v(_vm._s(_vm.$t("YES")))]
                 )
               : _vm._e()
           ]),
@@ -42012,7 +44119,7 @@ var render = function() {
                       }
                     }
                   },
-                  [_vm._v("NO")]
+                  [_vm._v(_vm._s(_vm.$t("NO")))]
                 )
               : _vm._e()
           ])
@@ -42056,7 +44163,9 @@ var render = function() {
   return _vm.most_copied_snippets.length
     ? _c("aside", { staticClass: "menu" }, [
         _c("p", { staticClass: "menu-label title is-6" }, [
-          _vm._v("\n        Top 5 copied snippets:\n    ")
+          _vm._v(
+            "\n        " + _vm._s(_vm.$t("Top 5 copied snippets")) + ":\n    "
+          )
         ]),
         _vm._v(" "),
         _c(
@@ -42119,7 +44228,9 @@ var render = function() {
   return _vm.most_liked_snippets.length
     ? _c("aside", { staticClass: "menu" }, [
         _c("p", { staticClass: "menu-label title is-6" }, [
-          _vm._v("\n        Top 5 liked snippets:\n    ")
+          _vm._v(
+            "\n        " + _vm._s(_vm.$t("Top 5 liked snippets")) + ":\n    "
+          )
         ]),
         _vm._v(" "),
         _c(
@@ -42195,7 +44306,7 @@ var render = function() {
             { staticClass: "navbar-item" },
             [
               _c("router-link", { attrs: { to: { name: "snippets.index" } } }, [
-                _vm._v("Snippets")
+                _vm._v(_vm._s(_vm.$t("Snippets")))
               ])
             ],
             1
@@ -42240,7 +44351,7 @@ var render = function() {
                     staticClass: "navbar-item has-text-white",
                     attrs: { to: { name: "snippets.index" } }
                   },
-                  [_vm._v("Home")]
+                  [_vm._v(_vm._s(_vm.$t("Home")))]
                 ),
                 _vm._v(" "),
                 _vm.Auth.check()
@@ -42250,7 +44361,7 @@ var render = function() {
                         staticClass: "navbar-item has-text-white",
                         attrs: { to: { name: "snippets.create" } }
                       },
-                      [_vm._v("Create Snippet")]
+                      [_vm._v(_vm._s(_vm.$t("Create Snippet")))]
                     )
                   : _vm._e(),
                 _vm._v(" "),
@@ -42260,7 +44371,7 @@ var render = function() {
                     staticClass: "navbar-item has-text-white",
                     attrs: { to: { name: "tags.index" } }
                   },
-                  [_vm._v("Tags")]
+                  [_vm._v(_vm._s(_vm.$t("Tags")))]
                 ),
                 _vm._v(" "),
                 _vm.Auth.check()
@@ -42270,7 +44381,7 @@ var render = function() {
                         staticClass: "navbar-item has-text-white",
                         on: { click: _vm.logout }
                       },
-                      [_vm._v("Logout")]
+                      [_vm._v(_vm._s(_vm.$t("Logout")))]
                     )
                   : _vm._e(),
                 _vm._v(" "),
@@ -42286,7 +44397,7 @@ var render = function() {
                           }
                         }
                       },
-                      [_vm._v("Login")]
+                      [_vm._v(_vm._s(_vm.$t("Login")))]
                     )
                   : _vm._e(),
                 _vm._v(" "),
@@ -42302,7 +44413,7 @@ var render = function() {
                           }
                         }
                       },
-                      [_vm._v("Register")]
+                      [_vm._v(_vm._s(_vm.$t("Register")))]
                     )
                   : _vm._e()
               ],
@@ -42354,7 +44465,9 @@ var render = function() {
                       _vm._s(_vm.paginated_data.to) +
                       " / " +
                       _vm._s(_vm.paginated_data.total) +
-                      " (PAGE-" +
+                      " (" +
+                      _vm._s(_vm.$t("PAGE")) +
+                      "-" +
                       _vm._s(_vm.paginated_data.current_page) +
                       ")\n            "
                   )
@@ -42401,7 +44514,11 @@ var render = function() {
                 },
                 [
                   _vm._v(
-                    "~ PAGE-" + _vm._s(_vm.paginated_data.current_page) + " ~"
+                    "~ " +
+                      _vm._s(_vm.$t("PAGE")) +
+                      "-" +
+                      _vm._s(_vm.paginated_data.current_page) +
+                      " ~"
                   )
                 ]
               )
@@ -42450,7 +44567,7 @@ var render = function() {
                               }
                             }
                           },
-                          [_vm._v("first page")]
+                          [_vm._v(_vm._s(_vm.$t("first page")))]
                         )
                       ])
                     : _vm._e(),
@@ -42470,7 +44587,7 @@ var render = function() {
                               }
                             }
                           },
-                          [_vm._v("previous page")]
+                          [_vm._v(_vm._s(_vm.$t("previous page")))]
                         )
                       ])
                     : _vm._e(),
@@ -42606,7 +44723,7 @@ var render = function() {
                               }
                             }
                           },
-                          [_vm._v("next page")]
+                          [_vm._v(_vm._s(_vm.$t("next page")))]
                         )
                       ])
                     : _vm._e(),
@@ -42628,7 +44745,7 @@ var render = function() {
                               }
                             }
                           },
-                          [_vm._v("last page")]
+                          [_vm._v(_vm._s(_vm.$t("last page")))]
                         )
                       ])
                     : _vm._e(),
@@ -42701,7 +44818,7 @@ var render = function() {
                     }
                   }
                 },
-                [_vm._v("my snippets")]
+                [_vm._v(_vm._s(_vm.$t("my snippets")))]
               )
             : _vm._e(),
           _vm._v(" "),
@@ -42718,7 +44835,7 @@ var render = function() {
                     }
                   }
                 },
-                [_vm._v("my favorite snippets")]
+                [_vm._v(_vm._s(_vm.$t("my favorite snippets")))]
               )
             : _vm._e(),
           _vm._v(" "),
@@ -42735,7 +44852,7 @@ var render = function() {
                     }
                   }
                 },
-                [_vm._v("my snippets that was extended")]
+                [_vm._v(_vm._s(_vm.$t("my snippets that was extended")))]
               )
             : _vm._e(),
           _vm._v(" "),
@@ -42752,7 +44869,7 @@ var render = function() {
                     }
                   }
                 },
-                [_vm._v("snippets that extends my snippets")]
+                [_vm._v(_vm._s(_vm.$t("snippets that extends my snippets")))]
               )
             : _vm._e(),
           _vm._v(" "),
@@ -42767,7 +44884,7 @@ var render = function() {
                 }
               }
             },
-            [_vm._v("latest")]
+            [_vm._v(_vm._s(_vm.$t("latest")))]
           ),
           _vm._v(" "),
           _vm.show_reset_filters_button
@@ -42778,7 +44895,7 @@ var render = function() {
                     "tag is-rounded has-cursor-pointer is-unselectable is-warning",
                   on: { click: _vm.resetFilters }
                 },
-                [_vm._v("reset filters")]
+                [_vm._v(_vm._s(_vm.$t("reset filters")))]
               )
             : _vm._e()
         ])
@@ -42801,8 +44918,9 @@ var render = function() {
                 id: "tags",
                 cols: "30",
                 rows: "2",
-                placeholder:
+                placeholder: _vm.$t(
                   "Filter by tags. Separate them with comma: js, bash, drupal 8, php"
+                )
               },
               domProps: { value: _vm.tags },
               on: {
@@ -42835,7 +44953,7 @@ var render = function() {
               attrs: {
                 id: "search",
                 type: "text",
-                placeholder: "looking for..."
+                placeholder: _vm.$t("looking for...")
               },
               domProps: { value: _vm.search },
               on: {
@@ -42988,7 +45106,14 @@ var render = function() {
                   staticClass: "has-cursor-pointer",
                   on: { click: _vm.findByAuthor }
                 },
-                [_vm._v(" by " + _vm._s(_vm.snippet.user.name))]
+                [
+                  _vm._v(
+                    " " +
+                      _vm._s(_vm.$t("by")) +
+                      " " +
+                      _vm._s(_vm.snippet.user.name)
+                  )
+                ]
               )
             ]
           )
@@ -42999,13 +45124,13 @@ var render = function() {
     _c("div", { staticClass: "column is-narrow" }, [
       _c("button", {
         staticClass: "button is-success fa fa-clipboard is-small",
-        attrs: { title: "copy code to the clipboard" },
+        attrs: { title: _vm.$t("copy code to the clipboard") },
         on: { click: _vm.copy }
       }),
       _vm._v(" "),
       _c("button", {
         staticClass: "button is-info fa fa-eye is-small",
-        attrs: { title: "see the snippet" },
+        attrs: { title: _vm.$t("see the snippet") },
         on: {
           click: function($event) {
             return _vm.show(_vm.snippet)
@@ -43016,7 +45141,7 @@ var render = function() {
       _vm.Auth.check() && _vm.Auth.isOwner(_vm.snippet)
         ? _c("button", {
             staticClass: "button is-warning fa fa-edit is-small",
-            attrs: { title: "edit the snippet" },
+            attrs: { title: _vm.$t("edit the snippet") },
             on: {
               click: function($event) {
                 return _vm.edit(_vm.snippet)
@@ -43028,7 +45153,7 @@ var render = function() {
       _vm.Auth.check() && _vm.Auth.isOwner(_vm.snippet)
         ? _c("button", {
             staticClass: "button is-danger fa fa-trash-alt is-small",
-            attrs: { title: "delete the snippet" },
+            attrs: { title: _vm.$t("delete the snippet") },
             on: {
               click: function($event) {
                 return _vm.destroy(_vm.snippet)
@@ -43040,7 +45165,7 @@ var render = function() {
       _vm.Auth.check()
         ? _c("button", {
             staticClass: "button is-dark fas fa-code-branch is-small",
-            attrs: { title: "fork the snippet" },
+            attrs: { title: _vm.$t("fork the snippet") },
             on: {
               click: function($event) {
                 return _vm.createFork(_vm.snippet)
@@ -43052,7 +45177,7 @@ var render = function() {
       _vm.Auth.check() && _vm.Auth.isFavoriteSnippet(_vm.snippet)
         ? _c("button", {
             staticClass: "button is-danger fas fa-heart is-outlined is-small",
-            attrs: { title: "remove from favorite" },
+            attrs: { title: _vm.$t("remove from favorite") },
             on: {
               click: function($event) {
                 return _vm.removeFromFavoriteSnippets(_vm.snippet)
@@ -43065,7 +45190,7 @@ var render = function() {
         ? _c("button", {
             staticClass:
               "button is-dark fas fa-heart-broken is-outlined is-small",
-            attrs: { title: "add to favorite" },
+            attrs: { title: _vm.$t("add to favorite") },
             on: {
               click: function($event) {
                 return _vm.addToFavoriteSnippets(_vm.snippet)
@@ -43101,7 +45226,13 @@ var render = function() {
   return _c("div", [
     _vm._m(0),
     _vm._v(" "),
-    _vm._m(1),
+    _c("div", { staticClass: "columns is-centered" }, [
+      _c("div", { staticClass: "column is-8" }, [
+        _c("p", { staticClass: "box title is-1" }, [
+          _vm._v(_vm._s(_vm.$t("Hmmm, the page you looking for is not found.")))
+        ])
+      ])
+    ]),
     _vm._v(" "),
     _c("div", { staticClass: "columns is-centered" }, [
       _c(
@@ -43125,18 +45256,6 @@ var staticRenderFns = [
     return _c("div", { staticClass: "columns is-centered" }, [
       _c("div", { staticClass: "column box is-1 has-text-centered" }, [
         _c("p", { staticClass: "title is-1 has-text-danger" }, [_vm._v("404")])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "columns is-centered" }, [
-      _c("div", { staticClass: "column is-8" }, [
-        _c("p", { staticClass: "box title is-1" }, [
-          _vm._v("Hmmm, the page you looking for is not found.")
-        ])
       ])
     ])
   }
@@ -43164,7 +45283,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", { staticClass: "field" }, [
-      _c("label", { staticClass: "label" }, [_vm._v("Name")]),
+      _c("label", { staticClass: "label" }, [_vm._v(_vm._s(_vm.$t("Name")))]),
       _vm._v(" "),
       _c(
         "div",
@@ -43204,7 +45323,9 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "field" }, [
-      _c("label", { staticClass: "label" }, [_vm._v("Password")]),
+      _c("label", { staticClass: "label" }, [
+        _vm._v(_vm._s(_vm.$t("Password")))
+      ]),
       _vm._v(" "),
       _c("div", { staticClass: "control" }, [
         _c("input", {
@@ -43236,7 +45357,7 @@ var render = function() {
       _c(
         "button",
         { staticClass: "button is-link", on: { click: _vm.login } },
-        [_vm._v("Login")]
+        [_vm._v(_vm._s(_vm.$t("Login")))]
       )
     ])
   ])
@@ -43265,7 +45386,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", { staticClass: "field" }, [
-      _c("label", { staticClass: "label" }, [_vm._v("Name")]),
+      _c("label", { staticClass: "label" }, [_vm._v(_vm._s(_vm.$t("Name")))]),
       _vm._v(" "),
       _c(
         "div",
@@ -43281,7 +45402,7 @@ var render = function() {
               }
             ],
             staticClass: "input",
-            attrs: { type: "text", placeholder: "minimum 2 symbols" },
+            attrs: { type: "text", placeholder: _vm.$t("minimum 2 symbols") },
             domProps: { value: _vm.name },
             on: {
               focusin: _vm.resetErrors,
@@ -43321,7 +45442,10 @@ var render = function() {
               }
             ],
             staticClass: "input",
-            attrs: { type: "password", placeholder: "minumum 8 symbols" },
+            attrs: {
+              type: "password",
+              placeholder: _vm.$t("minumum 8 symbols")
+            },
             domProps: { value: _vm.password },
             on: {
               focusin: _vm.resetErrors,
@@ -43345,7 +45469,9 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "field" }, [
-      _c("label", { staticClass: "label" }, [_vm._v("Password Confirmation")]),
+      _c("label", { staticClass: "label" }, [
+        _vm._v(_vm._s(_vm.$t("Password Confirmation")))
+      ]),
       _vm._v(" "),
       _c(
         "div",
@@ -43361,7 +45487,7 @@ var render = function() {
               }
             ],
             staticClass: "input",
-            attrs: { type: "password", placeholder: "repeat password" },
+            attrs: { type: "password", placeholder: _vm.$t("repeat password") },
             domProps: { value: _vm.password_confirmation },
             on: {
               focusin: _vm.resetErrors,
@@ -43388,7 +45514,7 @@ var render = function() {
       _c(
         "button",
         { staticClass: "button is-link", on: { click: _vm.register } },
-        [_vm._v("Register")]
+        [_vm._v(_vm._s(_vm.$t("Register")))]
       )
     ])
   ])
@@ -43431,7 +45557,7 @@ var render = function() {
               [
                 _vm.Auth.check()
                   ? _c("p", [
-                      _c("b", [_vm._v("Author:")]),
+                      _c("b", [_vm._v(_vm._s(_vm.$t("Author")) + ":")]),
                       _vm._v(" " + _vm._s(_vm.Auth.getName())),
                       _c("button", {
                         staticClass: "button is-info fa fa-cog is-pulled-right",
@@ -43456,7 +45582,7 @@ var render = function() {
                   { staticClass: "control" },
                   [
                     _c("label", { attrs: { for: "title" } }, [
-                      _vm._v("Title:")
+                      _vm._v(_vm._s(_vm.$t("Title")) + ":")
                     ]),
                     _vm._v(" "),
                     _c("input", {
@@ -43472,7 +45598,7 @@ var render = function() {
                       attrs: {
                         id: "title",
                         type: "text",
-                        placeholder: "min symbols 1, max symbols 255"
+                        placeholder: _vm.$t("min symbols 1, max symbols 255")
                       },
                       domProps: { value: _vm.snippet.title },
                       on: {
@@ -43507,7 +45633,7 @@ var render = function() {
                   { staticClass: "control" },
                   [
                     _c("label", { attrs: { for: "description" } }, [
-                      _vm._v("Description:")
+                      _vm._v(_vm._s(_vm.$t("Description")) + ":")
                     ]),
                     _vm._v(" "),
                     _c("input", {
@@ -43523,7 +45649,7 @@ var render = function() {
                       attrs: {
                         id: "description",
                         type: "text",
-                        placeholder: "max symbols 2000"
+                        placeholder: _vm.$t("max symbols 2000")
                       },
                       domProps: { value: _vm.snippet.description },
                       on: {
@@ -43558,7 +45684,7 @@ var render = function() {
             _c("div", [
               _c("div", { staticClass: "field" }, [
                 _c("div", { staticClass: "control" }, [
-                  _vm._m(0),
+                  _c("div", [_c("b", [_vm._v(_vm._s(_vm.$t("Tags")) + ":")])]),
                   _vm._v(" "),
                   _c("label", { attrs: { for: "tags" } }),
                   _vm._v(" "),
@@ -43575,7 +45701,7 @@ var render = function() {
                     attrs: {
                       id: "tags",
                       type: "text",
-                      placeholder: "php, c#, full stack, bash'"
+                      placeholder: _vm.$t("php, c#, full stack, bash")
                     },
                     domProps: { value: _vm.fresh_tags },
                     on: {
@@ -43643,7 +45769,7 @@ var render = function() {
                     }
                   }
                 },
-                [_vm._v("CREATE")]
+                [_vm._v(_vm._s(_vm.$t("CREATE")))]
               )
             ])
           ])
@@ -43653,14 +45779,7 @@ var render = function() {
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [_c("b", [_vm._v("Tags:")])])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -43705,12 +45824,12 @@ var render = function() {
                   ? _c("div", [
                       _c("button", {
                         staticClass: "button is-success fa fa-clipboard",
-                        attrs: { title: "copy code to the clipboard" }
+                        attrs: { title: _vm.$t("copy code to the clipboard") }
                       }),
                       _vm._v(" "),
                       _c("button", {
                         staticClass: "button is-info fa fa-eye",
-                        attrs: { title: "show the snippet" },
+                        attrs: { title: _vm.$t("show the snippet") },
                         on: {
                           click: function($event) {
                             return _vm.show(_vm.snippet)
@@ -43721,7 +45840,7 @@ var render = function() {
                       _vm.Auth.check() && _vm.Auth.isOwner(_vm.snippet)
                         ? _c("button", {
                             staticClass: "button is-danger fa fa-trash-alt",
-                            attrs: { title: "delete the snippet" },
+                            attrs: { title: _vm.$t("delete the snippet") },
                             on: {
                               click: function($event) {
                                 return _vm.destroy(_vm.snippet)
@@ -43751,7 +45870,7 @@ var render = function() {
                   [
                     _vm.snippet.user
                       ? _c("p", [
-                          _c("b", [_vm._v("Author:")]),
+                          _c("b", [_vm._v(_vm._s(_vm.$t("Author")) + ":")]),
                           _vm._v(" " + _vm._s(_vm.snippet.user.name))
                         ])
                       : _c("ring-loader", { staticClass: "is-narrow" })
@@ -43766,7 +45885,7 @@ var render = function() {
                   [
                     _vm.snippet.id
                       ? _c("p", [
-                          _c("b", [_vm._v("Title:")]),
+                          _c("b", [_vm._v(_vm._s(_vm.$t("Title")) + ":")]),
                           _vm._v(" " + _vm._s(_vm.snippet.title))
                         ])
                       : _c("ring-loader", { staticClass: "is-narrow" })
@@ -43786,7 +45905,7 @@ var render = function() {
                           { staticClass: "control" },
                           [
                             _c("label", { attrs: { for: "description" } }, [
-                              _vm._v("Description:")
+                              _vm._v("$t('Description'):")
                             ]),
                             _vm._v(" "),
                             _c("input", {
@@ -43802,7 +45921,7 @@ var render = function() {
                               attrs: {
                                 id: "description",
                                 type: "text",
-                                placeholder: "max symbols 2000"
+                                placeholder: _vm.$t("max symbols 2000")
                               },
                               domProps: { value: _vm.snippet_copy.description },
                               on: {
@@ -43841,7 +45960,7 @@ var render = function() {
                   [
                     _vm.snippet.id
                       ? _c("p", [
-                          _c("b", [_vm._v("Created: ")]),
+                          _c("b", [_vm._v(_vm._s(_vm.$t("Created")) + ": ")]),
                           _vm._v(
                             " " + _vm._s(_vm.snippet.created_at_for_humans)
                           )
@@ -43858,7 +45977,9 @@ var render = function() {
                   [
                     _vm.snippet.id
                       ? _c("p", [
-                          _c("b", [_vm._v("Last update: ")]),
+                          _c("b", [
+                            _vm._v(_vm._s(_vm.$t("Last update")) + ": ")
+                          ]),
                           _vm._v(
                             " " + _vm._s(_vm.snippet.updated_at_for_humans)
                           )
@@ -43876,7 +45997,9 @@ var render = function() {
                     _vm.snippet.id
                       ? _c("div", { staticClass: "field" }, [
                           _c("div", { staticClass: "control" }, [
-                            _vm._m(0),
+                            _c("div", [
+                              _c("b", [_vm._v(_vm._s(_vm.$t("Tags")) + ":")])
+                            ]),
                             _vm._v(" "),
                             _c("label", { attrs: { for: "tags" } }),
                             _vm._v(" "),
@@ -43893,7 +46016,7 @@ var render = function() {
                               attrs: {
                                 id: "tags",
                                 type: "text",
-                                placeholder: "php, c#, full stack, bash'"
+                                placeholder: _vm.$t("php, c#, full stack, bash")
                               },
                               domProps: { value: _vm.fresh_tags },
                               on: {
@@ -43945,7 +46068,9 @@ var render = function() {
                             _vm._l(_vm.snippet.forks, function(fork) {
                               return _vm.snippet.forks_quantity > 0
                                 ? _c("p", [
-                                    _c("b", [_vm._v("Fork:")]),
+                                    _c("b", [
+                                      _vm._v(_vm._s(_vm.$t("Fork")) + ":")
+                                    ]),
                                     _vm._v(" "),
                                     _c(
                                       "a",
@@ -43960,7 +46085,9 @@ var render = function() {
                             _vm._v(" "),
                             _vm.snippet.forks_quantity == 0
                               ? _c("p", [
-                                  _c("b", [_vm._v("Forks:")]),
+                                  _c("b", [
+                                    _vm._v(_vm._s(_vm.$t("Forks")) + ":")
+                                  ]),
                                   _vm._v("0")
                                 ])
                               : _vm._e()
@@ -43985,7 +46112,9 @@ var render = function() {
                       ? _c("div", [
                           _vm.snippet.parent
                             ? _c("p", [
-                                _c("b", [_vm._v("Forked from:")]),
+                                _c("b", [
+                                  _vm._v(_vm._s(_vm.$t("Forked from")) + ":")
+                                ]),
                                 _vm._v(" "),
                                 _c(
                                   "a",
@@ -44001,7 +46130,11 @@ var render = function() {
                           _vm._v(" "),
                           _vm.snippet.parent == undefined
                             ? _c("p", [
-                                _c("b", [_vm._v("Do not have parent fork")])
+                                _c("b", [
+                                  _vm._v(
+                                    _vm._s(_vm.$t("Do not have parent fork"))
+                                  )
+                                ])
                               ])
                             : _vm._e()
                         ])
@@ -44057,7 +46190,7 @@ var render = function() {
                           }
                         }
                       },
-                      [_vm._v("UPDATE")]
+                      [_vm._v(_vm._s(_vm.$t("UPDATE")))]
                     )
                   ])
                 ])
@@ -44070,14 +46203,7 @@ var render = function() {
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [_c("b", [_vm._v("Tags:")])])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -44115,7 +46241,7 @@ var render = function() {
               [
                 _vm.Auth.check()
                   ? _c("p", [
-                      _c("b", [_vm._v("Author:")]),
+                      _c("b", [_vm._v(_vm._s(_vm.$t("Author")) + ":")]),
                       _vm._v(" " + _vm._s(_vm.Auth.user.name)),
                       _c("button", {
                         staticClass: "button is-info fa fa-cog is-pulled-right",
@@ -44140,7 +46266,7 @@ var render = function() {
                   { staticClass: "control" },
                   [
                     _c("label", { attrs: { for: "title" } }, [
-                      _vm._v("Title:")
+                      _vm._v(_vm._s(_vm.$t("Title")) + ":")
                     ]),
                     _vm._v(" "),
                     _c("input", {
@@ -44156,7 +46282,7 @@ var render = function() {
                       attrs: {
                         id: "title",
                         type: "text",
-                        placeholder: "min symbols 1, max symbols 255"
+                        placeholder: _vm.$t("min symbols 1, max symbols 255")
                       },
                       domProps: { value: _vm.snippet.title },
                       on: {
@@ -44191,7 +46317,7 @@ var render = function() {
                   { staticClass: "control" },
                   [
                     _c("label", { attrs: { for: "description" } }, [
-                      _vm._v("Description:")
+                      _vm._v(_vm._s(_vm.$t("Description")) + ":")
                     ]),
                     _vm._v(" "),
                     _c("input", {
@@ -44207,7 +46333,7 @@ var render = function() {
                       attrs: {
                         id: "description",
                         type: "text",
-                        placeholder: "max symbols 2000"
+                        placeholder: _vm.$t("max symbols 2000")
                       },
                       domProps: { value: _vm.snippet.description },
                       on: {
@@ -44242,7 +46368,7 @@ var render = function() {
             _c("div", [
               _c("div", { staticClass: "field" }, [
                 _c("div", { staticClass: "control" }, [
-                  _vm._m(0),
+                  _c("div", [_c("b", [_vm._v(_vm._s(_vm.$t("Tags")) + ":")])]),
                   _vm._v(" "),
                   _c("label", { attrs: { for: "tags" } }),
                   _vm._v(" "),
@@ -44259,7 +46385,7 @@ var render = function() {
                     attrs: {
                       id: "tags",
                       type: "text",
-                      placeholder: "php, c#, full stack, bash'"
+                      placeholder: _vm.$t("php, c#, full stack, bash")
                     },
                     domProps: { value: _vm.fresh_tags },
                     on: {
@@ -44332,7 +46458,7 @@ var render = function() {
                     }
                   }
                 },
-                [_vm._v("CREATE")]
+                [_vm._v(_vm._s(_vm.$t("CREATE")))]
               )
             ])
           ])
@@ -44342,14 +46468,7 @@ var render = function() {
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [_c("b", [_vm._v("Tags:")])])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -44459,7 +46578,7 @@ var render = function() {
                           _c(
                             "p",
                             { staticClass: "title has-text-centered is-3" },
-                            [_vm._v("No results found.")]
+                            [_vm._v(_vm._s(_vm.$t("No results found.")))]
                           )
                         ])
                       : _vm._e()
@@ -44574,14 +46693,14 @@ var render = function() {
               ? _c("div", [
                   _c("button", {
                     staticClass: "button is-success fa fa-clipboard",
-                    attrs: { title: "copy code to the clipboard" },
+                    attrs: { title: _vm.$t("copy code to the clipboard") },
                     on: { click: _vm.copy }
                   }),
                   _vm._v(" "),
                   _vm.Auth.check() && _vm.Auth.user.id == _vm.snippet.user_id
                     ? _c("button", {
                         staticClass: "button is-warning fa fa-edit",
-                        attrs: { title: "edit the snippet" },
+                        attrs: { title: _vm.$t("edit the snippet") },
                         on: {
                           click: function($event) {
                             return _vm.edit(_vm.snippet)
@@ -44593,7 +46712,7 @@ var render = function() {
                   _vm.Auth.check() && _vm.Auth.user.id == _vm.snippet.user_id
                     ? _c("button", {
                         staticClass: "button is-danger fa fa-trash-alt",
-                        attrs: { title: "delete the snippet" },
+                        attrs: { title: _vm.$t("delete the snippet") },
                         on: {
                           click: function($event) {
                             return _vm.destroy(_vm.snippet)
@@ -44605,7 +46724,7 @@ var render = function() {
                   _vm.Auth.check()
                     ? _c("button", {
                         staticClass: "button is-dark fas fa-code-branch",
-                        attrs: { title: "fork the snippet" },
+                        attrs: { title: _vm.$t("fork the snippet") },
                         on: {
                           click: function($event) {
                             return _vm.createFork(_vm.snippet)
@@ -44618,7 +46737,7 @@ var render = function() {
                     ? _c("button", {
                         staticClass:
                           "button is-danger fas fa-heart is-outlined",
-                        attrs: { title: "remove from favorite" },
+                        attrs: { title: _vm.$t("remove from favorite") },
                         on: {
                           click: function($event) {
                             return _vm.removeFromFavoriteSnippets(_vm.snippet)
@@ -44631,7 +46750,7 @@ var render = function() {
                     ? _c("button", {
                         staticClass:
                           "button is-dark fas fa-heart-broken is-outlined",
-                        attrs: { title: "add to favorite" },
+                        attrs: { title: _vm.$t("add to favorite") },
                         on: {
                           click: function($event) {
                             return _vm.addToFavoriteSnippets(_vm.snippet)
@@ -44649,7 +46768,7 @@ var render = function() {
               [
                 _vm.snippet.user
                   ? _c("p", [
-                      _c("b", [_vm._v("Author:")]),
+                      _c("b", [_vm._v(_vm._s(_vm.$t("Author")) + ":")]),
                       _vm._v(" " + _vm._s(_vm.snippet.user.name))
                     ])
                   : _c("ring-loader", { staticClass: "is-narrow" })
@@ -44664,7 +46783,7 @@ var render = function() {
               [
                 _vm.snippet.id
                   ? _c("p", [
-                      _c("b", [_vm._v("Title:")]),
+                      _c("b", [_vm._v(_vm._s(_vm.$t("Title")) + ":")]),
                       _vm._v(" " + _vm._s(_vm.snippet.title))
                     ])
                   : _c("ring-loader", { staticClass: "is-narrow" })
@@ -44679,7 +46798,7 @@ var render = function() {
               [
                 _vm.snippet.id
                   ? _c("p", [
-                      _c("b", [_vm._v("Description:")]),
+                      _c("b", [_vm._v(_vm._s(_vm.$t("Description")) + ":")]),
                       _vm._v(" " + _vm._s(_vm.snippet.description))
                     ])
                   : _c("ring-loader", { staticClass: "is-narrow" })
@@ -44694,7 +46813,7 @@ var render = function() {
               [
                 _vm.snippet.id
                   ? _c("p", [
-                      _c("b", [_vm._v("Created: ")]),
+                      _c("b", [_vm._v(_vm._s(_vm.$t("Created")) + ": ")]),
                       _vm._v(" " + _vm._s(_vm.snippet.created_at_for_humans))
                     ])
                   : _c("ring-loader", { staticClass: "is-narrow" })
@@ -44709,7 +46828,7 @@ var render = function() {
               [
                 _vm.snippet.id
                   ? _c("p", [
-                      _c("b", [_vm._v("Last update: ")]),
+                      _c("b", [_vm._v(_vm._s(_vm.$t("Last update")) + ": ")]),
                       _vm._v(" " + _vm._s(_vm.snippet.updated_at_for_humans))
                     ])
                   : _c("ring-loader", { staticClass: "is-narrow" })
@@ -44727,7 +46846,9 @@ var render = function() {
                       "div",
                       { staticClass: "tags" },
                       [
-                        _vm._m(0),
+                        _c("span", [
+                          _c("b", [_vm._v(_vm._s(_vm.$t("Tags")) + ":")])
+                        ]),
                         _vm._v(" "),
                         _vm._l(_vm.snippet.tags, function(tag) {
                           return _vm.snippet.tags.length > 0
@@ -44779,7 +46900,7 @@ var render = function() {
                         _vm._l(_vm.snippet.forks, function(fork) {
                           return _vm.snippet.forks_quantity > 0
                             ? _c("p", [
-                                _c("b", [_vm._v("Fork:")]),
+                                _c("b", [_vm._v(_vm._s(_vm.$t("Fork")) + ":")]),
                                 _vm._v(" "),
                                 _c(
                                   "a",
@@ -44791,7 +46912,10 @@ var render = function() {
                         }),
                         _vm._v(" "),
                         _vm.snippet.forks_quantity == 0
-                          ? _c("p", [_c("b", [_vm._v("Forks:")]), _vm._v("0")])
+                          ? _c("p", [
+                              _c("b", [_vm._v(_vm._s(_vm.$t("Forks")) + ":")]),
+                              _vm._v("0")
+                            ])
                           : _vm._e()
                       ],
                       2
@@ -44814,7 +46938,9 @@ var render = function() {
                   ? _c("div", [
                       _vm.snippet.parent
                         ? _c("p", [
-                            _c("b", [_vm._v("Forked from:")]),
+                            _c("b", [
+                              _vm._v(_vm._s(_vm.$t("Forked from")) + ":")
+                            ]),
                             _vm._v(" "),
                             _c(
                               "a",
@@ -44830,7 +46956,9 @@ var render = function() {
                       _vm._v(" "),
                       _vm.snippet.parent == undefined
                         ? _c("p", [
-                            _c("b", [_vm._v("Do not have parent fork")])
+                            _c("b", [
+                              _vm._v(_vm._s(_vm.$t("Do not have parent fork")))
+                            ])
                           ])
                         : _vm._e()
                     ])
@@ -44878,14 +47006,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", [_c("b", [_vm._v("Tags:")])])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -44910,7 +47031,18 @@ var render = function() {
   return _c("div", [
     _vm.tagsCollection.length
       ? _c("div", [
-          _vm._m(0),
+          _c("div", { staticClass: "columns is-centered" }, [
+            _c("div", { staticClass: "column is-3" }, [
+              _c(
+                "h2",
+                {
+                  staticClass:
+                    "box title is-2 has-text-centered has-text-primary"
+                },
+                [_vm._v(_vm._s(_vm.$t("All available tags")))]
+              )
+            ])
+          ]),
           _vm._v(" "),
           _c("div", { staticClass: "section" }, [
             _c("div", { staticClass: "container" }, [
@@ -44972,22 +47104,7 @@ var render = function() {
       : _c("div", { staticClass: "box" }, [_c("ring-loader")], 1)
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "columns is-centered" }, [
-      _c("div", { staticClass: "column is-3" }, [
-        _c(
-          "h2",
-          { staticClass: "box title is-2 has-text-centered has-text-primary" },
-          [_vm._v("All available tags")]
-        )
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -62054,6 +64171,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var bulma_helpers_css_bulma_helpers_min_css__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! bulma-helpers/css/bulma-helpers.min.css */ "./node_modules/bulma-helpers/css/bulma-helpers.min.css");
 /* harmony import */ var bulma_helpers_css_bulma_helpers_min_css__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(bulma_helpers_css_bulma_helpers_min_css__WEBPACK_IMPORTED_MODULE_12__);
 /* harmony import */ var vue_text_highlight__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! vue-text-highlight */ "./node_modules/vue-text-highlight/dist/vue-text-highlight.esm.js");
+/* harmony import */ var vue_i18n__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! vue-i18n */ "./node_modules/vue-i18n/dist/vue-i18n.esm.js");
+/* harmony import */ var _translations_json__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./translations.json */ "./resources/js/translations.json");
+var _translations_json__WEBPACK_IMPORTED_MODULE_15___namespace = /*#__PURE__*/__webpack_require__.t(/*! ./translations.json */ "./resources/js/translations.json", 1);
 
 
 
@@ -62068,6 +64188,14 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_i18n__WEBPACK_IMPORTED_MODULE_14__["default"]);
+var lang = localStorage.getItem('locale') || 'bg';
+var i18n = new vue_i18n__WEBPACK_IMPORTED_MODULE_14__["default"]({
+  locale: lang,
+  messages: _translations_json__WEBPACK_IMPORTED_MODULE_15__
+});
 window.axios = axios__WEBPACK_IMPORTED_MODULE_1___default.a;
 window.Event = new vue__WEBPACK_IMPORTED_MODULE_0___default.a();
 window.Initializer = null;
@@ -62106,6 +64234,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('message', _components_Mess
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('text-highlight', vue_text_highlight__WEBPACK_IMPORTED_MODULE_13__["default"]);
 var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   el: '#app',
+  i18n: i18n,
   router: new vue_router__WEBPACK_IMPORTED_MODULE_2__["default"](_routes__WEBPACK_IMPORTED_MODULE_3__["default"]),
   components: {
     navbar: _components_Navbar__WEBPACK_IMPORTED_MODULE_4__["default"]
@@ -63622,11 +65751,7 @@ __webpack_require__.r(__webpack_exports__);
   routes: [{
     path: '/',
     component: _pages_snippets_index__WEBPACK_IMPORTED_MODULE_0__["default"],
-    name: 'snippets.index',
-    beforeEnter: function beforeEnter(to, from, next) {
-      next();
-      document.querySelector('title').innerHTML = 'all snippets';
-    }
+    name: 'snippets.index'
   }, {
     path: '/snippets/create',
     component: _pages_snippets_create__WEBPACK_IMPORTED_MODULE_1__["default"],
@@ -63637,7 +65762,6 @@ __webpack_require__.r(__webpack_exports__);
           name: 'snippets.index'
         });
       } else {
-        document.querySelector('title').innerHTML = 'create a snippet';
         next();
       }
     }
@@ -63651,7 +65775,6 @@ __webpack_require__.r(__webpack_exports__);
           name: 'snippets.index'
         });
       } else {
-        document.querySelector('title').innerHTML = 'edit the snippet';
         next();
       }
     }
@@ -63660,7 +65783,6 @@ __webpack_require__.r(__webpack_exports__);
     component: _pages_snippets_show__WEBPACK_IMPORTED_MODULE_3__["default"],
     name: 'snippets.show',
     beforeEnter: function beforeEnter(to, from, next) {
-      document.querySelector('title').innerHTML = 'snippet';
       next();
     }
   }, {
@@ -63673,7 +65795,6 @@ __webpack_require__.r(__webpack_exports__);
           name: 'snippets.index'
         });
       } else {
-        document.querySelector('title').innerHTML = 'create a fork';
         next();
       }
     }
@@ -63687,7 +65808,6 @@ __webpack_require__.r(__webpack_exports__);
           name: 'snippets.index'
         });
       } else {
-        document.querySelector('title').innerHTML = 'login';
         next();
       }
     }
@@ -63701,7 +65821,6 @@ __webpack_require__.r(__webpack_exports__);
           name: 'snippets.index'
         });
       } else {
-        document.querySelector('title').innerHTML = 'registration';
         next();
       }
     }
@@ -63710,18 +65829,28 @@ __webpack_require__.r(__webpack_exports__);
     component: _pages_tags_index__WEBPACK_IMPORTED_MODULE_7__["default"],
     name: 'tags.index',
     beforeEnter: function beforeEnter(to, from, next) {
-      document.querySelector('title').innerHTML = 'tags';
       next();
     }
   }, {
     path: '*',
+    name: 'not.found',
     component: _pages_NotFound__WEBPACK_IMPORTED_MODULE_8__["default"],
     beforeEnter: function beforeEnter(to, from, next) {
-      document.querySelector('title').innerHTML = '404 not found!';
       next();
     }
   }]
 });
+
+/***/ }),
+
+/***/ "./resources/js/translations.json":
+/*!****************************************!*\
+  !*** ./resources/js/translations.json ***!
+  \****************************************/
+/*! exports provided: bg, default */
+/***/ (function(module) {
+
+module.exports = JSON.parse("{\"bg\":{\"No results found.\":\"Няма намерени резултати.\",\"Author\":\"Автор\",\"Title\":\"Заглавие\",\"Description\":\"Описание\",\"Created\":\"Създаден\",\"Last update\":\"Последно обновен\",\"Tags\":\"Тагове\",\"Fork\":\"Форк\",\"Forks\":\"Форкове\",\"Forked from\":\"Форкнат от\",\"Do not have parent fork\":\"Не е форкнат\",\"Copied to clipbord.\":\"Копирано на клип-борда.\",\"Maybe your browser do not allow this.\":\"Може би браузъра Ви не позволява това.\",\"Do you confirm deletion?\":\"Потвърждавате ли изтриването?\",\"Snippet was successful deleted. Also all of his tag and fans.\":\"Снипета беше изтрит успешно. Също всички тагове ползващи се само от него и фенове му.\",\"Snippet was added to yours favorite snippets.\":\"Снипета бе добавен към любимите Ви санипети.\",\"Snippet was removed from yours favorite snippets.\":\"Снипета бе премахнат от любимите Ви санипети.\",\"UPDATE\":\"ОБНОВИ\",\"Description cannot be more then 2000 symbols.\":\"Описанието не може да е повече от 2000 символа.\",\"Snippet is required.\":\"Снипета е задължителен.\",\"Snippet cannot be more then 100 000 symbols.\":\"Снипета не може да е повече от 100 000 символа.\",\"Snippet was updated successful.\":\"Снипета е обновен успешно.\",\"Title is required.\":\"Заглавието е задължително.\",\"Title cannot be more then 255 symbols.\":\"Заглавието не може да е повече от 255 символа.\",\"Snippet was created successful.\":\"Снипета е създаден успешно.\",\"tag was added to the snippet.\":\"тага беше добавен към снипета.\",\"CREATE\":\"СЪЗДАЙ\",\"Fork title cannot be the same as the parent snippet title.\":\"Заглавието на форка не може да е същото като това на родителя му.\",\"Fork was created successful.\":\"Форка е създаден успешно.\",\"All available tags\":\"Всички налични тагове\",\"Hmmm, the page you looking for is not found.\":\"Хммм, страницата която търсите не може да бъде намерена.\",\"copy code to the clipboard\":\"копиране на кода към клип-борда\",\"edit the snippet\":\"редактиране на снипета\",\"delete the snippet\":\"изтриване на снипета\",\"fork the snippet\":\"направи форк на снипета\",\"remove from favorite\":\"премахни от любими\",\"add to favorite\":\"добави към любими\",\"max symbols 2000\":\"масимален брой символи 2000\",\"php, c#, full stack, bash\":\"php, c#, full stack, bash\",\"show the snippet\":\"покажи снипета\",\"min symbols 1, max symbols 255\":\"минимален брой символи 1, максимален брой символи 255\",\"Name\":\"Име\",\"minimum 2 symbols\":\"минимум 2 символа\",\"Password Confirmation\":\"Потвърждение на паролата\",\"repeat password\":\"повторете паролата\",\"Register\":\"Регистрация\",\"Name must be more then 1 symbols.\":\"Името трябва да е повече от 1 символ.\",\"Name must be less then 256 symbols.\":\"Името трябва да е по-късо от 256 символа.\",\"Password must be more then 7 symbols.\":\"Паролата трябва да е повече от 7 символа.\",\"Password Confirmation and Password must be the same.\":\"Паролата и Повторената парола трябва да съвпадат.\",\"Password\":\"Парола\",\"Login\":\"Вход\",\"Welcome\":\"Привет\",\"see the snippet\":\"виж снипета\",\"Cannot copy snippet.\":\"Снипета не може да бъде копиран.\",\"Snippet is deleted.\":\"Снипета е изтрит.\",\"by\":\"от\",\"my snippets\":\"моите снипети\",\"my favorite snippets\":\"моите любими снипети\",\"my snippets that was extended\":\"моите снипети които са форкнати\",\"snippets that extends my snippets\":\"снипети които са форкове на мой снипети\",\"latest\":\"най-нови\",\"reset filters\":\"рестартиране на филтрите\",\"Filter by tags. Separate them with comma: js, bash, drupal 8, php\":\"Филтриране по тагове. Разделете ги със запетая: js, bash, drupal 8, php\",\"looking for...\":\"търся за...\",\" was created from you\":\" са създадени от мен\",\"you like\":\"са ми любими\",\"have forks\":\"имат форкове\",\"extends my snippets\":\"са форкове на мой снипети\",\"contains string\":\"съдържат текста\",\"in title, body or description\":\"в заглавието, тялото или описанието\",\"have tags\":\"имат тагове\",\" are ordered by creation time\":\" са подредени по най-нови\",\" belongs to specific author\":\" принадлежат на конкретен автор\",\" are created on specific day\":\" са създадени на конкретен ден\",\"Looking for snipiites that \":\"Търся за снипети които \",\" and \":\" и \",\"PAGE\":\"СРАНИЦА\",\"first page\":\"първа\",\"previous page\":\"предишна\",\"next page\":\"следваща\",\"last page\":\"последна\",\"Snippets\":\"Снипети\",\"Home\":\"Начало\",\"Create Snippet\":\"Създайте Снипет\",\"Logout\":\"Изход\",\"See ya later\":\"До скоро\",\"Top 5 liked snippets\":\"5-те най-харесвани снипета\",\"Top 5 copied snippets\":\"5-те най-копирани снипета\",\"YES\":\"ДА\",\"NO\":\"НЕ\",\"Joke of the day\":\"Шегата на деня\",\"editor settings\":\"настройки на редактора\",\"Language\":\"Език\",\"Theme\":\"Тема\",\"Cursor blink rate\":\"Честота на мигане на курсора\",\"Cursor height\":\"Височина на курсора\",\"Indent unit\":\"Единица за идентация\",\"Tab size\":\"Големина на таба\",\"Smart Indent\":\"Умна идентация\",\"Indent with tabs\":\"Идентация с табове\",\"Electric chars\":\"Електрически символи\",\"Line wrapping\":\"Обграждане на ред\",\"Line numbers\":\"Номерация на редовете\",\"Spellcheck\":\"проверка на правописа\",\"Autocorrect\":\"автоматичен коректор\",\"Direction left to right\":\"Посока ляво към дясно\",\"Direction right to left\":\"Посока дясно към ляво\",\"min symbols 1, max symbols 100 000\":\"минимален брой символи 1, максимален брой символи 100 000\",\"all snippets\":\"всички снипети\",\"create a snippet\":\"създайте снипет\",\"snippet\":\"снипет\",\"create a fork\":\"създаване на форк\",\"login\":\"вход\",\"registration\":\"регистрация\",\"tags\":\"тагове\",\"404 not found!\":\"404 не съществува!\"}}");
 
 /***/ }),
 

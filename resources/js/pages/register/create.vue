@@ -1,28 +1,28 @@
 <template>
     <div>
         <div class="field">
-            <label class="label">Name</label>
+            <label class="label">{{ $t('Name') }}</label>
             <div class="control">
-                <input class="input" type="text" v-model="name" placeholder="minimum 2 symbols" @focusin="resetErrors">
+                <input class="input" type="text" v-model="name" :placeholder="$t('minimum 2 symbols')" @focusin="resetErrors">
                 <p class="has-text-danger" v-for="error in errors.name">{{ error }}</p>
             </div>
         </div>
         <div class="field">
             <label class="label">Password</label>
             <div class="control">
-                <input class="input" type="password" v-model="password" placeholder="minumum 8 symbols" @focusin="resetErrors">
+                <input class="input" type="password" v-model="password" :placeholder="$t('minumum 8 symbols')" @focusin="resetErrors">
                 <p class="has-text-danger" v-for="error in errors.password">{{ error }}</p>
             </div>
         </div>
         <div class="field">
-            <label class="label">Password Confirmation</label>
+            <label class="label">{{ $t('Password Confirmation') }}</label>
             <div class="control">
-                <input class="input" type="password" v-model="password_confirmation" placeholder="repeat password" @focusin="resetErrors">
+                <input class="input" type="password" v-model="password_confirmation" :placeholder="$t('repeat password')" @focusin="resetErrors">
                 <p class="has-text-danger" v-for="error in errors.password_confirmation">{{ error }}</p>
             </div>
         </div>
         <div class="control">
-            <button class="button is-link" @click="register">Register</button>
+            <button class="button is-link" @click="register">{{ $t('Register') }}</button>
         </div>
     </div>
 </template>
@@ -42,6 +42,9 @@
                 }
             }
         },
+        mounted() {
+            document.querySelector('title').innerHTML = this.$t('registration')
+        },
         methods: {
             resetErrors() {
                 this.errors.name = []
@@ -50,16 +53,16 @@
             },
             validateFields() {
                 if (this.name.length < 2) {
-                    this.errors.name.push('Name must be more then 1 symbols.');
+                    this.errors.name.push(this.$t('Name must be more then 1 symbols.'));
                 }
                 if (this.name.length > 255) {
-                    this.errors.name.push('Name must be less then 256 symbols.');
+                    this.errors.name.push(this.$t('Name must be less then 256 symbols.'));
                 }
                 if (this.password.length < 8) {
-                    this.errors.password.push('Password must be more then 7 symbols.');
+                    this.errors.password.push(this.$t('Password must be more then 7 symbols.'));
                 }
                 if (this.password !== this.password_confirmation) {
-                    this.errors.password_confirmation.push('Password Confirmation and Password must be the same.');
+                    this.errors.password_confirmation.push(this.$t('Password Confirmation and Password must be the same.'));
                 }
             },
             register() {
