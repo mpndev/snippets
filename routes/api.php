@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Cache;
 
 Route::post('/login', 'API\LoginController@store')->name('api.login.store');
 Route::delete('/logout', 'API\LoginController@destroy')->name('api.login.destroy');
@@ -22,3 +23,7 @@ Route::delete('/snippets/favorite/{snippet}', 'API\FavoriteSnippetsController@de
 Route::put('/snippets/actions/copy/{snippet}', 'API\SnippetsActionsCopyController@update')->name('api.snippets.actions.copy.update');
 
 Route::put('/users/{user}/settings', 'API\UserSettingsController@update')->name('api.users.settings.update');
+
+Route::delete('/cache', function() {
+    Cache::flush();
+});

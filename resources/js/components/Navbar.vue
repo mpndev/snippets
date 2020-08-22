@@ -22,6 +22,7 @@
                     <router-link class="navbar-item has-text-white" :to="{ name: 'snippets.index' }">{{ $t('Home') }}</router-link>
                     <router-link v-if="Auth.check()" :to="{ name: 'snippets.create' }" class="navbar-item has-text-white">{{ $t('Create Snippet') }}</router-link>
                     <router-link class="navbar-item has-text-white" :to="{ name: 'tags.index' }">{{ $t('Tags') }}</router-link>
+                    <language-switcher class="navbar-item has-text-white" />
                     <a v-if="Auth.check()" class="navbar-item has-text-white" @click="logout">{{ $t('Logout') }}</a>
                     <router-link v-if="Auth.guest()" :to="{ name: 'login.create' }" class="navbar-item has-text-white" @click="burger_is_on = false">{{ $t('Login') }}</router-link>
                     <router-link v-if="Auth.guest()" :to="{ name: 'register.create' }" class="navbar-item has-text-white" @click="burger_is_on = false">{{ $t('Register') }}</router-link>
@@ -32,7 +33,11 @@
 </template>
 
 <script>
+    import LanguageSwitcher from "./LanguageSwitcher";
     export default {
+        components: {
+            LanguageSwitcher: LanguageSwitcher
+        },
         data: () => {
             return {
                 Auth: Auth,

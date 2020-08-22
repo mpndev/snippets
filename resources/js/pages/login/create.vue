@@ -43,7 +43,7 @@
 
                 axios.post('/api/login', {
                     name: this.name,
-                    password: this.password
+                    password: this.password,
                 }).then(response => {
                     this.success({message: `${this.$t('Welcome')} ${response.data.name}!`})
                     this.Auth.update(response.data)

@@ -16,11 +16,13 @@ import VueI18n from "vue-i18n"
 import translations from "./translations.json"
 
 Vue.use(VueI18n)
-const lang = localStorage.getItem('locale') || 'bg'
+const lang = localStorage.getItem('language') || 'en'
 const i18n = new VueI18n({
     locale: lang,
     messages: translations
 })
+
+axios.defaults.headers.common['Langcode'] = lang
 
 window.axios = axios
 window.Event = new Vue()
