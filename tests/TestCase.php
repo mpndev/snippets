@@ -38,4 +38,32 @@ abstract class TestCase extends BaseTestCase
         return $this->{$verb}(route($this->test_route_name, $route_bindings), $data);
     }
 
+    /**
+     * @param string $string_needle
+     * @param $items
+     */
+    protected function assertArrayContainsRecursive(string $string_needle, $items)
+    {
+        $exists = false;
+        $this->inArrayRecursive($string_needle, $items, $exists);
+        $this->assertTrue($exists);
+    }
+
+    /**
+     * @param $needle
+     * @param $items
+     * @param $exists
+     */
+    protected function inArrayRecursive($needle, $items, &$exists) {
+        if (is_array($items)) {
+            if (in_array($needle, $items, true)) {
+                $exists = true;
+                return;
+            }
+            foreach ($items as $item) {
+                $this->inArrayRecursive($needle, $item, $exists);
+            }
+        }
+    }
+
 }
