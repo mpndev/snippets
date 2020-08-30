@@ -3,6 +3,7 @@ import axios from 'axios'
 import VueRouter from 'vue-router'
 import routes from './routes'
 import Navbar from './components/Navbar'
+import FAQ from './components/FAQ'
 import Message from './components/Message'
 import RingLoader from 'vue-spinner/src/RingLoader'
 import VueClipboard from 'vue-clipboard2'
@@ -51,6 +52,7 @@ const options = {
 VueNotifications.config.timeout = 6000
 Vue.use(VueNotifications, options)
 
+Vue.component('faq', FAQ)
 Vue.component('ring-loader', RingLoader)
 Vue.component('message', Message)
 Vue.component('text-highlight', TextHighlight)

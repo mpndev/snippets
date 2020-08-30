@@ -116,6 +116,9 @@
         "login": "вход",
         "registration": "регистрация",
         "tags": "тагове",
-        "404 not found!": "404 не съществува!"
+        "404 not found!": "404 не съществува!",
+        "What is a fork?": "Какво е форк?",
+        "If you like some snippet, but is not exactly what you need...": "Ако харесаш някой снипет, но не е точно каквото ти трябва...",
+        "just extend(fork) that snippet and make modified version on your own.": "просто разшири(форкни) този снипет и направи твоя версия."
     }
 }

@@ -18,6 +18,10 @@
                 <router-view :key="$route.fullPath"></router-view>
             </div>
         </div>
+
+        <div class="section">
+            <faq />
+        </div>
     </div>
 
     <script src="/js/app.js"></script>

@@ -2234,6 +2234,30 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FAQ.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/FAQ.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/JokeOfTheDay.vue?vue&type=script&lang=js&":
 /*!***********************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/JokeOfTheDay.vue?vue&type=script&lang=js& ***!
@@ -44115,6 +44139,61 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FAQ.vue?vue&type=template&id=c602b80a&":
+/*!******************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/FAQ.vue?vue&type=template&id=c602b80a& ***!
+  \******************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "box has-text-centered" }, [
+    _c("p", { staticClass: "title is-2 has-text-info" }, [
+      _vm._v(_vm._s(_vm.$t("What is a fork?")))
+    ]),
+    _vm._v(" "),
+    _c("p", { staticClass: "title is-4 has-text-info" }, [
+      _vm._v(
+        _vm._s(
+          _vm.$t(
+            "If you like some snippet, but is not exactly what you need..."
+          )
+        )
+      )
+    ]),
+    _vm._v(" "),
+    _c("p", { staticClass: "title is-4 has-text-info" }, [
+      _vm._v(
+        _vm._s(
+          _vm.$t(
+            "just extend(fork) that snippet and make modified version on your own."
+          )
+        )
+      )
+    ]),
+    _vm._v(" "),
+    _c("img", {
+      attrs: {
+        src: __webpack_require__(/*! ../assets/images/forks-demo.svg */ "./resources/js/assets/images/forks-demo.svg"),
+        alt: "forks-demo"
+      }
+    })
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/JokeOfTheDay.vue?vue&type=template&id=14e6540c&":
 /*!***************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/JokeOfTheDay.vue?vue&type=template&id=14e6540c& ***!
@@ -64355,21 +64434,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
 /* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./routes */ "./resources/js/routes.js");
 /* harmony import */ var _components_Navbar__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/Navbar */ "./resources/js/components/Navbar.vue");
-/* harmony import */ var _components_Message__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/Message */ "./resources/js/components/Message.vue");
-/* harmony import */ var vue_spinner_src_RingLoader__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vue-spinner/src/RingLoader */ "./node_modules/vue-spinner/src/RingLoader.vue");
-/* harmony import */ var vue_clipboard2__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue-clipboard2 */ "./node_modules/vue-clipboard2/vue-clipboard.js");
-/* harmony import */ var vue_clipboard2__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(vue_clipboard2__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var vue_notifications__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vue-notifications */ "./node_modules/vue-notifications/dist/vue-notifications.js");
-/* harmony import */ var mini_toastr__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! mini-toastr */ "./node_modules/mini-toastr/mini-toastr.js");
-/* harmony import */ var _Auth__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Auth */ "./resources/js/Auth.js");
-/* harmony import */ var bulma_css_bulma_css__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! bulma/css/bulma.css */ "./node_modules/bulma/css/bulma.css");
-/* harmony import */ var bulma_css_bulma_css__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(bulma_css_bulma_css__WEBPACK_IMPORTED_MODULE_11__);
-/* harmony import */ var bulma_helpers_css_bulma_helpers_min_css__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! bulma-helpers/css/bulma-helpers.min.css */ "./node_modules/bulma-helpers/css/bulma-helpers.min.css");
-/* harmony import */ var bulma_helpers_css_bulma_helpers_min_css__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(bulma_helpers_css_bulma_helpers_min_css__WEBPACK_IMPORTED_MODULE_12__);
-/* harmony import */ var vue_text_highlight__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! vue-text-highlight */ "./node_modules/vue-text-highlight/dist/vue-text-highlight.esm.js");
-/* harmony import */ var vue_i18n__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! vue-i18n */ "./node_modules/vue-i18n/dist/vue-i18n.esm.js");
-/* harmony import */ var _translations_json__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./translations.json */ "./resources/js/translations.json");
-var _translations_json__WEBPACK_IMPORTED_MODULE_15___namespace = /*#__PURE__*/__webpack_require__.t(/*! ./translations.json */ "./resources/js/translations.json", 1);
+/* harmony import */ var _components_FAQ__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/FAQ */ "./resources/js/components/FAQ.vue");
+/* harmony import */ var _components_Message__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/Message */ "./resources/js/components/Message.vue");
+/* harmony import */ var vue_spinner_src_RingLoader__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue-spinner/src/RingLoader */ "./node_modules/vue-spinner/src/RingLoader.vue");
+/* harmony import */ var vue_clipboard2__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vue-clipboard2 */ "./node_modules/vue-clipboard2/vue-clipboard.js");
+/* harmony import */ var vue_clipboard2__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(vue_clipboard2__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var vue_notifications__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vue-notifications */ "./node_modules/vue-notifications/dist/vue-notifications.js");
+/* harmony import */ var mini_toastr__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! mini-toastr */ "./node_modules/mini-toastr/mini-toastr.js");
+/* harmony import */ var _Auth__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Auth */ "./resources/js/Auth.js");
+/* harmony import */ var bulma_css_bulma_css__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! bulma/css/bulma.css */ "./node_modules/bulma/css/bulma.css");
+/* harmony import */ var bulma_css_bulma_css__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(bulma_css_bulma_css__WEBPACK_IMPORTED_MODULE_12__);
+/* harmony import */ var bulma_helpers_css_bulma_helpers_min_css__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! bulma-helpers/css/bulma-helpers.min.css */ "./node_modules/bulma-helpers/css/bulma-helpers.min.css");
+/* harmony import */ var bulma_helpers_css_bulma_helpers_min_css__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(bulma_helpers_css_bulma_helpers_min_css__WEBPACK_IMPORTED_MODULE_13__);
+/* harmony import */ var vue_text_highlight__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! vue-text-highlight */ "./node_modules/vue-text-highlight/dist/vue-text-highlight.esm.js");
+/* harmony import */ var vue_i18n__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! vue-i18n */ "./node_modules/vue-i18n/dist/vue-i18n.esm.js");
+/* harmony import */ var _translations_json__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./translations.json */ "./resources/js/translations.json");
+var _translations_json__WEBPACK_IMPORTED_MODULE_16___namespace = /*#__PURE__*/__webpack_require__.t(/*! ./translations.json */ "./resources/js/translations.json", 1);
 
 
 
@@ -64386,26 +64466,27 @@ var _translations_json__WEBPACK_IMPORTED_MODULE_15___namespace = /*#__PURE__*/__
 
 
 
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_i18n__WEBPACK_IMPORTED_MODULE_14__["default"]);
+
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_i18n__WEBPACK_IMPORTED_MODULE_15__["default"]);
 var lang = localStorage.getItem('language') || 'en';
-var i18n = new vue_i18n__WEBPACK_IMPORTED_MODULE_14__["default"]({
+var i18n = new vue_i18n__WEBPACK_IMPORTED_MODULE_15__["default"]({
   locale: lang,
-  messages: _translations_json__WEBPACK_IMPORTED_MODULE_15__
+  messages: _translations_json__WEBPACK_IMPORTED_MODULE_16__
 });
 axios__WEBPACK_IMPORTED_MODULE_1___default.a.defaults.headers.common['Langcode'] = lang;
 window.axios = axios__WEBPACK_IMPORTED_MODULE_1___default.a;
 window.Event = new vue__WEBPACK_IMPORTED_MODULE_0___default.a();
 window.Initializer = null;
-window.Auth = _Auth__WEBPACK_IMPORTED_MODULE_10__["default"];
+window.Auth = _Auth__WEBPACK_IMPORTED_MODULE_11__["default"];
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]);
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_clipboard2__WEBPACK_IMPORTED_MODULE_7___default.a);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_clipboard2__WEBPACK_IMPORTED_MODULE_8___default.a);
 var toastTypes = {
   success: 'success',
   error: 'error',
   info: 'info',
   warn: 'warn'
 };
-mini_toastr__WEBPACK_IMPORTED_MODULE_9__["default"].init({
+mini_toastr__WEBPACK_IMPORTED_MODULE_10__["default"].init({
   types: toastTypes
 });
 
@@ -64415,7 +64496,7 @@ function toast(_ref) {
       type = _ref.type,
       timeout = _ref.timeout,
       cb = _ref.cb;
-  return mini_toastr__WEBPACK_IMPORTED_MODULE_9__["default"][type](message, title, timeout, cb);
+  return mini_toastr__WEBPACK_IMPORTED_MODULE_10__["default"][type](message, title, timeout, cb);
 }
 
 var options = {
@@ -64424,11 +64505,12 @@ var options = {
   info: toast,
   warn: toast
 };
-vue_notifications__WEBPACK_IMPORTED_MODULE_8__["default"].config.timeout = 6000;
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_notifications__WEBPACK_IMPORTED_MODULE_8__["default"], options);
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('ring-loader', vue_spinner_src_RingLoader__WEBPACK_IMPORTED_MODULE_6__["default"]);
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('message', _components_Message__WEBPACK_IMPORTED_MODULE_5__["default"]);
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('text-highlight', vue_text_highlight__WEBPACK_IMPORTED_MODULE_13__["default"]);
+vue_notifications__WEBPACK_IMPORTED_MODULE_9__["default"].config.timeout = 6000;
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_notifications__WEBPACK_IMPORTED_MODULE_9__["default"], options);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('faq', _components_FAQ__WEBPACK_IMPORTED_MODULE_5__["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('ring-loader', vue_spinner_src_RingLoader__WEBPACK_IMPORTED_MODULE_7__["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('message', _components_Message__WEBPACK_IMPORTED_MODULE_6__["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('text-highlight', vue_text_highlight__WEBPACK_IMPORTED_MODULE_14__["default"]);
 var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   el: '#app',
   i18n: i18n,
@@ -64458,6 +64540,17 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
     }
   }
 });
+
+/***/ }),
+
+/***/ "./resources/js/assets/images/forks-demo.svg":
+/*!***************************************************!*\
+  !*** ./resources/js/assets/images/forks-demo.svg ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/images/forks-demo.svg?739de1e1413e114b007905acbe4c44ff";
 
 /***/ }),
 
@@ -64612,6 +64705,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EditorSettings_vue_vue_type_template_id_7c1bd04a___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EditorSettings_vue_vue_type_template_id_7c1bd04a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/FAQ.vue":
+/*!*****************************************!*\
+  !*** ./resources/js/components/FAQ.vue ***!
+  \*****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _FAQ_vue_vue_type_template_id_c602b80a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FAQ.vue?vue&type=template&id=c602b80a& */ "./resources/js/components/FAQ.vue?vue&type=template&id=c602b80a&");
+/* harmony import */ var _FAQ_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FAQ.vue?vue&type=script&lang=js& */ "./resources/js/components/FAQ.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _FAQ_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _FAQ_vue_vue_type_template_id_c602b80a___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _FAQ_vue_vue_type_template_id_c602b80a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/FAQ.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/FAQ.vue?vue&type=script&lang=js&":
+/*!******************************************************************!*\
+  !*** ./resources/js/components/FAQ.vue?vue&type=script&lang=js& ***!
+  \******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FAQ_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./FAQ.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FAQ.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FAQ_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/FAQ.vue?vue&type=template&id=c602b80a&":
+/*!************************************************************************!*\
+  !*** ./resources/js/components/FAQ.vue?vue&type=template&id=c602b80a& ***!
+  \************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FAQ_vue_vue_type_template_id_c602b80a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./FAQ.vue?vue&type=template&id=c602b80a& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/FAQ.vue?vue&type=template&id=c602b80a&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FAQ_vue_vue_type_template_id_c602b80a___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FAQ_vue_vue_type_template_id_c602b80a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -66134,7 +66296,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! exports provided: bg, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"bg\":{\"No results found.\":\"Няма намерени резултати.\",\"Author\":\"Автор\",\"Title\":\"Заглавие\",\"Description\":\"Описание\",\"Created\":\"Създаден\",\"Last update\":\"Последно обновен\",\"Tags\":\"Тагове\",\"Fork\":\"Форк\",\"Forks\":\"Форкове\",\"Forked from\":\"Форкнат от\",\"Do not have parent fork\":\"Не е форкнат\",\"Copied to clipbord.\":\"Копирано на клип-борда.\",\"Maybe your browser do not allow this.\":\"Може би браузъра Ви не позволява това.\",\"Do you confirm deletion?\":\"Потвърждавате ли изтриването?\",\"Snippet was successful deleted. Also all of his tag and fans.\":\"Снипета беше изтрит успешно. Също всички тагове ползващи се само от него и фенове му.\",\"Snippet was added to yours favorite snippets.\":\"Снипета бе добавен към любимите Ви санипети.\",\"Snippet was removed from yours favorite snippets.\":\"Снипета бе премахнат от любимите Ви санипети.\",\"UPDATE\":\"ОБНОВИ\",\"Description cannot be more then 2000 symbols.\":\"Описанието не може да е повече от 2000 символа.\",\"Snippet is required.\":\"Снипета е задължителен.\",\"Snippet cannot be more then 100 000 symbols.\":\"Снипета не може да е повече от 100 000 символа.\",\"Snippet was updated successful.\":\"Снипета е обновен успешно.\",\"Title is required.\":\"Заглавието е задължително.\",\"Title cannot be more then 255 symbols.\":\"Заглавието не може да е повече от 255 символа.\",\"Snippet was created successful.\":\"Снипета е създаден успешно.\",\"tag was added to the snippet.\":\"тага беше добавен към снипета.\",\"CREATE\":\"СЪЗДАЙ\",\"Fork title cannot be the same as the parent snippet title.\":\"Заглавието на форка не може да е същото като това на родителя му.\",\"Fork was created successful.\":\"Форка е създаден успешно.\",\"All available tags\":\"Всички налични тагове\",\"Hmmm, the page you looking for is not found.\":\"Хммм, страницата която търсите не може да бъде намерена.\",\"copy code to the clipboard\":\"копиране на кода към клип-борда\",\"edit the snippet\":\"редактиране на снипета\",\"delete the snippet\":\"изтриване на снипета\",\"fork the snippet\":\"направи форк на снипета\",\"remove from favorite\":\"премахни от любими\",\"add to favorite\":\"добави към любими\",\"max symbols 2000\":\"масимален брой символи 2000\",\"php, c#, full stack, bash\":\"php, c#, full stack, bash\",\"show the snippet\":\"покажи снипета\",\"min symbols 1, max symbols 255\":\"минимален брой символи 1, максимален брой символи 255\",\"Name\":\"Име\",\"minimum 2 symbols\":\"минимум 2 символа\",\"Password Confirmation\":\"Потвърждение на паролата\",\"repeat password\":\"повторете паролата\",\"Register\":\"Регистрация\",\"Name must be more then 1 symbols.\":\"Името трябва да е повече от 1 символ.\",\"Name must be less then 256 symbols.\":\"Името трябва да е по-късо от 256 символа.\",\"Password must be more then 7 symbols.\":\"Паролата трябва да е повече от 7 символа.\",\"Password Confirmation and Password must be the same.\":\"Паролата и Повторената парола трябва да съвпадат.\",\"Password\":\"Парола\",\"Login\":\"Вход\",\"Welcome\":\"Привет\",\"see the snippet\":\"виж снипета\",\"Cannot copy snippet.\":\"Снипета не може да бъде копиран.\",\"Snippet is deleted.\":\"Снипета е изтрит.\",\"by\":\"от\",\"my snippets\":\"моите снипети\",\"my favorite snippets\":\"моите любими снипети\",\"my snippets that was extended\":\"моите снипети които са форкнати\",\"snippets that extends my snippets\":\"снипети които са форкове на мой снипети\",\"latest\":\"най-нови\",\"reset filters\":\"рестартиране на филтрите\",\"Filter by tags. Separate them with comma: js, bash, drupal 8, php\":\"Филтриране по тагове. Разделете ги със запетая: js, bash, drupal 8, php\",\"looking for...\":\"търся за...\",\" was created from you\":\" са създадени от мен\",\"you like\":\"са ми любими\",\"have forks\":\"имат форкове\",\"extends my snippets\":\"са форкове на мой снипети\",\"contains string\":\"съдържат текста\",\"in title, body or description\":\"в заглавието, тялото или описанието\",\"have tags\":\"имат тагове\",\" are ordered by creation time\":\" са подредени по най-нови\",\" belongs to specific author\":\" принадлежат на конкретен автор\",\" are created on specific day\":\" са създадени на конкретен ден\",\"Looking for snipiites that \":\"Търся за снипети които \",\" and \":\" и \",\"PAGE\":\"СРАНИЦА\",\"first page\":\"първа\",\"previous page\":\"предишна\",\"next page\":\"следваща\",\"last page\":\"последна\",\"Snippets\":\"Снипети\",\"Home\":\"Начало\",\"Create Snippet\":\"Създайте Снипет\",\"Logout\":\"Изход\",\"See ya later\":\"До скоро\",\"Top 5 liked snippets\":\"5-те най-харесвани снипета\",\"Top 5 copied snippets\":\"5-те най-копирани снипета\",\"YES\":\"ДА\",\"NO\":\"НЕ\",\"Joke of the day\":\"Шегата на деня\",\"editor settings\":\"настройки на редактора\",\"Language\":\"Език\",\"Theme\":\"Тема\",\"Cursor blink rate\":\"Честота на мигане на курсора\",\"Cursor height\":\"Височина на курсора\",\"Indent unit\":\"Единица за идентация\",\"Tab size\":\"Големина на таба\",\"Smart Indent\":\"Умна идентация\",\"Indent with tabs\":\"Идентация с табове\",\"Electric chars\":\"Електрически символи\",\"Line wrapping\":\"Обграждане на ред\",\"Line numbers\":\"Номерация на редовете\",\"Spellcheck\":\"проверка на правописа\",\"Autocorrect\":\"автоматичен коректор\",\"Direction left to right\":\"Посока ляво към дясно\",\"Direction right to left\":\"Посока дясно към ляво\",\"min symbols 1, max symbols 100 000\":\"минимален брой символи 1, максимален брой символи 100 000\",\"all snippets\":\"всички снипети\",\"create a snippet\":\"създайте снипет\",\"snippet\":\"снипет\",\"create a fork\":\"създаване на форк\",\"login\":\"вход\",\"registration\":\"регистрация\",\"tags\":\"тагове\",\"404 not found!\":\"404 не съществува!\"}}");
+module.exports = JSON.parse("{\"bg\":{\"No results found.\":\"Няма намерени резултати.\",\"Author\":\"Автор\",\"Title\":\"Заглавие\",\"Description\":\"Описание\",\"Created\":\"Създаден\",\"Last update\":\"Последно обновен\",\"Tags\":\"Тагове\",\"Fork\":\"Форк\",\"Forks\":\"Форкове\",\"Forked from\":\"Форкнат от\",\"Do not have parent fork\":\"Не е форкнат\",\"Copied to clipbord.\":\"Копирано на клип-борда.\",\"Maybe your browser do not allow this.\":\"Може би браузъра Ви не позволява това.\",\"Do you confirm deletion?\":\"Потвърждавате ли изтриването?\",\"Snippet was successful deleted. Also all of his tag and fans.\":\"Снипета беше изтрит успешно. Също всички тагове ползващи се само от него и фенове му.\",\"Snippet was added to yours favorite snippets.\":\"Снипета бе добавен към любимите Ви санипети.\",\"Snippet was removed from yours favorite snippets.\":\"Снипета бе премахнат от любимите Ви санипети.\",\"UPDATE\":\"ОБНОВИ\",\"Description cannot be more then 2000 symbols.\":\"Описанието не може да е повече от 2000 символа.\",\"Snippet is required.\":\"Снипета е задължителен.\",\"Snippet cannot be more then 100 000 symbols.\":\"Снипета не може да е повече от 100 000 символа.\",\"Snippet was updated successful.\":\"Снипета е обновен успешно.\",\"Title is required.\":\"Заглавието е задължително.\",\"Title cannot be more then 255 symbols.\":\"Заглавието не може да е повече от 255 символа.\",\"Snippet was created successful.\":\"Снипета е създаден успешно.\",\"tag was added to the snippet.\":\"тага беше добавен към снипета.\",\"CREATE\":\"СЪЗДАЙ\",\"Fork title cannot be the same as the parent snippet title.\":\"Заглавието на форка не може да е същото като това на родителя му.\",\"Fork was created successful.\":\"Форка е създаден успешно.\",\"All available tags\":\"Всички налични тагове\",\"Hmmm, the page you looking for is not found.\":\"Хммм, страницата която търсите не може да бъде намерена.\",\"copy code to the clipboard\":\"копиране на кода към клип-борда\",\"edit the snippet\":\"редактиране на снипета\",\"delete the snippet\":\"изтриване на снипета\",\"fork the snippet\":\"направи форк на снипета\",\"remove from favorite\":\"премахни от любими\",\"add to favorite\":\"добави към любими\",\"max symbols 2000\":\"масимален брой символи 2000\",\"php, c#, full stack, bash\":\"php, c#, full stack, bash\",\"show the snippet\":\"покажи снипета\",\"min symbols 1, max symbols 255\":\"минимален брой символи 1, максимален брой символи 255\",\"Name\":\"Име\",\"minimum 2 symbols\":\"минимум 2 символа\",\"Password Confirmation\":\"Потвърждение на паролата\",\"repeat password\":\"повторете паролата\",\"Register\":\"Регистрация\",\"Name must be more then 1 symbols.\":\"Името трябва да е повече от 1 символ.\",\"Name must be less then 256 symbols.\":\"Името трябва да е по-късо от 256 символа.\",\"Password must be more then 7 symbols.\":\"Паролата трябва да е повече от 7 символа.\",\"Password Confirmation and Password must be the same.\":\"Паролата и Повторената парола трябва да съвпадат.\",\"Password\":\"Парола\",\"Login\":\"Вход\",\"Welcome\":\"Привет\",\"see the snippet\":\"виж снипета\",\"Cannot copy snippet.\":\"Снипета не може да бъде копиран.\",\"Snippet is deleted.\":\"Снипета е изтрит.\",\"by\":\"от\",\"my snippets\":\"моите снипети\",\"my favorite snippets\":\"моите любими снипети\",\"my snippets that was extended\":\"моите снипети които са форкнати\",\"snippets that extends my snippets\":\"снипети които са форкове на мой снипети\",\"latest\":\"най-нови\",\"reset filters\":\"рестартиране на филтрите\",\"Filter by tags. Separate them with comma: js, bash, drupal 8, php\":\"Филтриране по тагове. Разделете ги със запетая: js, bash, drupal 8, php\",\"looking for...\":\"търся за...\",\" was created from you\":\" са създадени от мен\",\"you like\":\"са ми любими\",\"have forks\":\"имат форкове\",\"extends my snippets\":\"са форкове на мой снипети\",\"contains string\":\"съдържат текста\",\"in title, body or description\":\"в заглавието, тялото или описанието\",\"have tags\":\"имат тагове\",\" are ordered by creation time\":\" са подредени по най-нови\",\" belongs to specific author\":\" принадлежат на конкретен автор\",\" are created on specific day\":\" са създадени на конкретен ден\",\"Looking for snipiites that \":\"Търся за снипети които \",\" and \":\" и \",\"PAGE\":\"СРАНИЦА\",\"first page\":\"първа\",\"previous page\":\"предишна\",\"next page\":\"следваща\",\"last page\":\"последна\",\"Snippets\":\"Снипети\",\"Home\":\"Начало\",\"Create Snippet\":\"Създайте Снипет\",\"Logout\":\"Изход\",\"See ya later\":\"До скоро\",\"Top 5 liked snippets\":\"5-те най-харесвани снипета\",\"Top 5 copied snippets\":\"5-те най-копирани снипета\",\"YES\":\"ДА\",\"NO\":\"НЕ\",\"Joke of the day\":\"Шегата на деня\",\"editor settings\":\"настройки на редактора\",\"Language\":\"Език\",\"Theme\":\"Тема\",\"Cursor blink rate\":\"Честота на мигане на курсора\",\"Cursor height\":\"Височина на курсора\",\"Indent unit\":\"Единица за идентация\",\"Tab size\":\"Големина на таба\",\"Smart Indent\":\"Умна идентация\",\"Indent with tabs\":\"Идентация с табове\",\"Electric chars\":\"Електрически символи\",\"Line wrapping\":\"Обграждане на ред\",\"Line numbers\":\"Номерация на редовете\",\"Spellcheck\":\"проверка на правописа\",\"Autocorrect\":\"автоматичен коректор\",\"Direction left to right\":\"Посока ляво към дясно\",\"Direction right to left\":\"Посока дясно към ляво\",\"min symbols 1, max symbols 100 000\":\"минимален брой символи 1, максимален брой символи 100 000\",\"all snippets\":\"всички снипети\",\"create a snippet\":\"създайте снипет\",\"snippet\":\"снипет\",\"create a fork\":\"създаване на форк\",\"login\":\"вход\",\"registration\":\"регистрация\",\"tags\":\"тагове\",\"404 not found!\":\"404 не съществува!\",\"What is a fork?\":\"Какво е форк?\",\"If you like some snippet, but is not exactly what you need...\":\"Ако харесаш някой снипет, но не е точно каквото ти трябва...\",\"just extend(fork) that snippet and make modified version on your own.\":\"просто разшири(форкни) този снипет и направи твоя версия.\"}}");
 
 /***/ }),
 
