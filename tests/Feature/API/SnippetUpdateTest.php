@@ -148,4 +148,32 @@ class SnippetUpdateTest extends TestCase
             ]);
     }
 
+    /** @test */
+    public function empty_description_will_be_converted_to_empty_string()
+    {
+        // Arrange
+        $user = factory(User::class)->create();
+        $snippet = factory(Snippet::class)->make([
+            'title' => 'foo',
+            'description' => 'foo',
+            'body' => 'foo'
+        ]);
+        $user->addSnippet($snippet);
+        $new_data = [
+            'title' => 'bar',
+            'description' => null,
+            'body' => 'bar',
+            'api_token' => $user->fresh()->api_token,
+        ];
+
+        // Act
+        $this->apiRequest([
+            'snippet' => $snippet->id,
+        ], $new_data);
+
+        // Assert
+        $snippet = $user->snippets()->first();
+        $this->assertSame('', $snippet->description);
+    }
+
 }

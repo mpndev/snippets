@@ -24,7 +24,7 @@
                     <hr>
                     <div class="field">
                         <div v-if="snippet.id" class="control">
-                            <label for="description">$t('Description'):</label>
+                            <label for="description">{{ $t('Description') }}:</label>
                             <input class="input" id="description" type="text" :placeholder="$t('max symbols 2000')" v-model="snippet_copy.description">
                             <span v-for="error in errors.description" class="title is-6 has-text-danger">{{ error }}</span>
                         </div>

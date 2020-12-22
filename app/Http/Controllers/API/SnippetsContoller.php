@@ -39,6 +39,7 @@ class SnippetsController extends Controller
             'body' => 'required|min:1|max:100000',
             'settings' => 'sometimes|nullable|min: 1',
         ]);
+        request()->merge(['description' => (request('description') === null ? '' : request('description'))]);
 
         $snippet = new Snippet(request([
             'title',
@@ -62,6 +63,8 @@ class SnippetsController extends Controller
             'body' => 'required|min:1|max:100000',
             'settings' => 'sometimes|nullable|min: 1',
         ]);
+
+        request()->merge(['description' => (request('description') === null ? '' : request('description'))]);
 
         if ($snippet->have_parent) {
             $this->validateTitles($snippet->parent->title, $snippet->title);

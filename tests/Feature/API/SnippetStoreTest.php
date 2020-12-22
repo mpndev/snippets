@@ -143,4 +143,24 @@ class SnippetStoreTest extends TestCase
             ]);
     }
 
+    /** @test */
+    public function empty_description_will_be_converted_to_empty_string()
+    {
+        // Arrange
+        $user = factory(User::class)->create();
+
+        // Act
+        $this->apiRequest([], [
+            'title' => 'Foo',
+            'description' => null,
+            'body' => '<h1>FooBar</h1>',
+            'settings' => '{"theme": "darcula"}',
+            'api_token' => $user->api_token,
+        ]);
+
+        // Assert
+        $snippet = $user->snippets()->first();
+        $this->assertSame('', $snippet->description);
+    }
+
 }

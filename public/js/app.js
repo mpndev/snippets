@@ -46180,7 +46180,7 @@ var render = function() {
                           { staticClass: "control" },
                           [
                             _c("label", { attrs: { for: "description" } }, [
-                              _vm._v("$t('Description'):")
+                              _vm._v(_vm._s(_vm.$t("Description")) + ":")
                             ]),
                             _vm._v(" "),
                             _c("input", {
