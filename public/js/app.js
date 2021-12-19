@@ -2953,6 +2953,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['snippet'],
   data: function data() {
@@ -3618,7 +3619,8 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           title: this.snippet.title,
           description: this.snippet.description,
           body: this.snippet.body,
-          settings: JSON.stringify(this.editorOptions)
+          settings: JSON.stringify(this.editorOptions),
+          "public": this.snippet["public"]
         }).then(function (response) {
           return response;
         })["catch"](function (error) {
@@ -3864,7 +3866,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var _this2 = this;
 
     document.querySelector('title').innerHTML = this.$t('edit the snippet');
-    axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(function (response) {
+    axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet + '?api_token=' + (this.Auth.check() ? this.Auth.getApiToken() : '')).then(function (response) {
       response.data.settings = JSON.parse(response.data.settings);
       _this2.snippet = response.data;
     })["catch"](function (error) {
@@ -4616,6 +4618,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -4631,7 +4634,7 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     document.querySelector('title').innerHTML = this.$t('snippet');
-    axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(function (response) {
+    axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet + (this.Auth.check() ? '?api_token=' + this.Auth.user.api_token : '')).then(function (response) {
       response.data.settings = JSON.parse(response.data.settings);
       _this.snippet = response.data;
       _this.snippet.settings.readOnly = true;
@@ -45411,6 +45414,15 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "column is-narrow" }, [
+      !_vm.snippet.public &&
+      _vm.Auth.check() &&
+      _vm.Auth.user.id === _vm.snippet.user_id
+        ? _c("button", {
+            staticClass: "button is-danger fa fa-lock is-small",
+            attrs: { title: _vm.$t("This snippet is visible only to you!") }
+          })
+        : _vm._e(),
+      _vm._v(" "),
       _c("button", {
         staticClass: "button is-success fa fa-clipboard is-small",
         attrs: { title: _vm.$t("copy code to the clipboard") },
@@ -47016,6 +47028,17 @@ var render = function() {
           [
             _vm.snippet.id
               ? _c("div", [
+                  !_vm.snippet.public &&
+                  _vm.Auth.check() &&
+                  _vm.Auth.user.id === _vm.snippet.user_id
+                    ? _c("button", {
+                        staticClass: "button is-danger fa fa-lock",
+                        attrs: {
+                          title: _vm.$t("This snippet is visible only to you!")
+                        }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
                   _c("button", {
                     staticClass: "button is-success fa fa-clipboard",
                     attrs: { title: _vm.$t("copy code to the clipboard") },

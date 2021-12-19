@@ -4,6 +4,7 @@
             <div class="column is-3">
                 <div class="box">
                     <div v-if="snippet.id">
+                        <button v-if="!snippet.public && Auth.check() && Auth.user.id === snippet.user_id" class="button is-danger fa fa-lock" :title="$t('This snippet is visible only to you!')"></button>
                         <button class="button is-success fa fa-clipboard" :title="$t('copy code to the clipboard')" @click="copy"></button>
                         <button v-if="Auth.check() && Auth.user.id == snippet.user_id" class="button is-warning fa fa-edit" :title="$t('edit the snippet')" @click="edit(snippet)"></button>
                         <button v-if="Auth.check() && Auth.user.id == snippet.user_id" class="button is-danger fa fa-trash-alt" :title="$t('delete the snippet')" @click="destroy(snippet)"></button>
@@ -88,7 +89,7 @@
         },
         mounted() {
             document.querySelector('title').innerHTML = this.$t('snippet')
-            axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(response => {
+            axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet + (this.Auth.check() ? '?api_token=' + this.Auth.user.api_token : '')).then(response => {
                 response.data.settings = JSON.parse(response.data.settings)
                 this.snippet = response.data
                 this.snippet.settings.readOnly = true

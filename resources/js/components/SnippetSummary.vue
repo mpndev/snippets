@@ -30,6 +30,7 @@
             </div>
         </div>
         <div class="column is-narrow">
+            <button v-if="!snippet.public && Auth.check() && Auth.user.id === snippet.user_id" class="button is-danger fa fa-lock is-small" :title="$t('This snippet is visible only to you!')"></button>
             <button class="button is-success fa fa-clipboard is-small" :title="$t('copy code to the clipboard')" @click="copy"></button>
             <button class="button is-info fa fa-eye is-small" :title="$t('see the snippet')" @click="show(snippet)"></button>
             <button v-if="Auth.check() && Auth.isOwner(snippet)" class="button is-warning fa fa-edit is-small" :title="$t('edit the snippet')" @click="edit(snippet)"></button>

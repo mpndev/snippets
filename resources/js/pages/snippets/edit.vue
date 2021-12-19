@@ -140,7 +140,7 @@
         },
         mounted() {
             document.querySelector('title').innerHTML = this.$t('edit the snippet')
-            axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(response => {
+            axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet + '?api_token=' + (this.Auth.check() ? this.Auth.getApiToken() : '')).then(response => {
                 response.data.settings = JSON.parse(response.data.settings)
                 this.snippet = response.data
             }).catch(error => {

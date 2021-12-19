@@ -144,7 +144,8 @@
                         title: this.snippet.title,
                         description: this.snippet.description,
                         body: this.snippet.body,
-                        settings: JSON.stringify(this.editorOptions)
+                        settings: JSON.stringify(this.editorOptions),
+                        public: this.snippet.public
                     }).then(response => {
                         return response
                     }).catch(error => {
