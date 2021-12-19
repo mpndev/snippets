@@ -3811,6 +3811,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3918,6 +3930,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           description: this.snippet_copy.description,
           body: this.snippet_copy.body,
           settings: JSON.stringify(this.snippet_copy.settings),
+          "public": this.snippet_copy["public"],
           _method: 'PUT'
         }).then(function (response) {
           return response;
@@ -4543,6 +4556,7 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Editor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/Editor */ "./resources/js/components/Editor.vue");
+//
 //
 //
 //
@@ -46159,44 +46173,114 @@ var render = function() {
               [
                 _vm.snippet.id
                   ? _c("div", [
-                      _c("button", {
-                        staticClass: "button is-success fa fa-clipboard",
-                        attrs: { title: _vm.$t("copy code to the clipboard") }
-                      }),
-                      _vm._v(" "),
-                      _c("button", {
-                        staticClass: "button is-info fa fa-eye",
-                        attrs: { title: _vm.$t("show the snippet") },
-                        on: {
-                          click: function($event) {
-                            return _vm.show(_vm.snippet)
-                          }
-                        }
-                      }),
-                      _vm._v(" "),
-                      _vm.Auth.check() && _vm.Auth.isOwner(_vm.snippet)
-                        ? _c("button", {
-                            staticClass: "button is-danger fa fa-trash-alt",
-                            attrs: { title: _vm.$t("delete the snippet") },
-                            on: {
-                              click: function($event) {
-                                return _vm.destroy(_vm.snippet)
-                              }
-                            }
-                          })
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _vm.Auth.check()
-                        ? _c("button", {
-                            staticClass:
-                              "button is-info fa fa-cog is-pulled-right",
-                            on: {
-                              click: function($event) {
-                                _vm.show_editor_settings = true
-                              }
-                            }
-                          })
-                        : _vm._e()
+                      _c(
+                        "div",
+                        { staticClass: "columns" },
+                        [
+                          _vm.Auth.check()
+                            ? _c(
+                                "div",
+                                { staticClass: "column is-three-fifths" },
+                                [
+                                  _c("button", {
+                                    staticClass:
+                                      "button is-success fa fa-clipboard",
+                                    attrs: {
+                                      title: _vm.$t(
+                                        "copy code to the clipboard"
+                                      )
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("button", {
+                                    staticClass: "button is-info fa fa-eye",
+                                    attrs: {
+                                      title: _vm.$t("show the snippet")
+                                    },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.show(_vm.snippet)
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _vm.Auth.check() &&
+                                  _vm.Auth.isOwner(_vm.snippet)
+                                    ? _c("button", {
+                                        staticClass:
+                                          "button is-danger fa fa-trash-alt",
+                                        attrs: {
+                                          title: _vm.$t("delete the snippet")
+                                        },
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.destroy(_vm.snippet)
+                                          }
+                                        }
+                                      })
+                                    : _vm._e()
+                                ]
+                              )
+                            : _c("ring-loader", { staticClass: "is-narrow" }),
+                          _vm._v(" "),
+                          !_vm.snippet_copy.public && _vm.Auth.check()
+                            ? _c("div", { staticClass: "column" }, [
+                                _c("button", {
+                                  staticClass: "button is-danger fa fa-lock",
+                                  attrs: {
+                                    title: _vm.$t(
+                                      "This snippet is visible only to you!"
+                                    )
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.snippet_copy.public = !_vm
+                                        .snippet_copy.public
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("button", {
+                                  staticClass: "button is-info fa fa-cog",
+                                  on: {
+                                    click: function($event) {
+                                      _vm.show_editor_settings = true
+                                    }
+                                  }
+                                })
+                              ])
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm.snippet_copy.public && _vm.Auth.check()
+                            ? _c("div", { staticClass: "column" }, [
+                                _c("button", {
+                                  staticClass: "button is-warning fa fa-unlock",
+                                  attrs: {
+                                    title: _vm.$t(
+                                      "This snippet is visible to everyone!"
+                                    )
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.snippet_copy.public = !_vm
+                                        .snippet_copy.public
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("button", {
+                                  staticClass: "button is-info fa fa-cog",
+                                  on: {
+                                    click: function($event) {
+                                      _vm.show_editor_settings = true
+                                    }
+                                  }
+                                })
+                              ])
+                            : _vm._e()
+                        ],
+                        1
+                      )
                     ])
                   : _c("ring-loader", { staticClass: "is-narrow" }),
                 _vm._v(" "),
@@ -47035,6 +47119,17 @@ var render = function() {
                         staticClass: "button is-danger fa fa-lock",
                         attrs: {
                           title: _vm.$t("This snippet is visible only to you!")
+                        }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.snippet.public &&
+                  _vm.Auth.check() &&
+                  _vm.Auth.user.id === _vm.snippet.user_id
+                    ? _c("button", {
+                        staticClass: "button is-warning fa fa-lock",
+                        attrs: {
+                          title: _vm.$t("This snippet is visible to everyone!")
                         }
                       })
                     : _vm._e(),

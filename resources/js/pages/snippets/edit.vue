@@ -5,10 +5,22 @@
             <div class="column is-3">
                 <div class="box">
                     <div v-if="snippet.id">
-                        <button class="button is-success fa fa-clipboard" :title="$t('copy code to the clipboard')"></button>
-                        <button class="button is-info fa fa-eye" :title="$t('show the snippet')" @click="show(snippet)"></button>
-                        <button v-if="Auth.check() && Auth.isOwner(snippet)" class="button is-danger fa fa-trash-alt" :title="$t('delete the snippet')" @click="destroy(snippet)"></button>
-                        <button v-if="Auth.check()" class="button is-info fa fa-cog is-pulled-right" @click="show_editor_settings = true"></button>
+                        <div class="columns" >
+                            <div class="column is-three-fifths" v-if="Auth.check()">
+                                <button class="button is-success fa fa-clipboard" :title="$t('copy code to the clipboard')"></button>
+                                <button class="button is-info fa fa-eye" :title="$t('show the snippet')" @click="show(snippet)"></button>
+                                <button v-if="Auth.check() && Auth.isOwner(snippet)" class="button is-danger fa fa-trash-alt" :title="$t('delete the snippet')" @click="destroy(snippet)"></button>
+                            </div>
+                            <ring-loader v-else class="is-narrow"></ring-loader>
+                            <div v-if="!snippet_copy.public && Auth.check()" class="column">
+                                <button class="button is-danger fa fa-lock" @click="snippet_copy.public = !snippet_copy.public" :title="$t('This snippet is visible only to you!')"></button>
+                                <button class="button is-info fa fa-cog" @click="show_editor_settings = true"></button>
+                            </div>
+                            <div v-if="snippet_copy.public && Auth.check()" class="column">
+                                <button class="button is-warning fa fa-unlock" @click="snippet_copy.public = !snippet_copy.public" :title="$t('This snippet is visible to everyone!')"></button>
+                                <button class="button is-info fa fa-cog" @click="show_editor_settings = true"></button>
+                            </div>
+                        </div>
                     </div>
                     <ring-loader v-else class="is-narrow"></ring-loader>
                     <hr>
@@ -177,6 +189,7 @@
                         description: this.snippet_copy.description,
                         body: this.snippet_copy.body,
                         settings: JSON.stringify(this.snippet_copy.settings),
+                        public: this.snippet_copy.public,
                         _method: 'PUT'
                     }).then(response => {
                         return response
