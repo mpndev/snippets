@@ -271,4 +271,12 @@ class Snippet extends Model
         return $this->fresh();
     }
 
+    public function scopeVisibility($query, $id)
+    {
+        if ($id) {
+            return $query->where('public', true)->orWhere('user_id', $id);
+        }
+        return $query->where('public', true);
+    }
+
 }

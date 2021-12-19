@@ -77,7 +77,12 @@ class SnippetsRepository
             $snippets = $snippets->mostCopiedSnippets();
         }
 
+        if ($constraints['user_id']) {
+
+        }
+
         $snippets = $snippets
+            ->visibility($constraints['user_id'])
             ->with('user')
             ->with('tags')
             ->orderBy('created_at', $constraints['latest'] ? 'desc' : 'asc')

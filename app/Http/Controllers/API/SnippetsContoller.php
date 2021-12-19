@@ -28,6 +28,13 @@ class SnippetsController extends Controller
 
     public function show(Snippet $snippet)
     {
+        if ((!$snippet->public && auth()->guard('api')->check() && $snippet->user_id != auth()->guard('api')->id()) || (!auth()->guard('api')->check() && !$snippet->public)) {
+            return response()->json([
+                'user' => [
+                    'This action is unauthorized.'
+                ],
+            ], 403);
+        }
         return response()->json($snippet->toArray(), 200);
     }
 
@@ -38,6 +45,7 @@ class SnippetsController extends Controller
             'description' => 'sometimes|nullable|min:1|max:2000',
             'body' => 'required|min:1|max:100000',
             'settings' => 'sometimes|nullable|min: 1',
+            'public' => 'boolean',
         ]);
         request()->merge(['description' => (request('description') === null ? '' : request('description'))]);
 
@@ -46,6 +54,7 @@ class SnippetsController extends Controller
             'body',
             'description',
             'settings',
+            'public',
         ]));
         $snippet->fork_id = $this->getParentSnippetIdOnStore();
         auth()->user()->addSnippet($snippet);
@@ -62,6 +71,7 @@ class SnippetsController extends Controller
             'description' => 'sometimes|nullable|min:1|max:2000',
             'body' => 'required|min:1|max:100000',
             'settings' => 'sometimes|nullable|min: 1',
+            'public' => 'boolean',
         ]);
 
         request()->merge(['description' => (request('description') === null ? '' : request('description'))]);
@@ -75,6 +85,7 @@ class SnippetsController extends Controller
             'description',
             'body',
             'settings',
+            'public',
         ]));
 
         return response()->json($snippet->fresh()->toArray(), 200);

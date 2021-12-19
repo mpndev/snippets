@@ -176,4 +176,178 @@ class SnippetUpdateTest extends TestCase
         $this->assertSame('', $snippet->description);
     }
 
+    /** @test */
+    public function user_can_mark_snippet_as_private_with_0()
+    {
+        // Arrange
+        $user = factory(User::class)->create();
+        $snippet = factory(Snippet::class)->make([
+            'public' => true,
+        ]);
+        $user->addSnippet($snippet);
+        $new_data = [
+            'title' => 'foo',
+            'description' => 'foo',
+            'body' => 'foo',
+            'public' => 0,
+            'api_token' => $user->fresh()->api_token,
+        ];
+
+        // Act
+        $response = $this->apiRequest([
+            'snippet' => $snippet->id,
+        ], $new_data);
+
+        // Assert
+        $response
+            ->assertStatus(200)
+            ->assertSee('"public":"0"');
+        $this->assertDatabaseHas('snippets', ['id' => $snippet->id]);
+    }
+
+    /** @test */
+    public function user_can_mark_snippet_as_private_with_0_surrounded_by_commas()
+    {
+        // Arrange
+        $user = factory(User::class)->create();
+        $snippet = factory(Snippet::class)->make([
+            'public' => true,
+        ]);
+        $user->addSnippet($snippet);
+        $new_data = [
+            'title' => 'foo',
+            'description' => 'foo',
+            'body' => 'foo',
+            'public' => "0",
+            'api_token' => $user->fresh()->api_token,
+        ];
+
+        // Act
+        $response = $this->apiRequest([
+            'snippet' => $snippet->id,
+        ], $new_data);
+
+        // Assert
+        $response
+            ->assertStatus(200)
+            ->assertSee('"public":"0"');
+        $this->assertDatabaseHas('snippets', ['id' => $snippet->id]);
+    }
+
+    /** @test */
+    public function user_can_mark_snippet_as_private_with_boolean_false()
+    {
+        // Arrange
+        $user = factory(User::class)->create();
+        $snippet = factory(Snippet::class)->make([
+            'public' => true,
+        ]);
+        $user->addSnippet($snippet);
+        $new_data = [
+            'title' => 'foo',
+            'description' => 'foo',
+            'body' => 'foo',
+            'public' => false,
+            'api_token' => $user->fresh()->api_token,
+        ];
+
+        // Act
+        $response = $this->apiRequest([
+            'snippet' => $snippet->id,
+        ], $new_data);
+
+        // Assert
+        $response
+            ->assertStatus(200)
+            ->assertSee('"public":"0"');
+        $this->assertDatabaseHas('snippets', ['id' => $snippet->id]);
+    }
+
+    /** @test */
+    public function user_can_mark_snippet_as_public_with_1()
+    {
+        // Arrange
+        $user = factory(User::class)->create();
+        $snippet = factory(Snippet::class)->make([
+            'public' => false,
+        ]);
+        $user->addSnippet($snippet);
+        $new_data = [
+            'title' => 'foo',
+            'description' => 'foo',
+            'body' => 'foo',
+            'public' => 1,
+            'api_token' => $user->fresh()->api_token,
+        ];
+
+        // Act
+        $response = $this->apiRequest([
+            'snippet' => $snippet->id,
+        ], $new_data);
+
+        // Assert
+        $response
+            ->assertStatus(200)
+            ->assertSee('"public":"1"');
+        $this->assertDatabaseHas('snippets', ['id' => $snippet->id]);
+    }
+
+    /** @test */
+    public function user_can_mark_snippet_as_public_with_1_surrounded_by_commas()
+    {
+        // Arrange
+        $user = factory(User::class)->create();
+        $snippet = factory(Snippet::class)->make([
+            'public' => false,
+        ]);
+        $user->addSnippet($snippet);
+        $new_data = [
+            'title' => 'foo',
+            'description' => 'foo',
+            'body' => 'foo',
+            'public' => "1",
+            'api_token' => $user->fresh()->api_token,
+        ];
+
+        // Act
+        $response = $this->apiRequest([
+            'snippet' => $snippet->id,
+        ], $new_data);
+
+        // Assert
+        $response
+            ->assertStatus(200)
+            ->assertSee('"public":"1"');
+        $this->assertDatabaseHas('snippets', ['id' => $snippet->id]);
+    }
+
+    /** @test */
+    public function user_can_mark_snippet_as_public_with_boolean_true()
+    {
+        // Arrange
+        $user = factory(User::class)->create();
+        $snippet = factory(Snippet::class)->make([
+            'public' => false,
+        ]);
+        $user->addSnippet($snippet);
+        $new_data = [
+            'title' => 'foo',
+            'description' => 'foo',
+            'body' => 'foo',
+            'public' => true,
+            'api_token' => $user->fresh()->api_token,
+        ];
+
+        // Act
+        $response = $this->apiRequest([
+            'snippet' => $snippet->id,
+        ], $new_data);
+
+        // Assert
+        $response
+            ->assertStatus(200)
+            ->assertSee('"public":"1"');
+        $this->assertDatabaseHas('snippets', ['id' => $snippet->id]);
+    }
+
 }

@@ -3529,6 +3529,15 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3543,7 +3552,8 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       snippet: {
         title: '',
         description: '',
-        body: ''
+        body: '',
+        "public": false
       },
       fresh_tags: '',
       errors: {
@@ -4457,12 +4467,16 @@ __webpack_require__.r(__webpack_exports__);
         message: error.toString()
       });
     });
-    axios('/api/snippets?limit=5&most-liked-snippets=true').then(function (response) {
-      _this.most_liked_snippets = response.data.data;
-    });
-    axios('/api/snippets?limit=5&most-copied-snippets=true').then(function (response) {
-      _this.most_copied_snippets = response.data.data;
-    });
+    setTimeout(function () {
+      axios('/api/snippets?limit=5&most-liked-snippets=true').then(function (response) {
+        _this.most_liked_snippets = response.data.data;
+      });
+    }, 500);
+    setTimeout(function () {
+      axios('/api/snippets?limit=5&most-copied-snippets=true').then(function (response) {
+        _this.most_copied_snippets = response.data.data;
+      });
+    }, 500);
   },
   methods: {
     snippetWasDeleted: function snippetWasDeleted() {
@@ -45829,21 +45843,57 @@ var render = function() {
           _c("div", { staticClass: "box" }, [
             _c(
               "div",
+              { staticClass: "columns" },
               [
                 _vm.Auth.check()
-                  ? _c("p", [
+                  ? _c("div", { staticClass: "column is-three-fifths" }, [
                       _c("b", [_vm._v(_vm._s(_vm.$t("Author")) + ":")]),
-                      _vm._v(" " + _vm._s(_vm.Auth.getName())),
+                      _vm._v(" " + _vm._s(_vm.Auth.getName()))
+                    ])
+                  : _c("ring-loader", { staticClass: "is-narrow" }),
+                _vm._v(" "),
+                !_vm.snippet.public
+                  ? _c("div", { staticClass: "column" }, [
                       _c("button", {
-                        staticClass: "button is-info fa fa-cog is-pulled-right",
+                        staticClass: "button is-danger fa fa-lock",
+                        attrs: {
+                          title: _vm.$t("This snippet is visible only to you!")
+                        },
                         on: {
                           click: function($event) {
-                            _vm.show_editor_settings = true
+                            _vm.snippet.public = !_vm.snippet.public
                           }
                         }
                       })
                     ])
-                  : _c("ring-loader", { staticClass: "is-narrow" })
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.snippet.public
+                  ? _c("div", { staticClass: "column" }, [
+                      _c("button", {
+                        staticClass: "button is-warning fa fa-unlock",
+                        attrs: {
+                          title: _vm.$t("This snippet is visible to everyone!")
+                        },
+                        on: {
+                          click: function($event) {
+                            _vm.snippet.public = !_vm.snippet.public
+                          }
+                        }
+                      })
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("div", { staticClass: "column" }, [
+                  _c("button", {
+                    staticClass: "button is-info fa fa-cog",
+                    on: {
+                      click: function($event) {
+                        _vm.show_editor_settings = true
+                      }
+                    }
+                  })
+                ])
               ],
               1
             ),
@@ -66293,10 +66343,10 @@ __webpack_require__.r(__webpack_exports__);
 /*!****************************************!*\
   !*** ./resources/js/translations.json ***!
   \****************************************/
-/*! exports provided: bg, default */
+/*! exports provided: bg, en, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"bg\":{\"No results found.\":\"Няма намерени резултати.\",\"Author\":\"Автор\",\"Title\":\"Заглавие\",\"Description\":\"Описание\",\"Created\":\"Създаден\",\"Last update\":\"Последно обновен\",\"Tags\":\"Тагове\",\"Fork\":\"Форк\",\"Forks\":\"Форкове\",\"Forked from\":\"Форкнат от\",\"Do not have parent fork\":\"Не е форкнат\",\"Copied to clipbord.\":\"Копирано на клип-борда.\",\"Maybe your browser do not allow this.\":\"Може би браузъра Ви не позволява това.\",\"Do you confirm deletion?\":\"Потвърждавате ли изтриването?\",\"Snippet was successful deleted. Also all of his tag and fans.\":\"Снипета беше изтрит успешно. Също всички тагове ползващи се само от него и фенове му.\",\"Snippet was added to yours favorite snippets.\":\"Снипета бе добавен към любимите Ви санипети.\",\"Snippet was removed from yours favorite snippets.\":\"Снипета бе премахнат от любимите Ви санипети.\",\"UPDATE\":\"ОБНОВИ\",\"Description cannot be more then 2000 symbols.\":\"Описанието не може да е повече от 2000 символа.\",\"Snippet is required.\":\"Снипета е задължителен.\",\"Snippet cannot be more then 100 000 symbols.\":\"Снипета не може да е повече от 100 000 символа.\",\"Snippet was updated successful.\":\"Снипета е обновен успешно.\",\"Title is required.\":\"Заглавието е задължително.\",\"Title cannot be more then 255 symbols.\":\"Заглавието не може да е повече от 255 символа.\",\"Snippet was created successful.\":\"Снипета е създаден успешно.\",\"tag was added to the snippet.\":\"тага беше добавен към снипета.\",\"CREATE\":\"СЪЗДАЙ\",\"Fork title cannot be the same as the parent snippet title.\":\"Заглавието на форка не може да е същото като това на родителя му.\",\"Fork was created successful.\":\"Форка е създаден успешно.\",\"All available tags\":\"Всички налични тагове\",\"Hmmm, the page you looking for is not found.\":\"Хммм, страницата която търсите не може да бъде намерена.\",\"copy code to the clipboard\":\"копиране на кода към клип-борда\",\"edit the snippet\":\"редактиране на снипета\",\"delete the snippet\":\"изтриване на снипета\",\"fork the snippet\":\"направи форк на снипета\",\"remove from favorite\":\"премахни от любими\",\"add to favorite\":\"добави към любими\",\"max symbols 2000\":\"масимален брой символи 2000\",\"php, c#, full stack, bash\":\"php, c#, full stack, bash\",\"show the snippet\":\"покажи снипета\",\"min symbols 1, max symbols 255\":\"минимален брой символи 1, максимален брой символи 255\",\"Name\":\"Име\",\"minimum 2 symbols\":\"минимум 2 символа\",\"Password Confirmation\":\"Потвърждение на паролата\",\"repeat password\":\"повторете паролата\",\"Register\":\"Регистрация\",\"Name must be more then 1 symbols.\":\"Името трябва да е повече от 1 символ.\",\"Name must be less then 256 symbols.\":\"Името трябва да е по-късо от 256 символа.\",\"Password must be more then 7 symbols.\":\"Паролата трябва да е повече от 7 символа.\",\"Password Confirmation and Password must be the same.\":\"Паролата и Повторената парола трябва да съвпадат.\",\"Password\":\"Парола\",\"Login\":\"Вход\",\"Welcome\":\"Привет\",\"see the snippet\":\"виж снипета\",\"Cannot copy snippet.\":\"Снипета не може да бъде копиран.\",\"Snippet is deleted.\":\"Снипета е изтрит.\",\"by\":\"от\",\"my snippets\":\"моите снипети\",\"my favorite snippets\":\"моите любими снипети\",\"my snippets that was extended\":\"моите снипети които са форкнати\",\"snippets that extends my snippets\":\"снипети които са форкове на мой снипети\",\"latest\":\"най-нови\",\"reset filters\":\"рестартиране на филтрите\",\"Filter by tags. Separate them with comma: js, bash, drupal 8, php\":\"Филтриране по тагове. Разделете ги със запетая: js, bash, drupal 8, php\",\"looking for...\":\"търся за...\",\" was created from you\":\" са създадени от мен\",\"you like\":\"са ми любими\",\"have forks\":\"имат форкове\",\"extends my snippets\":\"са форкове на мой снипети\",\"contains string\":\"съдържат текста\",\"in title, body or description\":\"в заглавието, тялото или описанието\",\"have tags\":\"имат тагове\",\" are ordered by creation time\":\" са подредени по най-нови\",\" belongs to specific author\":\" принадлежат на конкретен автор\",\" are created on specific day\":\" са създадени на конкретен ден\",\"Looking for snipiites that \":\"Търся за снипети които \",\" and \":\" и \",\"PAGE\":\"СРАНИЦА\",\"first page\":\"първа\",\"previous page\":\"предишна\",\"next page\":\"следваща\",\"last page\":\"последна\",\"Snippets\":\"Снипети\",\"Home\":\"Начало\",\"Create Snippet\":\"Създайте Снипет\",\"Logout\":\"Изход\",\"See ya later\":\"До скоро\",\"Top 5 liked snippets\":\"5-те най-харесвани снипета\",\"Top 5 copied snippets\":\"5-те най-копирани снипета\",\"YES\":\"ДА\",\"NO\":\"НЕ\",\"Joke of the day\":\"Шегата на деня\",\"editor settings\":\"настройки на редактора\",\"Language\":\"Език\",\"Theme\":\"Тема\",\"Cursor blink rate\":\"Честота на мигане на курсора\",\"Cursor height\":\"Височина на курсора\",\"Indent unit\":\"Единица за идентация\",\"Tab size\":\"Големина на таба\",\"Smart Indent\":\"Умна идентация\",\"Indent with tabs\":\"Идентация с табове\",\"Electric chars\":\"Електрически символи\",\"Line wrapping\":\"Обграждане на ред\",\"Line numbers\":\"Номерация на редовете\",\"Spellcheck\":\"проверка на правописа\",\"Autocorrect\":\"автоматичен коректор\",\"Direction left to right\":\"Посока ляво към дясно\",\"Direction right to left\":\"Посока дясно към ляво\",\"min symbols 1, max symbols 100 000\":\"минимален брой символи 1, максимален брой символи 100 000\",\"all snippets\":\"всички снипети\",\"create a snippet\":\"създайте снипет\",\"snippet\":\"снипет\",\"create a fork\":\"създаване на форк\",\"login\":\"вход\",\"registration\":\"регистрация\",\"tags\":\"тагове\",\"404 not found!\":\"404 не съществува!\",\"What is a fork?\":\"Какво е форк?\",\"If you like some snippet, but is not exactly what you need...\":\"Ако харесаш някой снипет, но не е точно каквото ти трябва...\",\"just extend(fork) that snippet and make modified version on your own.\":\"просто разшири(форкни) този снипет и направи твоя версия.\"}}");
+module.exports = JSON.parse("{\"bg\":{\"No results found.\":\"Няма намерени резултати.\",\"Author\":\"Автор\",\"Title\":\"Заглавие\",\"Description\":\"Описание\",\"Created\":\"Създаден\",\"Last update\":\"Последно обновен\",\"Tags\":\"Тагове\",\"Fork\":\"Форк\",\"Forks\":\"Форкове\",\"Forked from\":\"Форкнат от\",\"Do not have parent fork\":\"Не е форкнат\",\"Copied to clipbord.\":\"Копирано на клип-борда.\",\"Maybe your browser do not allow this.\":\"Може би браузъра Ви не позволява това.\",\"Do you confirm deletion?\":\"Потвърждавате ли изтриването?\",\"Snippet was successful deleted. Also all of his tag and fans.\":\"Снипета беше изтрит успешно. Също всички тагове ползващи се само от него и фенове му.\",\"Snippet was added to yours favorite snippets.\":\"Снипета бе добавен към любимите Ви санипети.\",\"Snippet was removed from yours favorite snippets.\":\"Снипета бе премахнат от любимите Ви санипети.\",\"UPDATE\":\"ОБНОВИ\",\"Description cannot be more then 2000 symbols.\":\"Описанието не може да е повече от 2000 символа.\",\"Snippet is required.\":\"Снипета е задължителен.\",\"Snippet cannot be more then 100 000 symbols.\":\"Снипета не може да е повече от 100 000 символа.\",\"Snippet was updated successful.\":\"Снипета е обновен успешно.\",\"Title is required.\":\"Заглавието е задължително.\",\"Title cannot be more then 255 symbols.\":\"Заглавието не може да е повече от 255 символа.\",\"Snippet was created successful.\":\"Снипета е създаден успешно.\",\"tag was added to the snippet.\":\"тага беше добавен към снипета.\",\"CREATE\":\"СЪЗДАЙ\",\"Fork title cannot be the same as the parent snippet title.\":\"Заглавието на форка не може да е същото като това на родителя му.\",\"Fork was created successful.\":\"Форка е създаден успешно.\",\"All available tags\":\"Всички налични тагове\",\"Hmmm, the page you looking for is not found.\":\"Хммм, страницата която търсите не може да бъде намерена.\",\"copy code to the clipboard\":\"копиране на кода към клип-борда\",\"edit the snippet\":\"редактиране на снипета\",\"delete the snippet\":\"изтриване на снипета\",\"fork the snippet\":\"направи форк на снипета\",\"remove from favorite\":\"премахни от любими\",\"add to favorite\":\"добави към любими\",\"max symbols 2000\":\"масимален брой символи 2000\",\"php, c#, full stack, bash\":\"php, c#, full stack, bash\",\"show the snippet\":\"покажи снипета\",\"min symbols 1, max symbols 255\":\"минимален брой символи 1, максимален брой символи 255\",\"Name\":\"Име\",\"minimum 2 symbols\":\"минимум 2 символа\",\"Password Confirmation\":\"Потвърждение на паролата\",\"repeat password\":\"повторете паролата\",\"Register\":\"Регистрация\",\"Name must be more then 1 symbols.\":\"Името трябва да е повече от 1 символ.\",\"Name must be less then 256 symbols.\":\"Името трябва да е по-късо от 256 символа.\",\"Password must be more then 7 symbols.\":\"Паролата трябва да е повече от 7 символа.\",\"Password Confirmation and Password must be the same.\":\"Паролата и Повторената парола трябва да съвпадат.\",\"Password\":\"Парола\",\"Login\":\"Вход\",\"Welcome\":\"Привет\",\"see the snippet\":\"виж снипета\",\"Cannot copy snippet.\":\"Снипета не може да бъде копиран.\",\"Snippet is deleted.\":\"Снипета е изтрит.\",\"by\":\"от\",\"my snippets\":\"моите снипети\",\"my favorite snippets\":\"моите любими снипети\",\"my snippets that was extended\":\"моите снипети които са форкнати\",\"snippets that extends my snippets\":\"снипети които са форкове на мой снипети\",\"latest\":\"най-нови\",\"reset filters\":\"рестартиране на филтрите\",\"Filter by tags. Separate them with comma: js, bash, drupal 8, php\":\"Филтриране по тагове. Разделете ги със запетая: js, bash, drupal 8, php\",\"looking for...\":\"търся за...\",\" was created from you\":\" са създадени от мен\",\"you like\":\"са ми любими\",\"have forks\":\"имат форкове\",\"extends my snippets\":\"са форкове на мой снипети\",\"contains string\":\"съдържат текста\",\"in title, body or description\":\"в заглавието, тялото или описанието\",\"have tags\":\"имат тагове\",\" are ordered by creation time\":\" са подредени по най-нови\",\" belongs to specific author\":\" принадлежат на конкретен автор\",\" are created on specific day\":\" са създадени на конкретен ден\",\"Looking for snipiites that \":\"Търся за снипети които \",\" and \":\" и \",\"PAGE\":\"СРАНИЦА\",\"first page\":\"първа\",\"previous page\":\"предишна\",\"next page\":\"следваща\",\"last page\":\"последна\",\"Snippets\":\"Снипети\",\"Home\":\"Начало\",\"Create Snippet\":\"Създайте Снипет\",\"Logout\":\"Изход\",\"See ya later\":\"До скоро\",\"Top 5 liked snippets\":\"5-те най-харесвани снипета\",\"Top 5 copied snippets\":\"5-те най-копирани снипета\",\"YES\":\"ДА\",\"NO\":\"НЕ\",\"Joke of the day\":\"Шегата на деня\",\"editor settings\":\"настройки на редактора\",\"Language\":\"Език\",\"Theme\":\"Тема\",\"Cursor blink rate\":\"Честота на мигане на курсора\",\"Cursor height\":\"Височина на курсора\",\"Indent unit\":\"Единица за идентация\",\"Tab size\":\"Големина на таба\",\"Smart Indent\":\"Умна идентация\",\"Indent with tabs\":\"Идентация с табове\",\"Electric chars\":\"Електрически символи\",\"Line wrapping\":\"Обграждане на ред\",\"Line numbers\":\"Номерация на редовете\",\"Spellcheck\":\"проверка на правописа\",\"Autocorrect\":\"автоматичен коректор\",\"Direction left to right\":\"Посока ляво към дясно\",\"Direction right to left\":\"Посока дясно към ляво\",\"min symbols 1, max symbols 100 000\":\"минимален брой символи 1, максимален брой символи 100 000\",\"all snippets\":\"всички снипети\",\"create a snippet\":\"създайте снипет\",\"snippet\":\"снипет\",\"create a fork\":\"създаване на форк\",\"login\":\"вход\",\"registration\":\"регистрация\",\"tags\":\"тагове\",\"404 not found!\":\"404 не съществува!\",\"What is a fork?\":\"Какво е форк?\",\"If you like some snippet, but is not exactly what you need...\":\"Ако харесаш някой снипет, но не е точно каквото ти трябва...\",\"just extend(fork) that snippet and make modified version on your own.\":\"просто разшири(форкни) този снипет и направи твоя версия.\",\"This snippet is visible only to you!\":\"Този снипет е видим само за теб!\",\"This snippet is visible to everyone!\":\"Този снипет е видим за всички!\"},\"en\":{\"No results found.\":\"No results found.\",\"Author\":\"Author\",\"Title\":\"Title\",\"Description\":\"Description\",\"Created\":\"Created\",\"Last update\":\"Last update\",\"Tags\":\"Tags\",\"Fork\":\"Fork\",\"Forks\":\"Forks\",\"Forked from\":\"Forked from\",\"Do not have parent fork\":\"Do not have parent fork\",\"Copied to clipbord.\":\"Copied to clipbord.\",\"Maybe your browser do not allow this.\":\"Maybe your browser do not allow this.\",\"Do you confirm deletion?\":\"Do you confirm deletion?\",\"Snippet was successful deleted. Also all of his tag and fans.\":\"Snippet was successful deleted. Also all of his tag and fans.\",\"Snippet was added to yours favorite snippets.\":\"Snippet was added to yours favorite snippets.\",\"Snippet was removed from yours favorite snippets.\":\"Snippet was removed from yours favorite snippets.\",\"UPDATE\":\"UPDATE\",\"Description cannot be more then 2000 symbols.\":\"Description cannot be more then 2000 symbols.\",\"Snippet is required.\":\"Snippet is required.\",\"Snippet cannot be more then 100 000 symbols.\":\"Snippet cannot be more then 100 000 symbols.\",\"Snippet was updated successful.\":\"Snippet was updated successful.\",\"Title is required.\":\"Title is required.\",\"Title cannot be more then 255 symbols.\":\"Title cannot be more then 255 symbols.\",\"Snippet was created successful.\":\"Snippet was created successful.\",\"tag was added to the snippet.\":\"tag was added to the snippet.\",\"CREATE\":\"CREATE\",\"Fork title cannot be the same as the parent snippet title.\":\"Fork title cannot be the same as the parent snippet title.\",\"Fork was created successful.\":\"Fork was created successful.\",\"All available tags\":\"All available tags\",\"Hmmm, the page you looking for is not found.\":\"Hmmm, the page you looking for is not found.\",\"copy code to the clipboard\":\"copy code to the clipboard\",\"edit the snippet\":\"edit the snippet\",\"delete the snippet\":\"delete the snippet\",\"fork the snippet\":\"fork the snippet\",\"remove from favorite\":\"remove from favorite\",\"add to favorite\":\"add to favorite\",\"max symbols 2000\":\"max symbols 2000\",\"php, c#, full stack, bash\":\"php, c#, full stack, bash\",\"show the snippet\":\"show the snippet\",\"min symbols 1, max symbols 255\":\"min symbols 1, max symbols 255\",\"Name\":\"Name\",\"minimum 2 symbols\":\"minimum 2 symbols\",\"Password Confirmation\":\"Password Confirmation\",\"repeat password\":\"repeat password\",\"Register\":\"Register\",\"Name must be more then 1 symbols.\":\"Name must be more then 1 symbols.\",\"Name must be less then 256 symbols.\":\"Name must be less then 256 symbols.\",\"Password must be more then 7 symbols.\":\"Password must be more then 7 symbols.\",\"Password Confirmation and Password must be the same.\":\"Password Confirmation and Password must be the same.\",\"Password\":\"Password\",\"Login\":\"Login\",\"Welcome\":\"Welcome\",\"see the snippet\":\"see the snippet\",\"Cannot copy snippet.\":\"Cannot copy snippet.\",\"Snippet is deleted.\":\"Snippet is deleted.\",\"by\":\"by\",\"my snippets\":\"my snippets\",\"my favorite snippets\":\"my favorite snippets\",\"my snippets that was extended\":\"my snippets that was extended\",\"snippets that extends my snippets\":\"snippets that extends my snippets\",\"latest\":\"latest\",\"reset filters\":\"reset filters\",\"Filter by tags. Separate them with comma: js, bash, drupal 8, php\":\"Filter by tags. Separate them with comma: js, bash, drupal 8, php\",\"looking for...\":\"looking for...\",\" was created from you\":\" was created from you\",\"you like\":\"you like\",\"have forks\":\"have forks\",\"extends my snippets\":\"extends my snippets\",\"contains string\":\"contains string\",\"in title, body or description\":\"in title, body or description\",\"have tags\":\"have tags\",\" are ordered by creation time\":\" are ordered by creation time\",\" belongs to specific author\":\" belongs to specific author\",\" are created on specific day\":\" are created on specific day\",\"Looking for snipiites that \":\"Looking for snipiites that \",\" and \":\" and \",\"PAGE\":\"PAGE\",\"first page\":\"first page\",\"previous page\":\"previous page\",\"next page\":\"next page\",\"last page\":\"last page\",\"Snippets\":\"Snippets\",\"Home\":\"Home\",\"Create Snippet\":\"Create Snippet\",\"Logout\":\"Logout\",\"See ya later\":\"See ya later\",\"Top 5 liked snippets\":\"Top 5 liked snippets\",\"Top 5 copied snippets\":\"Top 5 copied snippets\",\"YES\":\"YES\",\"NO\":\"NO\",\"Joke of the day\":\"Joke of the day\",\"editor settings\":\"editor settings\",\"Language\":\"Language\",\"Theme\":\"Theme\",\"Cursor blink rate\":\"Cursor blink rate\",\"Cursor height\":\"Cursor height\",\"Indent unit\":\"Indent unit\",\"Tab size\":\"Tab size\",\"Smart Indent\":\"Smart Indent\",\"Indent with tabs\":\"Indent with tabs\",\"Electric chars\":\"Electric chars\",\"Line wrapping\":\"Line wrapping\",\"Line numbers\":\"Line numbers\",\"Spellcheck\":\"Spellcheck\",\"Autocorrect\":\"Autocorrect\",\"Direction left to right\":\"Direction left to right\",\"Direction right to left\":\"Direction right to left\",\"min symbols 1, max symbols 100 000\":\"min symbols 1, max symbols 100 000\",\"all snippets\":\"all snippets\",\"create a snippet\":\"create a snippet\",\"snippet\":\"snippet\",\"create a fork\":\"create a fork\",\"login\":\"login\",\"registration\":\"registration\",\"tags\":\"tags\",\"404 not found!\":\"404 not found!\",\"What is a fork?\":\"What is a fork?\",\"If you like some snippet, but is not exactly what you need...\":\"If you like some snippet, but is not exactly what you need...\",\"just extend(fork) that snippet and make modified version on your own.\":\"just extend(fork) that snippet and make modified version on your own.\",\"This snippet is visible only to you!\":\"This snippet is visible only to you!\",\"This snippet is visible to everyone!\":\"This snippet is visible to everyone!\"}}");
 
 /***/ }),
 

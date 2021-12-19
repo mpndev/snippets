@@ -152,12 +152,16 @@
             }).catch(error => {
                 this.error({message: error.toString()})
             })
-            axios('/api/snippets?limit=5&most-liked-snippets=true').then(response => {
-                this.most_liked_snippets = response.data.data
-            })
-            axios('/api/snippets?limit=5&most-copied-snippets=true').then(response => {
-                this.most_copied_snippets = response.data.data
-            })
+            setTimeout(() => {
+                axios('/api/snippets?limit=5&most-liked-snippets=true').then(response => {
+                    this.most_liked_snippets = response.data.data
+                })
+            }, 500)
+            setTimeout(() => {
+                axios('/api/snippets?limit=5&most-copied-snippets=true').then(response => {
+                    this.most_copied_snippets = response.data.data
+                })
+            }, 500)
         },
         methods: {
             snippetWasDeleted() {

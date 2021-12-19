@@ -82,4 +82,93 @@ class SnippetIndexTest extends TestCase
             ->assertJsonFragment($child_fork->fresh()->toArray());
     }
 
+    /** @test */
+    public function guest_can_see_public_snippets()
+    {
+        $user = factory(User::class)->create();
+        $snippet = factory(Snippet::class)->make([
+            'public' => true,
+        ]);
+        $user->addSnippet($snippet);
+
+        // Act
+        $response = $this->apiRequest();
+
+        // Assert
+        $response
+            ->assertStatus(206)
+            ->assertDontSee('"data":[]')
+            ->assertJsonFragment($snippet->fresh()->toArray());
+    }
+
+    /** @test */
+    public function guest_can_not_see_private_snippets()
+    {
+        $user = factory(User::class)->create();
+        $snippet = factory(Snippet::class)->make([
+            'public' => false,
+        ]);
+        $user->addSnippet($snippet);
+
+        // Act
+        $response = $this->apiRequest();
+
+        // Assert
+        $response
+            ->assertStatus(206)
+            ->assertSee('"data":[]');
+    }
+
+    /** @test */
+    public function author_can_see_his_private_snippets()
+    {
+        $user = factory(User::class)->create(['api_token' => str_repeat('A', 60)]);
+        $snippet = factory(Snippet::class)->make([
+            'public' => false,
+        ]);
+        $user->addSnippet($snippet);
+
+        // Act
+        $response = $this->apiRequest([
+            'api_token' => $user->api_token,
+        ]);
+
+        // Assert
+        $response
+            ->assertStatus(206)
+            ->assertDontSee('"data":[]')
+            ->assertJsonFragment($snippet->fresh()->toArray());
+    }
+
+    /** @test */
+    public function user_can_not_see_private_snippets_from_other_users()
+    {
+        $user = factory(User::class)->create(['api_token' => str_repeat('A', 60)]);
+        $other_user_1 = factory(User::class)->create(['api_token' => str_repeat('B', 60)]);
+        $other_user_2 = factory(User::class)->create(['api_token' => str_repeat('C', 60)]);
+        $snippet_1 = factory(Snippet::class)->make([
+            'public' => false,
+        ]);
+        $other_user_1->addSnippet($snippet_1);
+
+        $snippet_2 = factory(Snippet::class)->make([
+            'public' => false,
+        ]);
+        $snippet_3 = factory(Snippet::class)->make([
+            'public' => false,
+        ]);
+        $other_user_2->addSnippet($snippet_2);
+        $other_user_2->addSnippet($snippet_3);
+
+        // Act
+        $response = $this->apiRequest([
+            'api_token' => $user->api_token,
+        ]);
+
+        // Assert
+        $response
+            ->assertStatus(206)
+            ->assertSee('"data":[]');
+    }
+
 }

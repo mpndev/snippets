@@ -4,7 +4,7 @@ use App\Tag;
 use App\User;
 use App\Snippet;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,6 +15,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        factory(User::class)->create([
+            'name' => 'mpndev',
+            'password' => Hash::make('Smpndev89!'),
+        ]);
         $users = factory(User::class, 3)->make();
         $tags = collect([
             factory(Tag::class)->create(['name' => 'foo']),

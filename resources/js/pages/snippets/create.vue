@@ -4,9 +4,18 @@
         <div class="columns">
             <div class="column is-3">
                 <div class="box">
-                    <div>
-                        <p v-if="Auth.check()"><b>{{ $t('Author') }}:</b> {{ Auth.getName() }}<button class="button is-info fa fa-cog is-pulled-right" @click="show_editor_settings = true"></button></p>
+                    <div class="columns" >
+                        <div class="column is-three-fifths" v-if="Auth.check()"><b>{{ $t('Author') }}:</b> {{ Auth.getName() }}</div>
                         <ring-loader v-else class="is-narrow"></ring-loader>
+                        <div v-if="!snippet.public" class="column">
+                            <button class="button is-danger fa fa-lock" @click="snippet.public = !snippet.public" :title="$t('This snippet is visible only to you!')"></button>
+                        </div>
+                        <div v-if="snippet.public" class="column">
+                            <button class="button is-warning fa fa-unlock" @click="snippet.public = !snippet.public" :title="$t('This snippet is visible to everyone!')"></button>
+                        </div>
+                        <div class="column">
+                            <button class="button is-info fa fa-cog" @click="show_editor_settings = true"></button>
+                        </div>
                     </div>
                     <hr>
                     <div>
@@ -81,6 +90,7 @@
                     title: '',
                     description: '',
                     body: '',
+                    public: false,
                 },
                 fresh_tags: '',
                 errors: {
