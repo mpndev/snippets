@@ -4,10 +4,19 @@
         <div class="columns">
             <div class="column is-3">
                 <div class="box">
-                    <div>
-                        <p v-if="Auth.check()"><b>{{ $t('Author') }}:</b> {{ Auth.user.name }}<button class="button is-info fa fa-cog is-pulled-right" @click="show_editor_settings = true"></button></p>
-                        <ring-loader v-else class="is-narrow"></ring-loader>
+                    <div v-if="Auth.check()" class="columns">
+                        <div class="column is-three-fifths"><b>{{ $t('Author') }}:</b> {{ Auth.user.name }}</div>
+                        <div v-if="!snippet.public" class="column">
+                            <button class="button is-danger fa fa-lock" @click="snippet.public = !snippet.public" :title="$t('This snippet is visible only to you!')"></button>
+                        </div>
+                        <div v-if="snippet.public" class="column">
+                            <button class="button is-warning fa fa-unlock" @click="snippet.public = !snippet.public" :title="$t('This snippet is visible to everyone!')"></button>
+                        </div>
+                        <div class="column">
+                            <button class="button is-info fa fa-cog" @click="show_editor_settings = true"></button>
+                        </div>
                     </div>
+                    <ring-loader v-else class="is-narrow"></ring-loader>
                     <hr>
                     <div>
                         <div class="field">
@@ -80,7 +89,8 @@
                     title: '',
                     description: '',
                     body: '',
-                    settings: ''
+                    settings: '',
+                    public: ''
                 },
                 parent: {},
                 fresh_tags: '',
@@ -94,7 +104,7 @@
         },
         mounted() {
             document.querySelector('title').innerHTML = this.$t('create a fork')
-            axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(response => {
+            axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet + '?api_token=' + (this.Auth.check() ? this.Auth.user.api_token : '')).then(response => {
                 response.data.settings = JSON.parse(response.data.settings)
                 this.parent = response.data
             }).catch(error => {
@@ -106,6 +116,7 @@
             parent() {
                 if (this.parent.id) {
                     this.snippet = {...this.parent}
+                    this.snippet.public = 0
                 }
                 this.parent.tags.map(tag => {
                     this.fresh_tags += tag.name + ', '
@@ -157,6 +168,7 @@
                         description: this.snippet.description,
                         body: this.snippet.body,
                         settings: JSON.stringify(this.snippet.settings),
+                        public: this.snippet.public,
                         _parent_id: this.parent.id
                     }).then(response => {
                         return response

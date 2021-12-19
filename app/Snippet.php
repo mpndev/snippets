@@ -222,7 +222,7 @@ class Snippet extends Model
 
     public function scopeWithTags($query, $tags_names)
     {
-        $names = explode(',', str_replace(' ', '', $tags_names));
+        $names = explode(',', str_replace(', ', ',', $tags_names));
         $names = array_filter($names, function($name) {
             return !!strlen($name);
         });

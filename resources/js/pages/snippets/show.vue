@@ -53,7 +53,10 @@
                     <hr>
                     <div>
                         <div v-if="snippet.id">
-                            <p v-if="snippet.forks_quantity > 0" v-for="fork in snippet.forks"><b>{{ $t('Fork') }}:</b> <a :href="'/snippets/' + fork.id">{{ fork.title }}</a></p>
+                            <p v-if="snippet.forks_quantity > 0" v-for="fork in snippet.forks">
+                                <span v-if="(fork.public) || (!fork.public && Auth.check() && Auth.user.id === fork.user_id)"><b>{{ $t('Fork') }}:</b> <a :href="'/snippets/' + fork.id">{{ fork.title }}</a></span>
+                                <span v-else-if="(!fork.public && Auth.check() && Auth.user.id !== fork.user_id) || (!fork.public && !Auth.check())"><b>{{ $t('Fork') }}:</b> "{{ fork.title }}" <button style="cursor: auto" class="button is-danger fa fa-lock is-small"></button></span>
+                            </p>
                             <p v-if="snippet.forks_quantity == 0"><b>{{ $t('Forks') }}:</b>0</p>
                         </div>
                         <ring-loader v-if="!snippet.id" class="is-narrow"></ring-loader>
@@ -61,7 +64,10 @@
                     <hr>
                     <div>
                         <div v-if="snippet.id">
-                            <p v-if="snippet.parent"><b>{{ $t('Forked from') }}:</b> <a :href="'/snippets/' + snippet.parent.id">{{ snippet.parent.title }}</a></p>
+                            <p v-if="snippet.parent">
+                                <span v-if="(snippet.parent.public) || (!snippet.parent.public && Auth.check() && Auth.user.id === snippet.parent.user_id)"><b>{{ $t('Forked from') }}:</b> <a :href="'/snippets/' + snippet.parent.id">{{ snippet.parent.title }}</a></span>
+                                <span v-else-if="(!snippet.parent.public && Auth.check() && Auth.user.id !== snippet.parent.user_id) || (!snippet.parent.public && !Auth.check())"><b>{{ $t('Forked from') }}:</b> "{{ snippet.parent.title }}" <button style="cursor: auto" class="button is-danger fa fa-lock is-small"></button></span>
+                            </p>
                             <p v-if="snippet.parent == undefined"><b>{{ $t('Do not have parent fork') }}</b></p>
                         </div>
                         <ring-loader v-if="!snippet.id" class="is-narrow"></ring-loader>

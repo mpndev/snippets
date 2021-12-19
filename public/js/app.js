@@ -4126,6 +4126,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -4140,7 +4149,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         title: '',
         description: '',
         body: '',
-        settings: ''
+        settings: '',
+        "public": ''
       },
       parent: {},
       fresh_tags: '',
@@ -4156,7 +4166,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var _this = this;
 
     document.querySelector('title').innerHTML = this.$t('create a fork');
-    axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet).then(function (response) {
+    axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet + '?api_token=' + (this.Auth.check() ? this.Auth.user.api_token : '')).then(function (response) {
       response.data.settings = JSON.parse(response.data.settings);
       _this.parent = response.data;
     })["catch"](function (error) {
@@ -4175,6 +4185,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       if (this.parent.id) {
         this.snippet = _objectSpread({}, this.parent);
+        this.snippet["public"] = 0;
       }
 
       this.parent.tags.map(function (tag) {
@@ -4239,6 +4250,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           description: this.snippet.description,
           body: this.snippet.body,
           settings: JSON.stringify(this.snippet.settings),
+          "public": this.snippet["public"],
           _parent_id: this.parent.id
         }).then(function (response) {
           return response;
@@ -4556,6 +4568,12 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Editor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/Editor */ "./resources/js/components/Editor.vue");
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -46656,16 +46674,56 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "columns" }, [
         _c("div", { staticClass: "column is-3" }, [
-          _c("div", { staticClass: "box" }, [
-            _c(
-              "div",
-              [
-                _vm.Auth.check()
-                  ? _c("p", [
+          _c(
+            "div",
+            { staticClass: "box" },
+            [
+              _vm.Auth.check()
+                ? _c("div", { staticClass: "columns" }, [
+                    _c("div", { staticClass: "column is-three-fifths" }, [
                       _c("b", [_vm._v(_vm._s(_vm.$t("Author")) + ":")]),
-                      _vm._v(" " + _vm._s(_vm.Auth.user.name)),
+                      _vm._v(" " + _vm._s(_vm.Auth.user.name))
+                    ]),
+                    _vm._v(" "),
+                    !_vm.snippet.public
+                      ? _c("div", { staticClass: "column" }, [
+                          _c("button", {
+                            staticClass: "button is-danger fa fa-lock",
+                            attrs: {
+                              title: _vm.$t(
+                                "This snippet is visible only to you!"
+                              )
+                            },
+                            on: {
+                              click: function($event) {
+                                _vm.snippet.public = !_vm.snippet.public
+                              }
+                            }
+                          })
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.snippet.public
+                      ? _c("div", { staticClass: "column" }, [
+                          _c("button", {
+                            staticClass: "button is-warning fa fa-unlock",
+                            attrs: {
+                              title: _vm.$t(
+                                "This snippet is visible to everyone!"
+                              )
+                            },
+                            on: {
+                              click: function($event) {
+                                _vm.snippet.public = !_vm.snippet.public
+                              }
+                            }
+                          })
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "column" }, [
                       _c("button", {
-                        staticClass: "button is-info fa fa-cog is-pulled-right",
+                        staticClass: "button is-info fa fa-cog",
                         on: {
                           click: function($event) {
                             _vm.show_editor_settings = true
@@ -46673,170 +46731,172 @@ var render = function() {
                         }
                       })
                     ])
-                  : _c("ring-loader", { staticClass: "is-narrow" })
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c("hr"),
-            _vm._v(" "),
-            _c("div", [
-              _c("div", { staticClass: "field" }, [
-                _c(
-                  "div",
-                  { staticClass: "control" },
-                  [
-                    _c("label", { attrs: { for: "title" } }, [
-                      _vm._v(_vm._s(_vm.$t("Title")) + ":")
-                    ]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.snippet.title,
-                          expression: "snippet.title"
-                        }
-                      ],
-                      staticClass: "input",
-                      attrs: {
-                        id: "title",
-                        type: "text",
-                        placeholder: _vm.$t("min symbols 1, max symbols 255")
-                      },
-                      domProps: { value: _vm.snippet.title },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
+                  ])
+                : _c("ring-loader", { staticClass: "is-narrow" }),
+              _vm._v(" "),
+              _c("hr"),
+              _vm._v(" "),
+              _c("div", [
+                _c("div", { staticClass: "field" }, [
+                  _c(
+                    "div",
+                    { staticClass: "control" },
+                    [
+                      _c("label", { attrs: { for: "title" } }, [
+                        _vm._v(_vm._s(_vm.$t("Title")) + ":")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.snippet.title,
+                            expression: "snippet.title"
                           }
-                          _vm.$set(_vm.snippet, "title", $event.target.value)
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm._l(_vm.errors.title, function(error) {
-                      return _c(
-                        "span",
-                        { staticClass: "title is-6 has-text-danger" },
-                        [_vm._v(_vm._s(error))]
-                      )
-                    })
-                  ],
-                  2
-                )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("hr"),
-            _vm._v(" "),
-            _c("div", [
-              _c("div", { staticClass: "field" }, [
-                _c(
-                  "div",
-                  { staticClass: "control" },
-                  [
-                    _c("label", { attrs: { for: "description" } }, [
-                      _vm._v(_vm._s(_vm.$t("Description")) + ":")
-                    ]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.snippet.description,
-                          expression: "snippet.description"
-                        }
-                      ],
-                      staticClass: "input",
-                      attrs: {
-                        id: "description",
-                        type: "text",
-                        placeholder: _vm.$t("max symbols 2000")
-                      },
-                      domProps: { value: _vm.snippet.description },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
+                        ],
+                        staticClass: "input",
+                        attrs: {
+                          id: "title",
+                          type: "text",
+                          placeholder: _vm.$t("min symbols 1, max symbols 255")
+                        },
+                        domProps: { value: _vm.snippet.title },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.snippet, "title", $event.target.value)
                           }
-                          _vm.$set(
-                            _vm.snippet,
-                            "description",
-                            $event.target.value
-                          )
                         }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm._l(_vm.errors.description, function(error) {
-                      return _c(
-                        "span",
-                        { staticClass: "title is-6 has-text-danger" },
-                        [_vm._v(_vm._s(error))]
-                      )
-                    })
-                  ],
-                  2
-                )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("hr"),
-            _vm._v(" "),
-            _c("div", [
-              _c("div", { staticClass: "field" }, [
-                _c("div", { staticClass: "control" }, [
-                  _c("div", [_c("b", [_vm._v(_vm._s(_vm.$t("Tags")) + ":")])]),
-                  _vm._v(" "),
-                  _c("label", { attrs: { for: "tags" } }),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.fresh_tags,
-                        expression: "fresh_tags"
-                      }
+                      }),
+                      _vm._v(" "),
+                      _vm._l(_vm.errors.title, function(error) {
+                        return _c(
+                          "span",
+                          { staticClass: "title is-6 has-text-danger" },
+                          [_vm._v(_vm._s(error))]
+                        )
+                      })
                     ],
-                    staticClass: "input",
-                    attrs: {
-                      id: "tags",
-                      type: "text",
-                      placeholder: _vm.$t("php, c#, full stack, bash")
-                    },
-                    domProps: { value: _vm.fresh_tags },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.fresh_tags = $event.target.value
-                      }
-                    }
-                  })
+                    2
+                  )
                 ])
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "field" }, [
-                _c("div", { staticClass: "control" }, [
+              _c("hr"),
+              _vm._v(" "),
+              _c("div", [
+                _c("div", { staticClass: "field" }, [
                   _c(
                     "div",
-                    { staticClass: "tags" },
-                    _vm._l(_vm.tags, function(tag) {
-                      return _c("span", { staticClass: "tag is-success" }, [
-                        _vm._v(_vm._s(tag))
-                      ])
-                    }),
-                    0
+                    { staticClass: "control" },
+                    [
+                      _c("label", { attrs: { for: "description" } }, [
+                        _vm._v(_vm._s(_vm.$t("Description")) + ":")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.snippet.description,
+                            expression: "snippet.description"
+                          }
+                        ],
+                        staticClass: "input",
+                        attrs: {
+                          id: "description",
+                          type: "text",
+                          placeholder: _vm.$t("max symbols 2000")
+                        },
+                        domProps: { value: _vm.snippet.description },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.snippet,
+                              "description",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _vm._l(_vm.errors.description, function(error) {
+                        return _c(
+                          "span",
+                          { staticClass: "title is-6 has-text-danger" },
+                          [_vm._v(_vm._s(error))]
+                        )
+                      })
+                    ],
+                    2
                   )
                 ])
+              ]),
+              _vm._v(" "),
+              _c("hr"),
+              _vm._v(" "),
+              _c("div", [
+                _c("div", { staticClass: "field" }, [
+                  _c("div", { staticClass: "control" }, [
+                    _c("div", [
+                      _c("b", [_vm._v(_vm._s(_vm.$t("Tags")) + ":")])
+                    ]),
+                    _vm._v(" "),
+                    _c("label", { attrs: { for: "tags" } }),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.fresh_tags,
+                          expression: "fresh_tags"
+                        }
+                      ],
+                      staticClass: "input",
+                      attrs: {
+                        id: "tags",
+                        type: "text",
+                        placeholder: _vm.$t("php, c#, full stack, bash")
+                      },
+                      domProps: { value: _vm.fresh_tags },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.fresh_tags = $event.target.value
+                        }
+                      }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "field" }, [
+                  _c("div", { staticClass: "control" }, [
+                    _c(
+                      "div",
+                      { staticClass: "tags" },
+                      _vm._l(_vm.tags, function(tag) {
+                        return _c("span", { staticClass: "tag is-success" }, [
+                          _vm._v(_vm._s(tag))
+                        ])
+                      }),
+                      0
+                    )
+                  ])
+                ])
               ])
-            ])
-          ])
+            ],
+            1
+          )
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "column is-9" }, [
@@ -47343,13 +47403,41 @@ var render = function() {
                         _vm._l(_vm.snippet.forks, function(fork) {
                           return _vm.snippet.forks_quantity > 0
                             ? _c("p", [
-                                _c("b", [_vm._v(_vm._s(_vm.$t("Fork")) + ":")]),
-                                _vm._v(" "),
-                                _c(
-                                  "a",
-                                  { attrs: { href: "/snippets/" + fork.id } },
-                                  [_vm._v(_vm._s(fork.title))]
-                                )
+                                fork.public ||
+                                (!fork.public &&
+                                  _vm.Auth.check() &&
+                                  _vm.Auth.user.id === fork.user_id)
+                                  ? _c("span", [
+                                      _c("b", [
+                                        _vm._v(_vm._s(_vm.$t("Fork")) + ":")
+                                      ]),
+                                      _vm._v(" "),
+                                      _c(
+                                        "a",
+                                        {
+                                          attrs: {
+                                            href: "/snippets/" + fork.id
+                                          }
+                                        },
+                                        [_vm._v(_vm._s(fork.title))]
+                                      )
+                                    ])
+                                  : (!fork.public &&
+                                      _vm.Auth.check() &&
+                                      _vm.Auth.user.id !== fork.user_id) ||
+                                    (!fork.public && !_vm.Auth.check())
+                                  ? _c("span", [
+                                      _c("b", [
+                                        _vm._v(_vm._s(_vm.$t("Fork")) + ":")
+                                      ]),
+                                      _vm._v(' "' + _vm._s(fork.title) + '" '),
+                                      _c("button", {
+                                        staticClass:
+                                          "button is-danger fa fa-lock is-small",
+                                        staticStyle: { cursor: "auto" }
+                                      })
+                                    ])
+                                  : _vm._e()
                               ])
                             : _vm._e()
                         }),
@@ -47381,19 +47469,48 @@ var render = function() {
                   ? _c("div", [
                       _vm.snippet.parent
                         ? _c("p", [
-                            _c("b", [
-                              _vm._v(_vm._s(_vm.$t("Forked from")) + ":")
-                            ]),
-                            _vm._v(" "),
-                            _c(
-                              "a",
-                              {
-                                attrs: {
-                                  href: "/snippets/" + _vm.snippet.parent.id
-                                }
-                              },
-                              [_vm._v(_vm._s(_vm.snippet.parent.title))]
-                            )
+                            _vm.snippet.parent.public ||
+                            (!_vm.snippet.parent.public &&
+                              _vm.Auth.check() &&
+                              _vm.Auth.user.id === _vm.snippet.parent.user_id)
+                              ? _c("span", [
+                                  _c("b", [
+                                    _vm._v(_vm._s(_vm.$t("Forked from")) + ":")
+                                  ]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "a",
+                                    {
+                                      attrs: {
+                                        href:
+                                          "/snippets/" + _vm.snippet.parent.id
+                                      }
+                                    },
+                                    [_vm._v(_vm._s(_vm.snippet.parent.title))]
+                                  )
+                                ])
+                              : (!_vm.snippet.parent.public &&
+                                  _vm.Auth.check() &&
+                                  _vm.Auth.user.id !==
+                                    _vm.snippet.parent.user_id) ||
+                                (!_vm.snippet.parent.public &&
+                                  !_vm.Auth.check())
+                              ? _c("span", [
+                                  _c("b", [
+                                    _vm._v(_vm._s(_vm.$t("Forked from")) + ":")
+                                  ]),
+                                  _vm._v(
+                                    ' "' +
+                                      _vm._s(_vm.snippet.parent.title) +
+                                      '" '
+                                  ),
+                                  _c("button", {
+                                    staticClass:
+                                      "button is-danger fa fa-lock is-small",
+                                    staticStyle: { cursor: "auto" }
+                                  })
+                                ])
+                              : _vm._e()
                           ])
                         : _vm._e(),
                       _vm._v(" "),
