@@ -37,6 +37,7 @@
         },
         "classmap": [
             "app",
+            "tests",
             "database/seeds",
             "database/factories"
         ]
