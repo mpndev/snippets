@@ -19,7 +19,13 @@ $factory->define(Snippet::class, function (Faker $faker) {
             'description' => 'example description',
             'body' => 'const example = "example peace of code";',
             'user_id' => 1,
-        ]
+        ],
+        'production' => [
+        'title' => $faker->text(30),
+        'description' => $faker->text(220),
+        'body' => $faker->randomHtml(1, 3),
+        'user_id' => 1,
+    ],
     ];
 
     return $snippet_for_testing_or_local[env('APP_ENV')];

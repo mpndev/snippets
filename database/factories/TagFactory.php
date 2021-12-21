@@ -14,6 +14,9 @@ $factory->define(Tag::class, function (Faker $faker) {
         'testing' => [
             'name' => $faker->unique()->word,
         ],
+        'production' => [
+            'name' => $faker->word(),
+        ],
     ];
 
     return $tag_for_testing_or_local[env('APP_ENV')];
