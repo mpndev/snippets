@@ -13,6 +13,7 @@ class SnippetsRepository
         $constraints = [
             'user_id' => request()->has('api_token') ? User::where('api_token', request('api_token'))->first()->id : null,
             'my_snippets' => request()->has('my-snippets'),
+            'my_private_snippets' => request()->has('my-private-snippets'),
             'snippets_by_author' => request('snippets-by-author'),
             'snippets_created_at_the_same_day_as' => request('snippets-created-at-the-same-day-as'),
             'my_forked_snippets' => request()->has('my-forked-snippets'),
@@ -54,12 +55,16 @@ class SnippetsRepository
             $snippets = $snippets->forks($constraints['user_id']);
         }
 
+        if ($constraints['my_private_snippets']) {
+            $snippets = $snippets->notPublic($constraints['user_id']);
+        }
+
         if ($constraints['my_favorite_snippets']) {
             $snippets = $snippets->favorite($constraints['user_id']);
         }
 
         if ($constraints['most_liked_snippets']) {
-            $snippets = $snippets->mostLikedSnippets();
+            $snippets = $snippets->mostLikedSnippets($constraints['user_id']);
         }
 
         if ($constraints['most_copied_snippets']) {

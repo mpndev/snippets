@@ -55,6 +55,11 @@ class User extends Authenticatable
         return $this;
     }
 
+    public function notPublicSnippets()
+    {
+        return $this->hasMany(Snippet::class)->where('public', false);
+    }
+
     public function favoriteSnippets()
     {
         return $this->belongsToMany(Snippet::class, 'favorite_snippets')->withTimestamps();

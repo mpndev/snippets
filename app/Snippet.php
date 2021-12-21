@@ -180,6 +180,17 @@ class Snippet extends Model
         return $query = $query->whereIn('id', $ids);
     }
 
+    public function scopeNotPublic($query, $id)
+    {
+        $ids = [];
+        $snippets = User::find($id)->notPublicSnippets;
+        foreach($snippets as $snippet) {
+            $ids[] = $snippet->id;
+        }
+
+        return $query = $query->whereIn('id', $ids);
+    }
+
     public function scopeMostLikedSnippets($query)
     {
         return $query = $query->withCount('fans')->orderBy('fans_count', 'desc');
