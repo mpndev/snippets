@@ -5,7 +5,6 @@ namespace App\Repositories;
 
 use App\Snippet;
 use App\User;
-use Illuminate\Support\Facades\Cache;
 
 class SnippetsRepository
 {
@@ -27,16 +26,6 @@ class SnippetsRepository
             'limit' => request('limit'),
             'page' => request('page'),
         ];
-
-        $cache_key = '';
-        foreach ($constraints as $constraint_key => $constraint_value) {
-            $cache_key .= $constraint_key . '->' . ($constraint_value == null ? 'null' : $constraint_value) . '|';
-        }
-        $cache_key = rtrim($cache_key, '|');
-
-        if (Cache::has($cache_key)) {
-            return Cache::get($cache_key);
-        }
 
         $snippets =  new Snippet;
         if ($constraints['my_snippets'] && $constraints['user_id']) {
@@ -91,8 +80,6 @@ class SnippetsRepository
             ->orderByRelevance($constraints['search'])
             ->paginate(5)
             ->toArray();
-
-        Cache::forever($cache_key, $snippets);
 
         return $snippets;
     }

@@ -140,7 +140,7 @@
             create() {
                 this.resetErrors()
                 if (this.validateForm()) {
-                    let response = axios.post('/api/snippets/?api_token=' + this.Auth.getApiToken(), {
+                    let response = axios.post('/api/snippets?api_token=' + this.Auth.getApiToken(), {
                         title: this.snippet.title,
                         description: this.snippet.description,
                         body: this.snippet.body,

@@ -184,7 +184,7 @@
             update() {
                 this.resetErrors()
                 if (this.validateForm()) {
-                    let response = axios.post('/api/snippets/' + this.snippet_copy.id + '/?api_token=' + this.Auth.getApiToken(), {
+                    let response = axios.post('/api/snippets/' + this.snippet_copy.id + '?api_token=' + this.Auth.getApiToken(), {
                         title: this.snippet.title,
                         description: this.snippet_copy.description,
                         body: this.snippet_copy.body,
@@ -200,7 +200,7 @@
                         this.success({message: this.$t('Snippet was updated successful.')})
                         if (this.snippet.tags.length) {
                             this.snippet.tags.map(tag => {
-                                axios.post(`/api/tags/${tag.id}/?api_token=` + this.Auth.getApiToken(), {
+                                axios.post(`/api/tags/${tag.id}?api_token=` + this.Auth.getApiToken(), {
                                     snippet: this.snippet.id,
                                     _method: 'DELETE'
                                 })

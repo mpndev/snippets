@@ -4,8 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -28,16 +26,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $event_types = ['saved', 'updated', 'deleted'];
-        $flushable_models = ['Snippet', 'User', 'Tag', 'FavoriteSnippets', 'Actions'];
-        foreach ($event_types as $event_type) {
-            foreach ($flushable_models as $flushable_model) {
-                Event::listen('eloquent.' . $event_type . ': App\\' . $flushable_model, function() {
-                    Cache::flush();
-                });
-            }
-        }
-
         Collection::macro('paginate', function(int $perPage = 15, $page = null, $options = []) {
             /** @var Collection $this */
             $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);

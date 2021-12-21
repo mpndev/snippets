@@ -3,9 +3,6 @@
 namespace App;
 
 use App\Traits\Searchable;
-use App\Actions;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 
 class Snippet extends Model
