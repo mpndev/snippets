@@ -20,7 +20,7 @@
             <div class="navbar-menu is-relative" :class="{ 'is-active': burger_is_on }">
                 <div class="navbar-end has-background-primary has-text-centered" @click="burger_is_on = false">
                     <router-link class="navbar-item has-text-white" :to="{ name: 'snippets.index' }">{{ $t('Home') }}</router-link>
-                    <router-link v-if="Auth.check()" :to="{ name: 'snippets.create' }" class="navbar-item has-text-white">{{ $t('Create Snippet') }}</router-link>
+                    <router-link v-if="Auth.check()" :to="{ name: 'snippets.create' }" class="navbar-item has-text-white glowing-text">{{ $t('Create Snippet') }}</router-link>
                     <router-link class="navbar-item has-text-white" :to="{ name: 'tags.index' }">{{ $t('Tags') }}</router-link>
                     <language-switcher class="navbar-item has-text-white" />
                     <a v-if="Auth.check()" class="navbar-item has-text-white" @click="logout">{{ $t('Logout') }}</a>
@@ -62,3 +62,20 @@
         notifications: require('../GlobalNotifications')
     }
 </script>
+
+<style scoped="scoped">
+    .glowing-text {
+        animation: glow 10s linear infinite;
+    }
+    @-webkit-keyframes glow {
+        0% {
+            text-shadow: 6px 0 0 orange, -6px 0 0 orange, 0 6px 0 orange, 0 -6px 0 orange;
+        }
+        20% {
+            text-shadow: 0 0 0 orange;
+        }
+        100% {
+            text-shadow: 0 0 0 orange;
+        }
+    }
+</style>
