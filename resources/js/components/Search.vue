@@ -4,6 +4,7 @@
             <div class="column is-4">
                 <div class="tags">
                     <span v-if="Auth.check()" class="tag is-rounded has-cursor-pointer is-unselectable" :class="{'is-info': my_snippets}" @click="toggleFilter('my_snippets')">{{ $t('my snippets') }}</span>
+                    <span v-if="Auth.check()" class="tag is-rounded has-cursor-pointer is-unselectable" :class="{'is-info': private_snippets}" @click="toggleFilter('private_snippets')">{{ $t('my private snippets') }}</span>
                     <span v-if="Auth.check()" class="tag is-rounded has-cursor-pointer is-unselectable" :class="{'is-info': favorite_snippets}" @click="toggleFilter('favorite_snippets')">{{ $t('my favorite snippets') }}</span>
                     <span v-if="Auth.check()" class="tag is-rounded has-cursor-pointer is-unselectable" :class="{'is-info': forked_snippets}" @click="toggleFilter('forked_snippets')">{{ $t('my snippets that was extended') }}</span>
                     <span v-if="Auth.check()" class="tag is-rounded has-cursor-pointer is-unselectable" :class="{'is-info': forks_snippets}" @click="toggleFilter('forks_snippets')">{{ $t('snippets that extends my snippets') }}</span>
@@ -38,6 +39,7 @@
                 Auth: Auth,
                 page: 1,
                 my_snippets: false,
+                private_snippets: false,
                 favorite_snippets: false,
                 forked_snippets: false,
                 forks_snippets: false,
@@ -54,6 +56,7 @@
             let query = {...this.$route.query}
             this.page = 1
             this.my_snippets = query['my-snippets'] ? query['my-snippets'] : this.my_snippets
+            this.private_snippets = query['my-private-snippets'] ? query['my-private-snippets'] : this.private_snippets
             this.favorite_snippets = query['my-favorite-snippets'] ? query['my-favorite-snippets'] : this.favorite_snippets
             this.forked_snippets = query['my-forked-snippets'] ? query['my-forked-snippets'] : this.forked_snippets
             this.forks_snippets = query['forks-of-my-snippets'] ? query['forks-of-my-snippets'] : this.forks_snippets
@@ -78,6 +81,7 @@
                 let query = {}
                 let params = {
                     'my-snippets': this.my_snippets,
+                    'my-private-snippets': this.private_snippets,
                     'my-favorite-snippets': this.favorite_snippets,
                     'my-forked-snippets': this.forked_snippets,
                     'forks-of-my-snippets': this.forks_snippets,
@@ -119,6 +123,7 @@
                 let is_first = true
                 let options = [
                     this.my_snippets ? this.$t(' was created from you') : '',
+                    this.private_snippets ? this.$t('are private') : '',
                     this.favorite_snippets ? this.$t('you like') : '',
                     this.forked_snippets ? this.$t('have forks') : '',
                     this.forks_snippets ? this.$t('extends my snippets') : '',
