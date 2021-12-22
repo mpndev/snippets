@@ -56,12 +56,13 @@
 export default {
     data: () => {
         return {
+            Auth: Auth,
             tags: [],
         }
     },
     mounted() {
         document.querySelector('title').innerHTML = this.$t('tags')
-        axios.get('/api/tags').then(response => {
+        axios.get('/api/tags' + '?api_token=' + (this.Auth.check() ? this.Auth.getApiToken() : '')).then(response => {
             this.tags = response.data
         })
     },

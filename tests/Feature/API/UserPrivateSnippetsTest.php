@@ -18,7 +18,6 @@ class UserPrivateSnippetsTest extends TestCase
     /** @test */
     public function user_can_see_his_private_snippets()
     {
-        $this->withoutExceptionHandling();
         // Arrange
         $user = factory(User::class)->create(['api_token' => str_repeat('A', 60)]);
         $user->addSnippet(factory(Snippet::class)->make(['title' => '1foo', 'public' => true]));

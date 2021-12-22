@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\API;
 
 use App\Tag;
+use App\User;
 use App\Snippet;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class TagsController extends Controller
 {
@@ -18,7 +20,11 @@ class TagsController extends Controller
 
     public function index()
     {
-        $tags = Tag::orderBy('name')->get()->groupBy(function($tag) {
+        $snippets = Snippet::visibility(Auth::guard('api')->check() ? Auth::guard('api')->id() : null)->with('tags')->get();
+        $tags = $snippets->map(function($snippet, $key) {
+            return $snippet->tags;
+        })->collapse();
+        $tags = $tags->unique('name')->groupBy(function($tag) {
             return substr($tag->name, 0, 1);
         });
         return response()->json($tags, 200);

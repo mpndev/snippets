@@ -3949,61 +3949,94 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           });
 
           if (_this3.snippet.tags.length) {
-            _this3.snippet.tags.map(function (tag) {
-              axios.post("/api/tags/".concat(tag.id, "?api_token=") + _this3.Auth.getApiToken(), {
-                snippet: _this3.snippet.id,
-                _method: 'DELETE'
-              });
+            _this3._deleteTags(response);
+          } else if (_this3.tags.length) {
+            _this3._createTags(response);
+          } else {
+            var snippet_id = response.data.id;
+
+            _this3.$router.push({
+              name: 'snippets.show',
+              params: {
+                snippet: snippet_id
+              }
             });
           }
+        });
+      }
+    },
+    _deleteTags: function _deleteTags(response) {
+      var _this4 = this;
 
+      var deleteTagsRequests = [];
+      this.snippet.tags.map(function (tag) {
+        deleteTagsRequests.push(axios.post("/api/tags/".concat(tag.id, "?api_token=") + _this4.Auth.getApiToken(), {
+          snippet: _this4.snippet.id,
+          _method: 'DELETE'
+        }));
+      });
+      axios.all(deleteTagsRequests).then(function () {
+        if (_this4.tags.length) {
+          _this4._createTags(response);
+        } else {
           var snippet_id = response.data.id;
 
-          if (_this3.tags.length) {
-            _this3.tags.map(function (tag) {
-              axios.post("/api/tags?api_token=" + _this3.Auth.getApiToken(), {
-                name: tag,
-                snippet: snippet_id
-              }).then(function (inner_response) {
-                _this3.success({
-                  message: 'tags was updated.'
-                });
-              })["catch"](function (inner_error) {
-                _this3.error({
-                  message: inner_error.toString()
-                });
-              });
-            });
-          }
-
-          _this3.$router.push({
+          _this4.$router.push({
             name: 'snippets.show',
             params: {
               snippet: snippet_id
             }
           });
+        }
+      });
+    },
+    _createTags: function _createTags(response) {
+      var _this5 = this;
+
+      var snippet_id = response.data.id;
+      var createdTagsRequests = [];
+      this.tags.map(function (tag) {
+        createdTagsRequests.push(axios.post("/api/tags?api_token=" + _this5.Auth.getApiToken(), {
+          name: tag,
+          snippet: snippet_id
+        }).then(function (inner_response) {
+          _this5.success({
+            message: 'tags was updated.'
+          });
+        })["catch"](function (inner_error) {
+          _this5.error({
+            message: inner_error.toString()
+          });
+        }));
+      });
+      axios.all(createdTagsRequests).then(function () {
+        _this5.$router.push({
+          name: 'snippets.show',
+          params: {
+            snippet: snippet_id
+          }
         });
-      }
+      });
     },
     destroy: function destroy(snippet) {
-      var _this4 = this;
+      var _this6 = this;
 
       Event.$emit('show-message', {
         message: this.$t('Do you confirm deletion?'),
         type: 'warning',
         callback: function callback() {
-          axios.post('/api/snippets/' + snippet.id + '?api_token=' + _this4.Auth.getApiToken(), {
+          axios.post('/api/snippets/' + snippet.id + '?api_token=' + _this6.Auth.getApiToken(), {
             _method: 'DELETE'
           }).then(function (response) {
-            _this4.$router.push({
+            _this6.$router.push({
               name: 'snippets.index'
             });
 
-            _this4.success({
-              message: _this4.$t('Snippet was successful deleted. Also all of his tag and fans.')
+            _this6.success({
+              message: _this6.$t('Snippet was successful deleted. Also all of his tag and fans.')
             });
           })["catch"](function (error) {
-            _this4.error({
+            _this6.error({
               message: error.toString()
             });
           });
@@ -4875,6 +4908,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      Auth: Auth,
       tags: []
     };
   },
@@ -4882,7 +4916,7 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     document.querySelector('title').innerHTML = this.$t('tags');
-    axios.get('/api/tags').then(function (response) {
+    axios.get('/api/tags' + '?api_token=' + (this.Auth.check() ? this.Auth.getApiToken() : '')).then(function (response) {
       _this.tags = response.data;
     });
   },

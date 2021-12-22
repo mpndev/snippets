@@ -184,7 +184,7 @@
             update() {
                 this.resetErrors()
                 if (this.validateForm()) {
-                    let response = axios.post('/api/snippets/' + this.snippet_copy.id + '?api_token=' + this.Auth.getApiToken(), {
+                    const response = axios.post('/api/snippets/' + this.snippet_copy.id + '?api_token=' + this.Auth.getApiToken(), {
                         title: this.snippet.title,
                         description: this.snippet_copy.description,
                         body: this.snippet_copy.body,
@@ -199,29 +199,53 @@
                     response.then(response => {
                         this.success({message: this.$t('Snippet was updated successful.')})
                         if (this.snippet.tags.length) {
-                            this.snippet.tags.map(tag => {
-                                axios.post(`/api/tags/${tag.id}?api_token=` + this.Auth.getApiToken(), {
-                                    snippet: this.snippet.id,
-                                    _method: 'DELETE'
-                                })
-                            })
+                            this._deleteTags(response)
+                        } else if (this.tags.length) {
+                            this._createTags(response)
+                        } else {
+                            const snippet_id = response.data.id
+                            this.$router.push({ name: 'snippets.show', params: {snippet: snippet_id} })
                         }
-                        let snippet_id = response.data.id
-                        if (this.tags.length) {
-                            this.tags.map(tag => {
-                                axios.post(`/api/tags?api_token=` + this.Auth.getApiToken(), {
-                                    name: tag,
-                                    snippet: snippet_id
-                                }).then(inner_response => {
-                                    this.success({message: 'tags was updated.'})
-                                }).catch(inner_error => {
-                                    this.error({message: inner_error.toString()})
-                                })
-                            })
-                        }
-                        this.$router.push({ name: 'snippets.show', params: {snippet: snippet_id} })
                     })
                 }
+            },
+            _deleteTags(response) {
+                const deleteTagsRequests = []
+                this.snippet.tags.map(tag => {
+                    deleteTagsRequests.push(
+                        axios.post(`/api/tags/${tag.id}?api_token=` + this.Auth.getApiToken(), {
+                            snippet: this.snippet.id,
+                            _method: 'DELETE'
+                        })
+                    )
+                })
+                axios.all(deleteTagsRequests).then(() => {
+                    if (this.tags.length) {
+                        this._createTags(response)
+                    } else {
+                        const snippet_id = response.data.id
+                        this.$router.push({ name: 'snippets.show', params: {snippet: snippet_id} })
+                    }
+                })
+            },
+            _createTags(response) {
+                let snippet_id = response.data.id
+                const createdTagsRequests = []
+                this.tags.map(tag => {
+                    createdTagsRequests.push(
+                        axios.post(`/api/tags?api_token=` + this.Auth.getApiToken(), {
+                            name: tag,
+                            snippet: snippet_id
+                        }).then(inner_response => {
+                            this.success({message: 'tags was updated.'})
+                        }).catch(inner_error => {
+                            this.error({message: inner_error.toString()})
+                        })
+                    )
+                })
+                axios.all(createdTagsRequests).then(() => {
+                    this.$router.push({ name: 'snippets.show', params: {snippet: snippet_id} })
+                })
             },
             destroy(snippet) {
                 Event.$emit('show-message', {

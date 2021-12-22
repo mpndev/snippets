@@ -35,6 +35,7 @@ class SnippetsController extends Controller
                 ],
             ], 403);
         }
+        $snippet->load('tags');
         return response()->json($snippet->toArray(), 200);
     }
 
