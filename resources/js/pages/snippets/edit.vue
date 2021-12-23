@@ -128,6 +128,9 @@
                 show_editor_settings: false
             }
         },
+        created() {
+            this.warn({message: this.$t('Do not store sensitive data like passwords, tokens, etc...')})
+        },
         watch: {
             snippet() {
                 if (this.snippet.id) {

@@ -49,7 +49,7 @@ const options = {
     info: toast,
     warn: toast
 }
-VueNotifications.config.timeout = 6000
+VueNotifications.config.timeout = 8000
 Vue.use(VueNotifications, options)
 
 Vue.component('faq', FAQ)

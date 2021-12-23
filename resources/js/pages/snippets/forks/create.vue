@@ -102,6 +102,9 @@
                 show_editor_settings: false
             }
         },
+        created() {
+            this.warn({message: this.$t('Do not store sensitive data like passwords, tokens, etc...')})
+        },
         mounted() {
             document.querySelector('title').innerHTML = this.$t('create a fork')
             axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet + '?api_token=' + (this.Auth.check() ? this.Auth.user.api_token : '')).then(response => {

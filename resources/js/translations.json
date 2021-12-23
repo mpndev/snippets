@@ -123,7 +123,8 @@
         "If you like some snippet, but is not exactly what you need...": "Ако харесаш някой снипет, но не е точно каквото ти трябва...",
         "just extend(fork) that snippet and make modified version on your own.": "просто разшири(форкни) този снипет и направи твоя версия.",
         "This snippet is visible only to you!": "Този снипет е видим само за теб!",
-        "This snippet is visible to everyone!": "Този снипет е видим за всички!"
+        "This snippet is visible to everyone!": "Този снипет е видим за всички!",
+        "Do not store sensitive data like passwords, tokens, etc...": "Не записвайте чуствителна информация като пароли, токени и т.н."
     },
     "en": {
         "No results found.":  "No results found.",
@@ -247,6 +248,7 @@
         "If you like some snippet, but is not exactly what you need...": "If you like some snippet, but is not exactly what you need...",
         "just extend(fork) that snippet and make modified version on your own.":  "just extend(fork) that snippet and make modified version on your own.",
         "This snippet is visible only to you!": "This snippet is visible only to you!",
-        "This snippet is visible to everyone!": "This snippet is visible to everyone!"
+        "This snippet is visible to everyone!": "This snippet is visible to everyone!",
+        "Do not store sensitive data like passwords, tokens, etc...": "Do not store sensitive data like passwords, tokens, etc..."
     }
 }

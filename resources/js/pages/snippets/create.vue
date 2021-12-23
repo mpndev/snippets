@@ -101,6 +101,9 @@
                 show_editor_settings: false
             }
         },
+        created() {
+            this.warn({message: this.$t('Do not store sensitive data like passwords, tokens, etc...')})
+        },
         computed: {
             tags() {
                 let processed_fresh_tags = this.fresh_tags.replace(', ', ',')
