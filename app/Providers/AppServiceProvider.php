@@ -45,31 +45,28 @@ class AppServiceProvider extends ServiceProvider
                     return $a['priority'] > $b['priority'];
                 });
 
-                return $this->sort(function($item1, $item2) use ($search_needle, $fields) {
-                    foreach($fields as $field) {
+                foreach($fields as $field) {
+                    usort($this->items, function($item1, $item2) use ($search_needle, $field) {
                         $position_first = strpos($item1->{$field['name']}, $search_needle);
                         $position_second = strpos($item2->{$field['name']}, $search_needle);
 
                         if (!is_numeric($position_first) && !is_numeric($position_second)) {
-                            continue;
+                            return 0;
                         }
                         if (!is_numeric($position_first)) {
-                            return -1;
+                            return 1;
                         }
                         if (!is_numeric($position_second)) {
-                            return 1;
+                            return -1;
                         }
                         if ($position_first === $position_second) {
-                            return 1;
+                            return 0;
                         }
 
-                        return $position_first < $position_second ? -1 : 1;
-                    }
-
-                    return 0;
-                });
+                        return $position_first > $position_second ? 1 : -1;
+                    });
+                };
             }
-
             return $this;
         });
     }

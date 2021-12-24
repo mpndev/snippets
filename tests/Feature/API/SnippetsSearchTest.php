@@ -37,13 +37,15 @@ class APISearchSnippetsTest extends TestCase
         // Assert
         $response
             ->assertStatus(206)
-            ->assertSeeInOrder([
-            'Nttttttt2',
-            'tttttNtt1',
-            'tttttttt5',
-            'tttttttt4',
-            'tttttttt3',
-        ]);
+            ->assertSeeInOrder(
+                [
+                    'Nttttttt2',
+                    'tttttNtt1',
+                    'tttttttt5',
+                    'tttttttt4',
+                    'tttttttt3',
+                ]
+            );
     }
 
     protected function getSnippetsData()
