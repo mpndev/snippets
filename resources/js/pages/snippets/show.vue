@@ -1,3 +1,15 @@
+<style>
+    .brake-url-to-fit {
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        word-break: break-word;
+        hyphens: auto;
+    }
+    .brake-url-to-fit:hover {
+        background-color: #80808073;
+    }
+</style>
+
 <template>
     <div>
         <div class="columns">
@@ -74,8 +86,18 @@
                     </div>
                 </div>
             </div>
-            <div class="column is-9" @mousedown.ctrl="runIfLink" @click.meta="runIfLink">
+            <div class="column is-9">
                 <Editor v-if="snippet.id" :snippet="snippet" :options="snippet.settings"></Editor>
+            </div>
+        </div>
+        <div class="columns">
+            <div v-if="urls && urls.length" class="column is-3">
+                <div class="box">
+                    <p><b>{{ $t('Detected URLs in the snippet:') }}</b></p>
+                    <ul v-for="url in urls">
+                        <li><a class="brake-url-to-fit" :href="url" target="_blank">{{ url }}</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -91,7 +113,8 @@
         data: () => {
             return {
                 snippet: {},
-                Auth: Auth
+                Auth: Auth,
+                urls: []
             }
         },
         mounted() {
@@ -103,6 +126,8 @@
                 this.snippet.settings.cursorHeight = 0
                 this.snippet.settings.lineNumbers = false
                 this.initializeTheme()
+                let urls_pattern = /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/ig
+                this.urls = this.snippet.body.match(urls_pattern)
             }).catch(error => {
                 this.$router.push({ name: 'snippets.index' })
                 this.error({message: error.toString()})
@@ -170,13 +195,6 @@
                 stylesheet.setAttribute("type", "text/css")
                 stylesheet.setAttribute("href", `/css/themes/${theme}.css`)
                 document.getElementsByTagName("head")[0].appendChild(stylesheet);
-            },
-            runIfLink() {
-                this.snippet.body.split(' ').map(word => {
-                    if (/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/.test(word.trim())) {
-                        window.open(word, '_blank')
-                    }
-                })
             }
         },
         notifications: require('../../GlobalNotifications')

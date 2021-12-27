@@ -124,7 +124,8 @@
         "just extend(fork) that snippet and make modified version on your own.": "просто разшири(форкни) този снипет и направи твоя версия.",
         "This snippet is visible only to you!": "Този снипет е видим само за теб!",
         "This snippet is visible to everyone!": "Този снипет е видим за всички!",
-        "Do not store sensitive data like passwords, tokens, etc...": "Не записвайте чуствителна информация като пароли, токени и т.н."
+        "Do not store sensitive data like passwords, tokens, etc...": "Не записвайте чуствителна информация като пароли, токени и т.н.",
+        "Detected URLs in the snippet:": "Засечени ликове към страници в снипета:"
     },
     "en": {
         "No results found.":  "No results found.",
@@ -249,6 +250,7 @@
         "just extend(fork) that snippet and make modified version on your own.":  "just extend(fork) that snippet and make modified version on your own.",
         "This snippet is visible only to you!": "This snippet is visible only to you!",
         "This snippet is visible to everyone!": "This snippet is visible to everyone!",
-        "Do not store sensitive data like passwords, tokens, etc...": "Do not store sensitive data like passwords, tokens, etc..."
+        "Do not store sensitive data like passwords, tokens, etc...": "Do not store sensitive data like passwords, tokens, etc...",
+        "Detected URLs in the snippet:": "Detected URLs in the snippet:"
     }
 }
