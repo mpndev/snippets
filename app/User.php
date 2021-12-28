@@ -21,6 +21,10 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    protected $casts = [
+        'id' => 'int',
+    ];
+
     public function getRouteKeyName()
     {
         return 'name';

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\API;
 
 use App\Tag;
-use App\User;
 use App\Snippet;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class TagsController extends Controller
 {
@@ -32,11 +32,12 @@ class TagsController extends Controller
 
     public function store()
     {
-        $this->validate(request(), [
-            'snippet' => 'exists:snippets,id',
-        ]);
-
-        $snippet = Snippet::find(request('snippet'));
+        $snippet_id_or_slug = request('snippet_id_or_slug');
+        if (!$snippet = Snippet::where('id', $snippet_id_or_slug)->orWhere('slug', $snippet_id_or_slug)->first()) {
+            throw ValidationException::withMessages([
+                'snippet_id_or_slug' => 'The selected snippet id or slug is invalid.',
+            ]);
+        }
         $tag_name = request('name');
 
         if (!$tag = Tag::where('name', $tag_name)->first()) {
@@ -52,11 +53,13 @@ class TagsController extends Controller
 
     public function destroy(Tag $tag)
     {
-        $this->validate(request(), [
-            'snippet' => 'exists:snippets,id',
-        ]);
+        $snippet_id_or_slug = request('snippet_id_or_slug');
+        if (!$snippet = Snippet::where('id', $snippet_id_or_slug)->orWhere('slug', $snippet_id_or_slug)->first()) {
+            throw ValidationException::withMessages([
+                'snippet_id_or_slug' => 'The selected snippet id or slug is invalid.',
+            ]);
+        }
 
-        $snippet = Snippet::find(request('snippet'));
         $snippet->removeTag($tag);
 
         return response()->json(null, 204);

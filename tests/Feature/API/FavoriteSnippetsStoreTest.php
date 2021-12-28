@@ -24,7 +24,27 @@ class FavoriteSnippetsStoreTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => $snippet->id,
+            'snippet_id_or_slug' => $snippet->id,
+        ], [
+            'api_token' => $user->api_token,
+        ]);
+
+        // Assert
+        $response
+            ->assertStatus(201)
+            ->assertJson($snippet->toArray());
+    }
+
+    /** @test */
+    public function user_can_add_snippet_to_favorite_with_slug()
+    {
+        // Arrange
+        $user = factory(User::class)->create();
+        $snippet = factory(Snippet::class)->create();
+
+        // Act
+        $response = $this->apiRequest([
+            'snippet_id_or_slug' => $snippet->id,
         ], [
             'api_token' => $user->api_token,
         ]);
@@ -43,7 +63,7 @@ class FavoriteSnippetsStoreTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => $snippet->id,
+            'snippet_id_or_slug' => $snippet->id,
         ], []);
 
         // Assert

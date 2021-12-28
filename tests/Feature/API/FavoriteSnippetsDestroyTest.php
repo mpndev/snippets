@@ -25,7 +25,7 @@ class FavoriteSnippetsDestroyTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => $snippet->id,
+            'snippet_id_or_slug' => $snippet->id,
         ], [
             'api_token' => $user->api_token,
         ]);
@@ -42,7 +42,7 @@ class FavoriteSnippetsDestroyTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => $snippet->id,
+            'snippet_id_or_slug' => $snippet->id,
         ], []);
 
         // Assert

@@ -35,7 +35,7 @@ class SnippetUpdateTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => $snippet->id,
+            'snippet_id_or_slug' => $snippet->id,
         ], $new_data);
 
         // Assert
@@ -66,7 +66,7 @@ class SnippetUpdateTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => $snippet->id,
+            'snippet_id_or_slug' => $snippet->id,
         ], $new_data);
 
         // Assert
@@ -98,7 +98,7 @@ class SnippetUpdateTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => $snippet->id
+            'snippet_id_or_slug' => $snippet->id
         ], $new_data);
 
         // Assert
@@ -129,7 +129,7 @@ class SnippetUpdateTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => $snippet->id,
+            'snippet_id_or_slug' => $snippet->id,
         ], $new_data);
 
         // Assert
@@ -168,7 +168,7 @@ class SnippetUpdateTest extends TestCase
 
         // Act
         $this->apiRequest([
-            'snippet' => $snippet->id,
+            'snippet_id_or_slug' => $snippet->id,
         ], $new_data);
 
         // Assert
@@ -195,13 +195,13 @@ class SnippetUpdateTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => $snippet->id,
+            'snippet_id_or_slug' => $snippet->id,
         ], $new_data);
 
         // Assert
         $response
             ->assertStatus(200)
-            ->assertSee('"public":"0"');
+            ->assertSee('"public":false');
         $this->assertDatabaseHas('snippets', ['id' => $snippet->id]);
     }
 
@@ -224,13 +224,13 @@ class SnippetUpdateTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => $snippet->id,
+            'snippet_id_or_slug' => $snippet->id,
         ], $new_data);
 
         // Assert
         $response
             ->assertStatus(200)
-            ->assertSee('"public":"0"');
+            ->assertSee('"public":false');
         $this->assertDatabaseHas('snippets', ['id' => $snippet->id]);
     }
 
@@ -253,13 +253,13 @@ class SnippetUpdateTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => $snippet->id,
+            'snippet_id_or_slug' => $snippet->id,
         ], $new_data);
 
         // Assert
         $response
             ->assertStatus(200)
-            ->assertSee('"public":"0"');
+            ->assertSee('"public":false');
         $this->assertDatabaseHas('snippets', ['id' => $snippet->id]);
     }
 
@@ -282,13 +282,13 @@ class SnippetUpdateTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => $snippet->id,
+            'snippet_id_or_slug' => $snippet->id,
         ], $new_data);
 
         // Assert
         $response
             ->assertStatus(200)
-            ->assertSee('"public":"1"');
+            ->assertSee('"public":true');
         $this->assertDatabaseHas('snippets', ['id' => $snippet->id]);
     }
 
@@ -311,13 +311,13 @@ class SnippetUpdateTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => $snippet->id,
+            'snippet_id_or_slug' => $snippet->id,
         ], $new_data);
 
         // Assert
         $response
             ->assertStatus(200)
-            ->assertSee('"public":"1"');
+            ->assertSee('"public":true');
         $this->assertDatabaseHas('snippets', ['id' => $snippet->id]);
     }
 
@@ -340,14 +340,141 @@ class SnippetUpdateTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => $snippet->id,
+            'snippet_id_or_slug' => $snippet->id,
         ], $new_data);
 
         // Assert
         $response
             ->assertStatus(200)
-            ->assertSee('"public":"1"');
+            ->assertSee('"public":true');
         $this->assertDatabaseHas('snippets', ['id' => $snippet->id]);
+    }
+
+    /** @test */
+    public function user_can_update_snippet_title_and_the_slug_get_updated_as_well()
+    {
+        // Arrange
+        $user = factory(User::class)->create();
+        $snippet = factory(Snippet::class)->make([
+            'title' => 'foo',
+            'slug' => 'bar',
+            'description' => 'bar',
+            'body' => 'bar',
+        ]);
+        $user->addSnippet($snippet);
+        $new_data = [
+            'title' => 'bar',
+            'description' => 'bar',
+            'body' => 'bar',
+            'api_token' => $user->fresh()->api_token,
+        ];
+
+        // Act
+        $response = $this->apiRequest([
+            'snippet_id_or_slug' => $snippet->slug,
+        ], $new_data);
+
+        // Assert
+        $response
+            ->assertStatus(200)
+            ->assertJson($snippet->fresh()->toArray());
+        $this->assertDatabaseHas('snippets', ['slug' => 'bar']);
+    }
+
+    /** @test */
+    public function user_can_not_update_the_snippet_title_if_another_snippet_have_the_title()
+    {
+        // Arrange
+        $another_user = factory(User::class)->create(['api_token' => str_repeat('B', 60)]);
+        $another_user_snippet = factory(Snippet::class)->make([
+            'title' => 'Bar',
+            'slug' => 'bar',
+            'description' => 'Bar',
+            'body' => '<h1>Bar</h1>',
+            'settings' => '{"theme": "darcula"}',
+        ]);
+        $another_user->addSnippet($another_user_snippet);
+
+        $user = factory(User::class)->create(['api_token' => str_repeat('A', 60)]);
+        $user_snippet = factory(Snippet::class)->make([
+            'title' => 'faz',
+            'slug' => 'faz',
+            'description' => 'faz',
+            'body' => 'faz',
+            'settings' => '{"theme": "darcula"}',
+        ]);
+        $user->addSnippet($user_snippet);
+
+        $new_data = [
+            'title' => 'Bar',
+            'description' => 'faz',
+            'body' => 'faz',
+            'settings' => '{"theme": "darcula"}',
+            'api_token' => $user->fresh()->api_token,
+        ];
+
+        // Act
+        $response = $this->apiRequest([
+            'snippet_id_or_slug' => $user_snippet->slug,
+        ], $new_data);
+
+        // Assert
+        $response
+            ->assertStatus(400)
+            ->assertJson([
+                'title' => [
+                    'The title has already been taken.',
+                ],
+            ]);
+        $this->assertDatabaseHas('snippets', ['slug' => 'faz']);
+    }
+
+    /** @test */
+    public function user_can_not_update_the_snippet_title_if_another_snippet_have_the_title_and_the_validation_is_case_insensitive()
+    {
+        // Arrange
+        $another_user = factory(User::class)->create(['api_token' => str_repeat('B', 60)]);
+        $another_user_snippet = factory(Snippet::class)->make([
+            'title' => 'Bar',
+            'slug' => 'bar',
+            'description' => 'Bar',
+            'body' => '<h1>Bar</h1>',
+            'settings' => '{"theme": "darcula"}',
+        ]);
+        $another_user->addSnippet($another_user_snippet);
+
+        $user = factory(User::class)->create(['api_token' => str_repeat('A', 60)]);
+        $user_snippet = factory(Snippet::class)->make([
+            'title' => 'faz',
+            'slug' => 'faz',
+            'description' => 'faz',
+            'body' => 'faz',
+            'settings' => '{"theme": "darcula"}',
+        ]);
+        $user->addSnippet($user_snippet);
+
+        $new_data = [
+            'title' => 'bar',
+            'description' => 'faz',
+            'body' => 'faz',
+            'settings' => '{"theme": "darcula"}',
+            'api_token' => $user->fresh()->api_token,
+        ];
+
+        // Act
+        $response = $this->apiRequest([
+            'snippet_id_or_slug' => $user_snippet->slug,
+        ], $new_data);
+
+        // Assert
+        $response
+            ->assertStatus(400)
+            ->assertJson([
+                'title' => [
+                    'The title has already been taken.',
+                ],
+            ]);
+        $this->assertDatabaseHas('snippets', ['slug' => 'faz']);
     }
 
 }

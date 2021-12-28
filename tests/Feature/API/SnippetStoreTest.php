@@ -19,7 +19,6 @@ class SnippetStoreTest extends TestCase
     /** @test */
     public function user_can_submit_new_snippet()
     {
-        $this->withoutExceptionHandling();
         // Arrange
         $user = factory(User::class)->create();
 
@@ -38,6 +37,41 @@ class SnippetStoreTest extends TestCase
             ->assertStatus(201)
             ->assertJson($snippet->toArray());
         $this->assertDatabaseHas('snippets', ['id' => $snippet->id]);
+    }
+
+    /** @test */
+    public function user_can_not_submit_new_snippet_with_existing_title()
+    {
+        // Arrange
+        $user = factory(User::class)->create(['api_token' => str_repeat('A', 60)]);
+
+        $another_user = factory(User::class)->create(['api_token' => str_repeat('B', 60)]);
+        $another_user->addSnippet(factory(Snippet::class)->make([
+            'title' => 'Foo',
+            'slug' => 'foo',
+            'description' => 'Bar',
+            'body' => '<h1>FooBar</h1>',
+            'settings' => '{"theme": "darcula"}',
+        ]));
+
+        // Act
+        $response = $this->apiRequest([], [
+            'title' => 'Foo',
+            'description' => 'Bar',
+            'body' => '<h1>FooBar</h1>',
+            'settings' => '{"theme": "darcula"}',
+            'api_token' => $user->api_token,
+        ]);
+
+        // Assert
+        $response
+            ->assertStatus(400)
+            ->assertJson([
+                'title' => [
+                    'The title has already been taken.',
+                ],
+            ]);
+        $this->assertDatabaseMissing('snippets', ['id' => 2]);
     }
 
     /** @test */
@@ -138,7 +172,7 @@ class SnippetStoreTest extends TestCase
             ->assertStatus(400)
             ->assertJson([
                 'title' => [
-                    'Title cannot be the same as the forked snippet.',
+                    'The title has already been taken.',
                 ],
             ]);
     }
@@ -161,6 +195,30 @@ class SnippetStoreTest extends TestCase
         // Assert
         $snippet = $user->snippets()->first();
         $this->assertSame('', $snippet->description);
+    }
+
+
+    /** @test */
+    public function when_user_submit_new_snippet_slug_is_created()
+    {
+        // Arrange
+        $user = factory(User::class)->create();
+
+        // Act
+        $response = $this->apiRequest([], [
+            'title' => 'Foo Bar',
+            'description' => 'Bar',
+            'body' => '<h1>FooBar</h1>',
+            'settings' => '{"theme": "darcula"}',
+            'api_token' => $user->api_token,
+        ]);
+
+        // Assert
+        $snippet = $user->snippets()->first();
+        $response
+            ->assertStatus(201)
+            ->assertJson($snippet->toArray());
+        $this->assertDatabaseHas('snippets', ['slug' => 'foo-bar']);
     }
 
 }

@@ -9,12 +9,12 @@
         <div class="column">
             <div>
                 <p>
-                    <a :href="`/snippets/${snippet.id}`" class="title has-text-dark is-6">
+                    <a :href="`/snippets/${snippet.slug}`" class="title has-text-dark is-6">
                         <text-highlight :queries="($route.query && $route.query.search) ? [$route.query.search] : []">{{ snippet.title }}</text-highlight>
                     </a>
                 </p>
                 <p>
-                    <a :href="`/snippets/${snippet.id}`" class="title has-text-dark is-7">
+                    <a :href="`/snippets/${snippet.slug}`" class="title has-text-dark is-7">
                         <text-highlight :queries="($route.query && $route.query.search) ? [$route.query.search] : []">{{ parsed_description }}</text-highlight>
                     </a>
                 </p>
@@ -62,7 +62,7 @@
             copy() {
                 this.$copyText(this.snippet.body).then(() => {
                     this.$parent.success({message: this.$t('Copied to clipbord.')})
-                    axios.post(`/api/snippets/actions/copy/${this.snippet.id}`, {
+                    axios.post(`/api/snippets/actions/copy/${this.snippet.slug}`, {
                         '_method': 'PUT'
                     }).then(response => {
                         this.$emit('snippet-was-copied', response.data)
@@ -72,17 +72,17 @@
                 })
             },
             show(snippet) {
-                this.$router.push({ name: 'snippets.show', params: { snippet: snippet.id} })
+                this.$router.push({ name: 'snippets.show', params: { snippet_id_or_slug: snippet.slug} })
             },
             edit(snippet) {
-                this.$router.push({ name: 'snippets.edit', params: { snippet: snippet.id }})
+                this.$router.push({ name: 'snippets.edit', params: { snippet_id_or_slug: snippet.slug }})
             },
             destroy(snippet) {
                 Event.$emit('show-message', {
                     message: this.$t('Do you confirm deletion?'),
                     type: 'warning',
                     callback: () => {
-                        axios.post('/api/snippets/' + snippet.id + '?api_token=' + this.Auth.getApiToken(), {
+                        axios.post('/api/snippets/' + snippet.slug + '?api_token=' + this.Auth.getApiToken(), {
                             _method: 'DELETE'
                         }).then(response => {
                             this.$emit('snippet-was-deleted', snippet.id)
@@ -97,10 +97,10 @@
                 this.$router.push({ name: 'snippets.index', query: { "with-tags": tag.name, page: 1 } })
             },
             createFork(snippet) {
-                this.$router.push({ name: 'snippets.forks.create', params: { snippet: snippet.id }})
+                this.$router.push({ name: 'snippets.forks.create', params: { snippet_id_or_slug: snippet.slug }})
             },
             addToFavoriteSnippets(snippet) {
-                axios.post(`/api/snippets/favorite/${snippet.id}`, {
+                axios.post(`/api/snippets/favorite/${snippet.slug}`, {
                     'api_token': this.Auth.getApiToken()
                 }).then(response => {
                     this.Auth.addToFavoriteSnippets(snippet)
@@ -113,7 +113,7 @@
                 })
             },
             removeFromFavoriteSnippets(snippet) {
-                axios.post(`/api/snippets/favorite/${snippet.id}`, {
+                axios.post(`/api/snippets/favorite/${snippet.slug}`, {
                     'api_token': this.Auth.getApiToken(),
                     '_method': 'DELETE'
                 }).then(response => {

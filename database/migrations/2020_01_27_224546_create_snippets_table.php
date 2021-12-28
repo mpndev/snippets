@@ -17,7 +17,8 @@ class CreateSnippetsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('fork_id')->nullable();
             $table->unsignedBigInteger('user_id');
-            $table->string('title');
+            $table->string('title')->unique();
+            $table->string('slug')->unique()->nullable();
             $table->text('description')->nullable();
             $table->text('body');
             $table->string('settings', 1000)->default('{"indentUnit": 2, "smartIndent": true, "tabSize": 2, "indentWithTabs": false, "electricChars": true, "direction": "ltr", "mode": "default", "theme": "default", "lineWrapping": true, "lineNumbers": true, "readOnly": false, "undoDepth": 200, "autofocus": true, "cursorBlinkRate": 530, "cursorScrollMargin": 0, "cursorHeight": 1, "workTime": 200, "workDelay": 300, "spellcheck": false, "autocorrect": false, "autocapitalize": false, "line": true}');

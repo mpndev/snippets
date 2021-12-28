@@ -38,6 +38,7 @@
                         <div v-if="snippet.id" class="control">
                             <label for="description">{{ $t('Description') }}:</label>
                             <input class="input" id="description" type="text" :placeholder="$t('max symbols 2000')" v-model="snippet_copy.description">
+                            <span class="tag is-info is-light is-small is-rounded is-pulled-right">{{ max_description_length - snippet_copy.description.length }}</span>
                             <span v-for="error in errors.description" class="title is-6 has-text-danger">{{ error }}</span>
                         </div>
                         <ring-loader v-else class="is-narrow"></ring-loader>
@@ -81,7 +82,7 @@
                     <hr>
                     <div>
                         <div v-if="snippet.id">
-                            <p v-if="snippet.parent"><b>{{ $t('Forked from') }}:</b> <a :href="'/snippets/' + snippet.parent.id">{{ snippet.parent.title }}</a></p>
+                            <p v-if="snippet.parent"><b>{{ $t('Forked from') }}:</b> <a :href="'/snippets/' + snippet.parent.slug">{{ snippet.parent.title }}</a></p>
                             <p v-if="snippet.parent == undefined"><b>{{ $t('Do not have parent fork') }}</b></p>
                         </div>
                         <ring-loader v-if="!snippet.id" class="is-narrow"></ring-loader>
@@ -96,8 +97,11 @@
                     </div>
                 </div>
                 <div class="columns">
-                    <div class="column">
+                    <div class="column is-11">
                         <button class="button is-success is-large is-fullwidth" @click="update()">{{ $t('UPDATE') }}</button>
+                    </div>
+                    <div class="column is-1">
+                        <span class="tag is-info is-light is-medium is-rounded">{{ max_body_length - snippet_copy.body.length }}</span>
                     </div>
                 </div>
             </div>
@@ -117,6 +121,8 @@
         },
         data: () => {
             return {
+                max_body_length: 100000,
+                max_description_length: 2000,
                 Auth: Auth,
                 snippet: {},
                 snippet_copy: null,
@@ -155,7 +161,7 @@
         },
         mounted() {
             document.querySelector('title').innerHTML = this.$t('edit the snippet')
-            axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet + '?api_token=' + (this.Auth.check() ? this.Auth.getApiToken() : '')).then(response => {
+            axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet_id_or_slug + '?api_token=' + (this.Auth.check() ? this.Auth.getApiToken() : '')).then(response => {
                 response.data.settings = JSON.parse(response.data.settings)
                 this.snippet = response.data
             }).catch(error => {
@@ -165,13 +171,13 @@
         },
         methods:{
             validateForm() {
-                if (this.snippet.description.trim().length > 2000) {
+                if (this.snippet.description.trim().length > this.max_description_length) {
                     this.errors.description.push(this.$t('Description cannot be more then 2000 symbols.'))
                 }
                 if (this.snippet.body.length < 1) {
                     this.errors.body.push(this.$t('Snippet is required.'))
                 }
-                if (this.snippet.body.length > 100000) {
+                if (this.snippet.body.length > this.max_body_length) {
                     this.errors.body.push(this.$t('Snippet cannot be more then 100 000 symbols.'))
                 }
 
@@ -182,12 +188,12 @@
                 this.errors.body = []
             },
             show(snippet) {
-                this.$router.push({ name: 'snippets.show', params: { snippet: snippet.id }})
+                this.$router.push({ name: 'snippets.show', params: { snippet_id_or_slug: snippet.slug }})
             },
             update() {
                 this.resetErrors()
                 if (this.validateForm()) {
-                    const response = axios.post('/api/snippets/' + this.snippet_copy.id + '?api_token=' + this.Auth.getApiToken(), {
+                    const response = axios.post('/api/snippets/' + this.snippet.slug + '?api_token=' + this.Auth.getApiToken(), {
                         title: this.snippet.title,
                         description: this.snippet_copy.description,
                         body: this.snippet_copy.body,
@@ -200,24 +206,25 @@
                         this.error({message: error.toString()})
                     })
                     response.then(response => {
+                        const slug = response.data.slug
                         this.success({message: this.$t('Snippet was updated successful.')})
-                        if (this.snippet.tags.length) {
+                        if (response.data.tags.length) {
                             this._deleteTags(response)
                         } else if (this.tags.length) {
                             this._createTags(response)
                         } else {
-                            const snippet_id = response.data.id
-                            this.$router.push({ name: 'snippets.show', params: {snippet: snippet_id} })
+                            this.$router.push({ name: 'snippets.show', params: {snippet_id_or_slug: slug} })
                         }
                     })
                 }
             },
             _deleteTags(response) {
                 const deleteTagsRequests = []
+                const slug = response.data.slug
                 this.snippet.tags.map(tag => {
                     deleteTagsRequests.push(
                         axios.post(`/api/tags/${tag.id}?api_token=` + this.Auth.getApiToken(), {
-                            snippet: this.snippet.id,
+                            snippet_id_or_slug: slug,
                             _method: 'DELETE'
                         })
                     )
@@ -226,28 +233,27 @@
                     if (this.tags.length) {
                         this._createTags(response)
                     } else {
-                        const snippet_id = response.data.id
-                        this.$router.push({ name: 'snippets.show', params: {snippet: snippet_id} })
+                        this.$router.push({ name: 'snippets.show', params: {snippet_id_or_slug: slug} })
                     }
                 })
             },
             _createTags(response) {
-                let snippet_id = response.data.id
                 const createdTagsRequests = []
+                const slug = response.data.slug
                 this.tags.map(tag => {
                     createdTagsRequests.push(
                         axios.post(`/api/tags?api_token=` + this.Auth.getApiToken(), {
                             name: tag,
-                            snippet: snippet_id
+                            snippet_id_or_slug: slug
                         }).then(inner_response => {
-                            this.success({message: 'tags was updated.'})
+                            this.success({message: this.$t('Tags was updated.')})
                         }).catch(inner_error => {
                             this.error({message: inner_error.toString()})
                         })
                     )
                 })
                 axios.all(createdTagsRequests).then(() => {
-                    this.$router.push({ name: 'snippets.show', params: {snippet: snippet_id} })
+                    this.$router.push({ name: 'snippets.show', params: {snippet_id_or_slug: slug} })
                 })
             },
             destroy(snippet) {
@@ -255,7 +261,7 @@
                     message: this.$t('Do you confirm deletion?'),
                     type: 'warning',
                     callback: () => {
-                        axios.post('/api/snippets/' + snippet.id + '?api_token=' + this.Auth.getApiToken(), {
+                        axios.post('/api/snippets/' + snippet.slug + '?api_token=' + this.Auth.getApiToken(), {
                             _method: 'DELETE'
                         }).then(response => {
                             this.$router.push({ name: 'snippets.index' })

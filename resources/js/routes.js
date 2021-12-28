@@ -30,7 +30,7 @@ export default {
             }
         },
         {
-            path: '/snippets/:snippet/edit',
+            path: '/snippets/:snippet_id_or_slug/edit',
             component: SnippetsEdit,
             name: 'snippets.edit',
             beforeEnter: (to, from, next) => {
@@ -43,7 +43,7 @@ export default {
             }
         },
         {
-            path: '/snippets/:snippet',
+            path: '/snippets/:snippet_id_or_slug',
             component: SnippetsShow,
             name: 'snippets.show',
             beforeEnter: (to, from, next) => {
@@ -51,7 +51,7 @@ export default {
             }
         },
         {
-            path: '/snippets/:snippet/forks/create',
+            path: '/snippets/:snippet_id_or_slug/forks/create',
             component: SnippetsForksCreate,
             name: 'snippets.forks.create',
             beforeEnter: (to, from, next) => {

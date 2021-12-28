@@ -11,7 +11,7 @@
         </p>
         <ul class="menu-list">
             <li v-for="snippet in most_copied_snippets">
-                <a class="title is-7" :href="`/snippets/${snippet.id}`">
+                <a class="title is-7" :href="`/snippets/${snippet.slug}`">
                     <span class="tag is-warning is-inline"><span class="fa fa-clipboard has-text-success"></span> X {{ snippet.times_copied }}</span>
                     {{ snippet.title }}
                 </a>

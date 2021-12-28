@@ -23,6 +23,7 @@
                             <div class="control">
                                 <label for="title">{{ $t('Title') }}:</label>
                                 <input class="input" id="title" type="text" :placeholder="$t('min symbols 1, max symbols 255')" v-model="snippet.title">
+                                <span class="tag is-info is-light is-small is-rounded is-pulled-right">{{ max_title_length - snippet.title.length }}</span>
                                 <span v-for="error in errors.title" class="title is-6 has-text-danger">{{ error }}</span>
                             </div>
                         </div>
@@ -33,6 +34,7 @@
                             <div class="control">
                                 <label for="description">{{ $t('Description') }}:</label>
                                 <input class="input" id="description" type="text" :placeholder="$t('max symbols 2000')" v-model="snippet.description">
+                                <span class="tag is-info is-light is-small is-rounded is-pulled-right">{{ max_description_length - snippet.description.length }}</span>
                                 <span v-for="error in errors.description" class="title is-6 has-text-danger">{{ error }}</span>
                             </div>
                         </div>
@@ -64,8 +66,11 @@
                     </p>
                 </div>
                 <div class="columns">
-                    <div class="column">
+                    <div class="column is-11">
                         <button class="button is-success is-large is-fullwidth" @click="create()">{{ $t('CREATE') }}</button>
+                    </div>
+                    <div class="column is-1">
+                        <span class="tag is-info is-light is-medium is-rounded">{{ max_body_length - snippet.body.length }}</span>
                     </div>
                 </div>
             </div>
@@ -84,6 +89,10 @@
         },
         data: () => {
             return {
+                min_title_length: 1,
+                max_title_length: 255,
+                max_body_length: 100000,
+                max_description_length: 2000,
                 editorOptions: {},
                 Auth: Auth,
                 snippet: {
@@ -117,19 +126,19 @@
         },
         methods: {
             validateForm() {
-                if (this.snippet.title.trim().length < 1) {
+                if (this.snippet.title.trim().length < this.min_title_length) {
                     this.errors.title.push(this.$t('Title is required.'))
                 }
-                if (this.snippet.title.trim().length > 255) {
+                if (this.snippet.title.trim().length > this.max_title_length) {
                     this.errors.title.push(this.$t('Title cannot be more then 255 symbols.'))
                 }
-                if (this.snippet.description.trim().length > 2000) {
+                if (this.snippet.description.trim().length > this.max_description_length) {
                     this.errors.description.push(this.$t('Description cannot be more then 2000 symbols.'))
                 }
                 if (this.snippet.body.length < 1) {
                     this.errors.body.push(this.$t('Snippet is required.'))
                 }
-                if (this.snippet.body.length > 100000) {
+                if (this.snippet.body.length > this.max_body_length) {
                     this.errors.body.push(this.$t('Snippet cannot be more then 100 000 symbols.'))
                 }
 
@@ -155,14 +164,13 @@
                         this.error({message: error.toString()})
                     })
                     response.then(response => {
-                        let snippet_id = response.data.id
-                        this.$router.push({ name: 'snippets.show', params: {snippet: snippet_id} })
+                        this.$router.push({ name: 'snippets.show', params: {snippet_id_or_slug: response.data.slug} })
                         this.success({message: this.$t('Snippet was created successful.')})
                         if (this.tags.length) {
                             this.tags.map(tag => {
                                 axios.post(`/api/tags?api_token=` + this.Auth.getApiToken(), {
                                     name: tag,
-                                    snippet: snippet_id
+                                    snippet_id_or_slug: response.data.slug
                                 }).then(inner_response => {
                                     this.success({message: `"${inner_response.data.name}" ${this.$t('tag was added to the snippet.')}`})
                                 }).catch(inner_error => {

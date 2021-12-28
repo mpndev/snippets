@@ -30,7 +30,7 @@ class TagCanBeDeletedForSnippetTest extends TestCase
         $response = $this->apiRequest([
             'tag' => $tag->id,
         ], [
-            'snippet' => $snippet->id,
+            'snippet_id_or_slug' => $snippet->id,
             'api_token' => $user->api_token,
         ]);
 
@@ -53,7 +53,7 @@ class TagCanBeDeletedForSnippetTest extends TestCase
         $response = $this->apiRequest([
             'tag' => $tag->id,
         ], [
-            'snippet' => $snippet->id,
+            'snippet_id_or_slug' => $snippet->id,
         ]);
 
         // Assert
@@ -80,7 +80,7 @@ class TagCanBeDeletedForSnippetTest extends TestCase
         $response = $this->apiRequest([
             'tag' => $tag->id,
         ], [
-            'snippet' => '2',
+            'snippet_id_or_slug' => '2',
             'api_token' => $user->api_token,
         ]);
 
@@ -88,8 +88,8 @@ class TagCanBeDeletedForSnippetTest extends TestCase
         $response
             ->assertStatus(400)
             ->assertJson([
-                'snippet' => [
-                    'The selected snippet is invalid.',
+                'snippet_id_or_slug' => [
+                    'The selected snippet id or slug is invalid.',
                 ]
             ]);
     }
@@ -106,7 +106,7 @@ class TagCanBeDeletedForSnippetTest extends TestCase
         $response = $this->apiRequest([
             'tag' => '1',
         ], [
-            'snippet' => $snippet->id,
+            'snippet_id_or_slug' => $snippet->id,
             'api_token' => $user->api_token,
         ]);
 
@@ -137,7 +137,7 @@ class TagCanBeDeletedForSnippetTest extends TestCase
         $response = $this->apiRequest([
             'tag' => $tag->id,
         ], [
-            'snippet' => $snippet1->id,
+            'snippet_id_or_slug' => $snippet1->id,
             'api_token' => $user->api_token,
         ]);
 
@@ -163,13 +163,13 @@ class TagCanBeDeletedForSnippetTest extends TestCase
         $this->actingAs($user)->apiRequest([
             'tag' => $tag->id,
         ], [
-            'snippet' => $snippet1->id,
+            'snippet_id_or_slug' => $snippet1->id,
             'api_token' => $user->api_token,
         ]);
         $this->apiRequest([
             'tag' => $tag->id,
         ], [
-            'snippet' => $snippet2->id,
+            'snippet_id_or_slug' => $snippet2->id,
             'api_token' => $user->api_token,
         ]);
 

@@ -114,6 +114,7 @@ return [
     'string' => ':attribute трябва да е низ.',
     'timezone' => ':attribute трябва да е валидна зона.',
     'unique' => ':attribute вече е заето.',
+    'iunique' => ':attribute вече е заето.',
     'uploaded' => ':attribute не успя да се качи.',
     'url' => ':attribute е невалиден формат.',
     'uuid' => ':attribute трябва да е валиден UUID.',

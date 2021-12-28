@@ -66,7 +66,7 @@
                     <div>
                         <div v-if="snippet.id">
                             <p v-if="snippet.forks_quantity > 0" v-for="fork in snippet.forks">
-                                <span v-if="(fork.public) || (!fork.public && Auth.check() && Auth.user.id === fork.user_id)"><b>{{ $t('Fork') }}:</b> <a :href="'/snippets/' + fork.id">{{ fork.title }}</a></span>
+                                <span v-if="(fork.public) || (!fork.public && Auth.check() && Auth.user.id === fork.user_id)"><b>{{ $t('Fork') }}:</b> <a :href="'/snippets/' + fork.slug">{{ fork.title }}</a></span>
                                 <span v-else-if="(!fork.public && Auth.check() && Auth.user.id !== fork.user_id) || (!fork.public && !Auth.check())"><b>{{ $t('Fork') }}:</b> "{{ fork.title }}" <button style="cursor: auto" class="button is-danger fa fa-lock is-small"></button></span>
                             </p>
                             <p v-if="snippet.forks_quantity == 0"><b>{{ $t('Forks') }}:</b>0</p>
@@ -77,7 +77,7 @@
                     <div>
                         <div v-if="snippet.id">
                             <p v-if="snippet.parent">
-                                <span v-if="(snippet.parent.public) || (!snippet.parent.public && Auth.check() && Auth.user.id === snippet.parent.user_id)"><b>{{ $t('Forked from') }}:</b> <a :href="'/snippets/' + snippet.parent.id">{{ snippet.parent.title }}</a></span>
+                                <span v-if="(snippet.parent.public) || (!snippet.parent.public && Auth.check() && Auth.user.id === snippet.parent.user_id)"><b>{{ $t('Forked from') }}:</b> <a :href="'/snippets/' + snippet.parent.slug">{{ snippet.parent.title }}</a></span>
                                 <span v-else-if="(!snippet.parent.public && Auth.check() && Auth.user.id !== snippet.parent.user_id) || (!snippet.parent.public && !Auth.check())"><b>{{ $t('Forked from') }}:</b> "{{ snippet.parent.title }}" <button style="cursor: auto" class="button is-danger fa fa-lock is-small"></button></span>
                             </p>
                             <p v-if="snippet.parent == undefined"><b>{{ $t('Do not have parent fork') }}</b></p>
@@ -119,7 +119,7 @@
         },
         mounted() {
             document.querySelector('title').innerHTML = this.$t('snippet')
-            axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet + (this.Auth.check() ? '?api_token=' + this.Auth.user.api_token : '')).then(response => {
+            axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet_id_or_slug + (this.Auth.check() ? '?api_token=' + this.Auth.user.api_token : '')).then(response => {
                 response.data.settings = JSON.parse(response.data.settings)
                 this.snippet = response.data
                 this.snippet.settings.readOnly = true
@@ -142,14 +142,14 @@
                 })
             },
             edit(snippet) {
-                this.$router.push({ name: 'snippets.edit', params: { snippet: snippet.id }})
+                this.$router.push({ name: 'snippets.edit', params: { snippet_id_or_slug: snippet.slug }})
             },
             destroy(snippet) {
                 Event.$emit('show-message', {
                     message: this.$t('Do you confirm deletion?'),
                     type: 'warning',
                     callback: () => {
-                        axios.post('/api/snippets/' + snippet.id + '?api_token=' + this.Auth.getApiToken(), {
+                        axios.post('/api/snippets/' + snippet.slug + '?api_token=' + this.Auth.getApiToken(), {
                             _method: 'DELETE'
                         }).then(response => {
                             this.$router.push({ name: 'snippets.index' })
@@ -164,10 +164,10 @@
                 this.$router.push({ name: 'snippets.index', query: { "with-tags": tag.name, page: 1 } })
             },
             createFork(snippet) {
-                this.$router.push({ name: 'snippets.forks.create', params: { snippet: snippet.id }})
+                this.$router.push({ name: 'snippets.forks.create', params: { snippet_id_or_slug: snippet.slug }})
             },
             addToFavoriteSnippets(snippet) {
-                axios.post(`/api/snippets/favorite/${snippet.id}`, {
+                axios.post(`/api/snippets/favorite/${snippet.slug}`, {
                     'api_token': this.Auth.getApiToken()
                 }).then(response => {
                     this.Auth.addToFavoriteSnippets(snippet)
@@ -177,7 +177,7 @@
                 })
             },
             removeFromFavoriteSnippets(snippet) {
-                axios.post(`/api/snippets/favorite/${snippet.id}`, {
+                axios.post(`/api/snippets/favorite/${snippet.slug}`, {
                     'api_token': this.Auth.getApiToken(),
                     '_method': 'DELETE'
                 }).then(response => {

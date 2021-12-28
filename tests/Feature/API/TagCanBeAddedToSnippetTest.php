@@ -26,7 +26,7 @@ class APITagsCanBeAddedToSnippetsTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => $snippet->id,
+            'snippet_id_or_slug' => $snippet->id,
         ], [
             'name' => 'foo',
             'api_token' => $user->api_token,
@@ -52,7 +52,7 @@ class APITagsCanBeAddedToSnippetsTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => $snippet->id,
+            'snippet_id_or_slug' => $snippet->id,
         ], [
             'name' => 'foo',
             'api_token' => $user->api_token,
@@ -74,7 +74,7 @@ class APITagsCanBeAddedToSnippetsTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => 1,
+            'snippet_id_or_slug' => 1,
         ], [
             'name' => 'foo',
             'api_token' => $user->api_token,
@@ -84,8 +84,8 @@ class APITagsCanBeAddedToSnippetsTest extends TestCase
         $response
             ->assertStatus(400)
             ->assertJson([
-                'snippet' => [
-                    'The selected snippet is invalid.',
+                'snippet_id_or_slug' => [
+                    'The selected snippet id or slug is invalid.',
                 ]
             ]);
     }
@@ -98,7 +98,7 @@ class APITagsCanBeAddedToSnippetsTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => $snippet->id,
+            'snippet_id_or_slug' => $snippet->id,
         ], [
             'name' => 'foo',
         ]);

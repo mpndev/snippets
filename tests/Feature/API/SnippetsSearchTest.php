@@ -20,11 +20,10 @@ class APISearchSnippetsTest extends TestCase
     {
         // Arrange
         $snippets_data = $this->getSnippetsData();
-        factory(Snippet::class, 10)->create([
-            'title' => 'qqqqq',
-            'description' => 'qqqqqqqqqq',
-            'body' => 'qqqq',
-        ]);
+        $garbage_titles_array = $this->getGarbageTitles();
+        foreach($garbage_titles_array as $garbage_title) {
+            factory(Snippet::class)->create($garbage_title);
+        }
         foreach($snippets_data as $snippet_data) {
             factory(Snippet::class)->create($snippet_data);
         }
@@ -46,6 +45,42 @@ class APISearchSnippetsTest extends TestCase
                     'tttttttt3',
                 ]
             );
+    }
+
+    protected function getGarbageTitles()
+    {
+        return [
+            [
+                'title' => 'q',
+            ],
+            [
+                'title' => 'qq',
+            ],
+            [
+                'title' => 'qqq',
+            ],
+            [
+                'title' => 'qqqq',
+            ],
+            [
+                'title' => 'qqqqq',
+            ],
+            [
+                'title' => 'qqqqqq',
+            ],
+            [
+                'title' => 'qqqqqqq',
+            ],
+            [
+                'title' => 'qqqqqqqq',
+            ],
+            [
+                'title' => 'qqqqqqqqq',
+            ],
+            [
+                'title' => 'qqqqqqqqqq',
+            ],
+        ];
     }
 
     protected function getSnippetsData()

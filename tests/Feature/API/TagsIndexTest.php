@@ -39,7 +39,6 @@ class TagsIndexTest extends TestCase
     /** @test */
     public function guest_can_not_see_private_snippets_tags()
     {
-        $this->withoutExceptionHandling();
         // Arrange
         $tag1 = factory(Tag::class)->create(['name' => 'foo']);
         $tag2 = factory(Tag::class)->create(['name' => 'bar']);
@@ -71,7 +70,6 @@ class TagsIndexTest extends TestCase
     /** @test */
     public function user_can_not_see_private_snippets_tags_that_do_not_belongs_to_him()
     {
-        $this->withoutExceptionHandling();
         // Arrange
         $tag1 = factory(Tag::class)->create(['name' => 'foo']);
         $tag2 = factory(Tag::class)->create(['name' => 'bar']);
@@ -105,7 +103,6 @@ class TagsIndexTest extends TestCase
     /** @test */
     public function user_can_see_his_private_snippets_tags()
     {
-        $this->withoutExceptionHandling();
         // Arrange
         $tag1 = factory(Tag::class)->create(['name' => 'foo']);
         $tag2 = factory(Tag::class)->create(['name' => 'bar']);

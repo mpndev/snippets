@@ -25,7 +25,7 @@ class SnippetShowTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => $snippet->id
+            'snippet_id_or_slug' => $snippet->id
         ]);
 
         // Assert
@@ -45,7 +45,7 @@ class SnippetShowTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => $snippet->id
+            'snippet_id_or_slug' => $snippet->id
         ]);
 
         // Assert
@@ -66,7 +66,7 @@ class SnippetShowTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => $snippet->id
+            'snippet_id_or_slug' => $snippet->id
         ]);
 
         // Assert
@@ -90,7 +90,7 @@ class SnippetShowTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => $snippet->id,
+            'snippet_id_or_slug' => $snippet->id,
             'api_token' => $user->api_token,
         ]);
 
@@ -113,7 +113,7 @@ class SnippetShowTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => $snippet->id,
+            'snippet_id_or_slug' => $snippet->id,
             'api_token' => $user->api_token,
         ]);
 
@@ -125,6 +125,25 @@ class SnippetShowTest extends TestCase
                     'This action is unauthorized.'
                 ]
             ]);
+    }
+
+    /** @test */
+    public function guest_can_see_single_snippet_by_the_slug_of_the_snippet()
+    {
+        // Arrange
+        $user = factory(User::class)->create();
+        $snippet = factory(Snippet::class)->make();
+        $user->addSnippet($snippet);
+
+        // Act
+        $response = $this->apiRequest([
+            'snippet_id_or_slug' => $snippet->slug
+        ]);
+
+        // Assert
+        $response
+            ->assertStatus(200)
+            ->assertJsonFragment($snippet->fresh()->toArray());
     }
 
 }

@@ -18,6 +18,11 @@ class Snippet extends Model
         'times_copied',
     ];
 
+    protected $casts = [
+        'user_id' => 'int',
+        'public' => 'boolean',
+    ];
+
     protected $guarded = [];
 
     public $searchable_fields = [

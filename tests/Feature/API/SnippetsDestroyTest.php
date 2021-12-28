@@ -25,7 +25,7 @@ class SnippetDestroyTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => $snippet->id,
+            'snippet_id_or_slug' => $snippet->id,
         ], [
             'api_token' => $user->api_token,
         ]);
@@ -46,7 +46,7 @@ class SnippetDestroyTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => $snippet->id,
+            'snippet_id_or_slug' => $snippet->id,
             ], [
             'api_token' => $user2->api_token,
         ]);
@@ -76,7 +76,7 @@ class SnippetDestroyTest extends TestCase
 
         // Act
         $this->apiRequest([
-            'snippet' => $parent_snippet->id,
+            'snippet_id_or_slug' => $parent_snippet->id,
         ], [
             'api_token' => $user->api_token,
         ]);
@@ -104,7 +104,7 @@ class SnippetDestroyTest extends TestCase
 
         // Act
         $this->apiRequest([
-            'snippet' => $snippet_id,
+            'snippet_id_or_slug' => $snippet_id,
         ], [
             'api_token' => $user->api_token,
         ]);
@@ -123,7 +123,7 @@ class SnippetDestroyTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => $snippet->id,
+            'snippet_id_or_slug' => $snippet->id,
         ]);
 
         // Assert

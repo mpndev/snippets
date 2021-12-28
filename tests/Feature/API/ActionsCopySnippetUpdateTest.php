@@ -23,7 +23,7 @@ class ActionsCopySnippetTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'snippet' => $snippet->id,
+            'snippet_id_or_slug' => $snippet->id,
         ]);
 
         // Assert

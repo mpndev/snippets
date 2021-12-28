@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class AppServiceProvider extends ServiceProvider
@@ -68,6 +70,12 @@ class AppServiceProvider extends ServiceProvider
                 };
             }
             return $this;
+        });
+
+        Validator::extend('iunique', function ($attribute, $value, $parameters, $validator) {
+            $query = DB::table($parameters[0]);
+            $column = $query->getGrammar()->wrap($parameters[1]);
+            return ! $query->whereRaw("lower({$column}) = lower(?)", [$value])->whereNotIn('id', [$parameters[2]])->count();
         });
     }
 }
