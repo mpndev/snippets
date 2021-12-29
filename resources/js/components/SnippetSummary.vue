@@ -30,24 +30,61 @@
             </div>
         </div>
         <div class="column is-narrow">
-            <button v-if="!snippet.public && Auth.check() && Auth.user.id === snippet.user_id" class="button is-danger fa fa-lock is-small" :title="$t('This snippet is visible only to you!')"></button>
-            <button class="button is-success fa fa-clipboard is-small" :title="$t('copy code to the clipboard')" @click="copy"></button>
-            <button class="button is-info fa fa-eye is-small" :title="$t('see the snippet')" @click="show(snippet)"></button>
-            <button v-if="Auth.check() && Auth.isOwner(snippet)" class="button is-warning fa fa-edit is-small" :title="$t('edit the snippet')" @click="edit(snippet)"></button>
-            <button v-if="Auth.check() && Auth.isOwner(snippet)" class="button is-danger fa fa-trash-alt is-small" :title="$t('delete the snippet')" @click="destroy(snippet)"></button>
-            <button v-if="Auth.check()" class="button is-dark fas fa-code-branch is-small" :title="$t('fork the snippet')" @click="createFork(snippet)"></button>
-            <button v-if="Auth.check() && Auth.isFavoriteSnippet(snippet)" class="button is-danger fas fa-heart is-outlined is-small" :title="$t('remove from favorite')" @click="removeFromFavoriteSnippets(snippet)"></button>
-            <button v-if="Auth.check() && Auth.isNotFavoriteSnippet(snippet)" class="button is-dark fas fa-heart-broken is-outlined is-small" :title="$t('add to favorite')" @click="addToFavoriteSnippets(snippet)"></button>
+            <div class="columns">
+                <div class="column is-narrow">
+                    <button v-if="!snippet.public && Auth.check() && Auth.user.id === snippet.user_id" class="button is-danger fa fa-lock is-small" :title="$t('This snippet is visible only to you!')"></button>
+                    <button class="button is-success fa fa-clipboard is-small" :title="$t('copy code to the clipboard')" @click="copy"></button>
+                    <button class="button is-info fa fa-eye is-small" :title="$t('see the snippet')" @click="show(snippet)"></button>
+                    <button v-if="Auth.check() && Auth.isOwner(snippet)" class="button is-warning fa fa-edit is-small" :title="$t('edit the snippet')" @click="edit(snippet)"></button>
+                    <button v-if="Auth.check() && Auth.isOwner(snippet)" class="button is-danger fa fa-trash-alt is-small" :title="$t('delete the snippet')" @click="destroy(snippet)"></button>
+                    <button v-if="Auth.check()" class="button is-dark fas fa-code-branch is-small" :title="$t('fork the snippet')" @click="createFork(snippet)"></button>
+                    <button v-if="Auth.check() && Auth.isFavoriteSnippet(snippet)" class="button is-danger fas fa-heart is-outlined is-small" :title="$t('remove from favorite')" @click="removeFromFavoriteSnippets(snippet)"></button>
+                    <button v-if="Auth.check() && Auth.isNotFavoriteSnippet(snippet)" class="button is-dark fas fa-heart-broken is-outlined is-small" :title="$t('add to favorite')" @click="addToFavoriteSnippets(snippet)"></button>
+                </div>
+            </div>
+            <div v-if="snippet.public" class="columns">
+                <div class="column">
+                    <share-it class="is-pulled-right" :url="current_domain + '/snippets/' + snippet.slug" :targets="['facebook', 'linkedin', 'twitter']" :shareConfig="share_it_settings" />
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+    const share_it_settings = {
+        facebook: {
+            size: "sm",
+            icon: true,
+            round: false,
+            dense: true,
+            outline: true,
+            color: '#4267B2',
+        },
+        linkedin: {
+            size: "sm",
+            icon: true,
+            round: false,
+            dense: true,
+            outline: true,
+            color: '#2867B2',
+        },
+        twitter: {
+            size: "sm",
+            icon: true,
+            round: false,
+            dense: true,
+            outline: true,
+            color: '#1DA1F2',
+        },
+    }
     export default {
         props: ['snippet'],
         data: () => {
             return {
-                Auth: Auth
+                share_it_settings: share_it_settings,
+                Auth: Auth,
+                current_domain: 'https://www.' + window.location.hostname,
             }
         },
         computed: {

@@ -100,21 +100,56 @@
                 </div>
             </div>
         </div>
+        <div class="columns">
+            <div v-if="snippet.public" class="column is-3">
+                <div class="box">
+                    <share-it :url="current_domain + '/snippets/' + snippet.slug" :targets="['facebook', 'linkedin', 'twitter']" :shareConfig="share_it_settings" />
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
     import Editor from '../../components/Editor'
 
+    const share_it_settings = {
+        facebook: {
+            size: "sm",
+            icon: true,
+            round: false,
+            dense: true,
+            outline: true,
+            color: '#4267B2',
+        },
+        linkedin: {
+            size: "sm",
+            icon: true,
+            round: false,
+            dense: true,
+            outline: true,
+            color: '#2867B2',
+        },
+        twitter: {
+            size: "sm",
+            icon: true,
+            round: false,
+            dense: true,
+            outline: true,
+            color: '#1DA1F2',
+        },
+    }
     export default {
         components: {
             Editor: Editor
         },
         data: () => {
             return {
+                share_it_settings: share_it_settings,
                 snippet: {},
                 Auth: Auth,
-                urls: []
+                urls: [],
+                current_domain: 'https://www.' + window.location.hostname,
             }
         },
         mounted() {

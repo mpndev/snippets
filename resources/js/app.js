@@ -15,6 +15,7 @@ import 'bulma-helpers/css/bulma-helpers.min.css'
 import TextHighlight from 'vue-text-highlight'
 import VueI18n from "vue-i18n"
 import translations from "./translations.json"
+import shareIt from 'vue-share-it'
 
 Vue.use(VueI18n)
 const lang = localStorage.getItem('language') || 'en'
@@ -32,6 +33,7 @@ window.Auth = Auth
 
 Vue.use(VueRouter)
 Vue.use(VueClipboard)
+Vue.use(shareIt)
 
 const toastTypes = {
     success: 'success',
