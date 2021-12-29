@@ -6,7 +6,7 @@
 
 <template>
     <div class="columns snippet-preview">
-        <div class="column">
+        <div class="column is-9">
             <div>
                 <p>
                     <a :href="`/snippets/${snippet.slug}`" class="title has-text-dark is-6">
@@ -29,23 +29,19 @@
                 </p>
             </div>
         </div>
-        <div class="column is-narrow">
-            <div class="columns">
-                <div class="column is-narrow">
-                    <button v-if="!snippet.public && Auth.check() && Auth.user.id === snippet.user_id" class="button is-danger fa fa-lock is-small" :title="$t('This snippet is visible only to you!')"></button>
-                    <button class="button is-success fa fa-clipboard is-small" :title="$t('copy code to the clipboard')" @click="copy"></button>
-                    <button class="button is-info fa fa-eye is-small" :title="$t('see the snippet')" @click="show(snippet)"></button>
-                    <button v-if="Auth.check() && Auth.isOwner(snippet)" class="button is-warning fa fa-edit is-small" :title="$t('edit the snippet')" @click="edit(snippet)"></button>
-                    <button v-if="Auth.check() && Auth.isOwner(snippet)" class="button is-danger fa fa-trash-alt is-small" :title="$t('delete the snippet')" @click="destroy(snippet)"></button>
-                    <button v-if="Auth.check()" class="button is-dark fas fa-code-branch is-small" :title="$t('fork the snippet')" @click="createFork(snippet)"></button>
-                    <button v-if="Auth.check() && Auth.isFavoriteSnippet(snippet)" class="button is-danger fas fa-heart is-outlined is-small" :title="$t('remove from favorite')" @click="removeFromFavoriteSnippets(snippet)"></button>
-                    <button v-if="Auth.check() && Auth.isNotFavoriteSnippet(snippet)" class="button is-dark fas fa-heart-broken is-outlined is-small" :title="$t('add to favorite')" @click="addToFavoriteSnippets(snippet)"></button>
-                </div>
+        <div class="column is-3">
+            <div class="is-full-width is-justify-content-flex-end is-flex is-flex-wrap-wrap">
+                <button v-if="!snippet.public && Auth.check() && Auth.user.id === snippet.user_id" class="button is-danger fa fa-lock is-small ml-1 mt-1" :title="$t('This snippet is visible only to you!')"></button>
+                <button class="button is-success fa fa-clipboard is-small ml-1 mt-1" :title="$t('copy code to the clipboard')" @click="copy"></button>
+                <button class="button is-info fa fa-eye is-small ml-1 mt-1" :title="$t('see the snippet')" @click="show(snippet)"></button>
+                <button v-if="Auth.check() && Auth.isOwner(snippet)" class="button is-warning fa fa-edit is-small ml-1 mt-1" :title="$t('edit the snippet')" @click="edit(snippet)"></button>
+                <button v-if="Auth.check() && Auth.isOwner(snippet)" class="button is-danger fa fa-trash-alt is-small ml-1 mt-1" :title="$t('delete the snippet')" @click="destroy(snippet)"></button>
+                <button v-if="Auth.check()" class="button is-dark fas fa-code-branch is-small ml-1 mt-1" :title="$t('fork the snippet')" @click="createFork(snippet)"></button>
+                <button v-if="Auth.check() && Auth.isFavoriteSnippet(snippet)" class="button is-danger fas fa-heart is-outlined is-small ml-1 mt-1" :title="$t('remove from favorite')" @click="removeFromFavoriteSnippets(snippet)"></button>
+                <button v-if="Auth.check() && Auth.isNotFavoriteSnippet(snippet)" class="button is-dark fas fa-heart-broken is-outlined is-small ml-1 mt-1" :title="$t('add to favorite')" @click="addToFavoriteSnippets(snippet)"></button>
             </div>
-            <div v-if="snippet.public" class="columns">
-                <div class="column">
-                    <share-it class="is-pulled-right" :url="current_domain + '/snippets/' + snippet.slug" :targets="['facebook', 'linkedin', 'twitter']" :shareConfig="share_it_settings" />
-                </div>
+            <div v-if="snippet.public" class="is-full-width is-justify-content-flex-end is-flex mt-5">
+                <share-it :url="current_domain + '/snippets/' + snippet.slug" :targets="['facebook', 'linkedin', 'twitter']" :shareConfig="share_it_settings" />
             </div>
         </div>
     </div>

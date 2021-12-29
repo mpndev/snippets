@@ -43,7 +43,7 @@
                     </div>
                     <div v-if="!has_results" class="columns is-centered">
                         <div v-if="!show_rings" class="column">
-                            <div class="colun"></div>
+                            <div class="column"></div>
                             <p class="title has-text-centered is-3">{{ $t('No results found.') }}</p>
                         </div>
                     </div>

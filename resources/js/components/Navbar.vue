@@ -9,7 +9,9 @@
         <div class="container" @mouseleave="burger_is_on = false">
             <div class="navbar-brand">
                 <h1 class="navbar-item">
-                    <router-link :to="{ name: 'snippets.index' }">{{ $t('Snippets') }}</router-link>
+                    <router-link :to="{ name: 'snippets.index' }">
+                        <logo></logo>
+                    </router-link>
                 </h1>
                 <span class="navbar-burger burger" @click="burger_is_on = !burger_is_on">
                     <span></span>
@@ -34,9 +36,11 @@
 
 <script>
     import LanguageSwitcher from "./LanguageSwitcher";
+    import Logo from "./Logo";
     export default {
         components: {
-            LanguageSwitcher: LanguageSwitcher
+            LanguageSwitcher: LanguageSwitcher,
+            Logo: Logo,
         },
         data: () => {
             return {
