@@ -30,8 +30,14 @@
                     </div>
                     <hr>
                     <div>
-                        <p v-if="snippet.id"><b>{{ $t('Title') }}:</b> {{ snippet.title }}</p>
-                        <ring-loader v-else class="is-narrow"></ring-loader>
+                        <div class="field">
+                            <div class="control">
+                                <label for="title">{{ $t('Title') }}:</label>
+                                <input class="input" id="title" type="text" :placeholder="$t('min symbols 1, max symbols 255')" v-model="snippet_copy.title">
+                                <span class="tag is-info is-light is-small is-rounded is-pulled-right">{{ max_title_length - snippet.title.length }}</span>
+                                <span v-for="error in errors.title" class="title is-6 has-text-danger">{{ error }}</span>
+                            </div>
+                        </div>
                     </div>
                     <hr>
                     <div class="field">
@@ -121,6 +127,8 @@
         },
         data: () => {
             return {
+                min_title_length: 1,
+                max_title_length: 255,
                 max_body_length: 100000,
                 max_description_length: 2000,
                 Auth: Auth,
@@ -171,6 +179,12 @@
         },
         methods:{
             validateForm() {
+                if (this.snippet.title.trim().length < this.min_title_length) {
+                    this.errors.title.push(this.$t('Title is required.'))
+                }
+                if (this.snippet.title.trim().length > this.max_title_length) {
+                    this.errors.title.push(this.$t('Title cannot be more then 255 symbols.'))
+                }
                 if (this.snippet.description.trim().length > this.max_description_length) {
                     this.errors.description.push(this.$t('Description cannot be more then 2000 symbols.'))
                 }
@@ -181,9 +195,10 @@
                     this.errors.body.push(this.$t('Snippet cannot be more then 100 000 symbols.'))
                 }
 
-                return (this.errors.description.length + this.errors.body.length) < 1
+                return (this.errors.title.length + this.errors.description.length + this.errors.body.length) < 1
             },
             resetErrors() {
+                this.errors.title = []
                 this.errors.description = []
                 this.errors.body = []
             },
@@ -194,7 +209,7 @@
                 this.resetErrors()
                 if (this.validateForm()) {
                     const response = axios.post('/api/snippets/' + this.snippet.slug + '?api_token=' + this.Auth.getApiToken(), {
-                        title: this.snippet.title,
+                        title: this.snippet_copy.title,
                         description: this.snippet_copy.description,
                         body: this.snippet_copy.body,
                         settings: JSON.stringify(this.snippet_copy.settings),
