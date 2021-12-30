@@ -9,7 +9,7 @@
 </head>
 <body class="has-background-grey-lighter" style="min-height: 100vh;">
     <div id="app">
-
+        <cookie-notification></cookie-notification>
         <message></message>
 
         <navbar></navbar>

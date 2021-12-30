@@ -126,7 +126,9 @@
         "This snippet is visible only to you!": "Този снипет е видим само за теб!",
         "This snippet is visible to everyone!": "Този снипет е видим за всички!",
         "Do not store sensitive data like passwords, tokens, etc...": "Не записвайте чуствителна информация като пароли, токени и т.н.",
-        "Detected URLs in the snippet:": "Засечени ликове към страници в снипета:"
+        "Detected URLs in the snippet:": "Засечени ликове към страници в снипета:",
+        "In order to give you the best experience, our website eats cookies. By continuing to use this site, you agree to our diet of cookies.": "За да ви осигурим най-доброто изживяване, нашият уебсайт яде бисквитки. Продължавайки да използвате този сайт, вие се съгласявате с нашата диета с бисквитки.",
+        "feed me": "нахрани ме"
     },
     "en": {
         "No results found.":  "No results found.",
@@ -255,6 +257,8 @@
         "This snippet is visible only to you!": "This snippet is visible only to you!",
         "This snippet is visible to everyone!": "This snippet is visible to everyone!",
         "Do not store sensitive data like passwords, tokens, etc...": "Do not store sensitive data like passwords, tokens, etc...",
-        "Detected URLs in the snippet:": "Detected URLs in the snippet:"
+        "Detected URLs in the snippet:": "Detected URLs in the snippet:",
+        "In order to give you the best experience, our website eats cookies. By continuing to use this site, you agree to our diet of cookies.": "In order to give you the best experience, our website eats cookies. By continuing to use this site, you agree to our diet of cookies.",
+        "feed me": "feed me"
     }
 }

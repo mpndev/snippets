@@ -17,6 +17,7 @@ import TextHighlight from 'vue-text-highlight'
 import VueI18n from "vue-i18n"
 import translations from "./translations.json"
 import shareIt from 'vue-share-it'
+import CookieNotification from "./components/CookieNotification";
 
 Vue.use(VueI18n)
 const lang = localStorage.getItem('language') || 'en'
@@ -66,7 +67,8 @@ let app = new Vue({
     i18n: i18n,
     router: new VueRouter(routes),
     components: {
-        navbar: Navbar
+        navbar: Navbar,
+        CookieNotification: CookieNotification
     },
     data: () => {
         return {

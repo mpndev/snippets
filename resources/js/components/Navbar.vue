@@ -35,8 +35,8 @@
 </template>
 
 <script>
-    import LanguageSwitcher from "./LanguageSwitcher";
-    import Logo from "./Logo";
+    import LanguageSwitcher from "./LanguageSwitcher"
+    import Logo from "./Logo"
     export default {
         components: {
             LanguageSwitcher: LanguageSwitcher,
