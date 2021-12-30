@@ -6,8 +6,9 @@
     .modal-languages {
         width: 100%;
         position: absolute;
-        top: 100%;
+        top: 0;
         right: 0;
+        z-index: 999999;
     }
     .selected {
         border: 1px solid blue;
@@ -15,7 +16,7 @@
 </style>
 
 <template>
-    <a class="language-swicher-icon" @click.prevent="openLanguageSwitcherModal" @mouseleave="showLanguages = false">
+    <a class="language-swicher-icon" @click.prevent.stop="openLanguageSwitcherModal" @mouseleave="showLanguages = false">
         {{ languages[currentLangcode] }}
         <div v-if="showLanguages" class="modal-languages has-background-primary	">
             <ul>
