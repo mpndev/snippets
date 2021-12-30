@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import axios from 'axios'
+import VueMeta from 'vue-meta'
 import VueRouter from 'vue-router'
 import routes from './routes'
 import Navbar from './components/Navbar'
@@ -31,6 +32,7 @@ window.Event = new Vue()
 window.Initializer = null
 window.Auth = Auth
 
+Vue.use(VueMeta)
 Vue.use(VueRouter)
 Vue.use(VueClipboard)
 Vue.use(shareIt)

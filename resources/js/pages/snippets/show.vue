@@ -157,6 +157,7 @@
             axios.get('/api/snippets/' + this.$router.currentRoute.params.snippet_id_or_slug + (this.Auth.check() ? '?api_token=' + this.Auth.user.api_token : '')).then(response => {
                 response.data.settings = JSON.parse(response.data.settings)
                 this.snippet = response.data
+                document.querySelectorAll('[rel="canonical"]')[0].href = 'https://www.' + window.location.hostname + '/snippets/' + this.snippet.slug
                 this.snippet.settings.readOnly = true
                 this.snippet.settings.cursorHeight = 0
                 this.snippet.settings.lineNumbers = false
@@ -230,6 +231,41 @@
                 stylesheet.setAttribute("type", "text/css")
                 stylesheet.setAttribute("href", `/css/themes/${theme}.css`)
                 document.getElementsByTagName("head")[0].appendChild(stylesheet);
+            }
+        },
+        metaInfo() {
+            return {
+                title: this.snippet.title,
+                meta: [
+                    {
+                        name: 'description',
+                        content: this.snippet.description
+                    },
+                    {
+                        property: 'og:title',
+                        content: this.snippet.title
+                    },
+                    {
+                        property: 'og:site_name',
+                        content: 'Snippets'
+                    },
+                    {
+                        property: 'og:description',
+                        content: this.snippet.description
+                    },
+                    {
+                        property: 'og:type',
+                        content: 'snippet of code'
+                    },
+                    {
+                        property: 'og:url',
+                        content: 'https://www.' + window.location.hostname + '/snippets/' + this.snippet.slug
+                    },
+                    {
+                        name: 'robots',
+                        content: 'index,follow'
+                    }
+                ]
             }
         },
         notifications: require('../../GlobalNotifications')
