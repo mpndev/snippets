@@ -33,7 +33,7 @@ class LogoutTest extends TestCase
     }
 
     /** @test */
-    public function guest_cannot_log_out()
+    public function guest_can_log_out_as_well_in_order_to_clear_bad_local_storage_data()
     {
         // Arrange
 
@@ -42,12 +42,8 @@ class LogoutTest extends TestCase
 
         // Assert
         $response
-            ->assertStatus(401)
-            ->assertJson([
-                'user' => [
-                    'Unauthenticated.'
-                ]
-            ]);
+            ->assertStatus(200)
+            ->assertJson(['Successful logged out.'], true);
     }
 
 }

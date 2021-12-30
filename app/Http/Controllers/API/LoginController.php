@@ -12,9 +12,6 @@ class LoginController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api')->only([
-            'destroy',
-        ]);
         $this->middleware('guest')->only([
             'create',
             'store',
@@ -38,7 +35,7 @@ class LoginController extends Controller
         return $this->sendFailedLoginResponse($request);
     }
 
-    public function destroy(Request $request)
+    public function destroy()
     {
         $user = auth()->user();
         if ($user) {

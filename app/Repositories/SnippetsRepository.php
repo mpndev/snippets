@@ -10,8 +10,10 @@ class SnippetsRepository
 {
     public static function getWithAllConstraints()
     {
+        $user = request()->has('api_token') ? User::where('api_token', request('api_token'))->first() : null;
+        $user_id = $user ? $user->id : null;
         $constraints = [
-            'user_id' => request()->has('api_token') ? User::where('api_token', request('api_token'))->first()->id : null,
+            'user_id' => $user_id,
             'my_snippets' => request()->has('my-snippets'),
             'my_private_snippets' => request()->has('my-private-snippets'),
             'snippets_by_author' => request('snippets-by-author'),
