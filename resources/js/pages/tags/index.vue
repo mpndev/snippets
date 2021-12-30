@@ -62,6 +62,7 @@ export default {
     },
     mounted() {
         document.querySelector('title').innerHTML = this.$t('tags')
+        document.querySelectorAll('[rel="canonical"]')[0].href = 'https://www.' + window.location.hostname + '/tags'
         axios.get('/api/tags' + '?api_token=' + (this.Auth.check() ? this.Auth.getApiToken() : '')).then(response => {
             this.tags = response.data
         })
@@ -79,6 +80,41 @@ export default {
         goToSnippetsWithThisTag(tag) {
             this.$router.push({name: 'snippets.index', query: {'with-tags': tag.name}})
         }
-    }
+    },
+    metaInfo() {
+        return {
+            title: 'all available snippets tags on the site',
+            meta: [
+                {
+                    name: 'description',
+                    content: 'all available snippets tags on the site'
+                },
+                {
+                    property: 'og:title',
+                    content: 'all available snippets tags on the site'
+                },
+                {
+                    property: 'og:site_name',
+                    content: 'Snippets'
+                },
+                {
+                    property: 'og:description',
+                    content: 'all available snippets tags on the site'
+                },
+                {
+                    property: 'og:type',
+                    content: 'snippets tags'
+                },
+                {
+                    property: 'og:url',
+                    content: 'https://www.' + window.location.hostname + '/tags'
+                },
+                {
+                    name: 'robots',
+                    content: 'index,nofollow'
+                }
+            ]
+        }
+    },
 }
 </script>
