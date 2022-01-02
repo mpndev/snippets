@@ -3,6 +3,7 @@ import SnippetsCreate from './pages/snippets/create'
 import SnippetsEdit from './pages/snippets/edit'
 import SnippetsShow from './pages/snippets/show'
 import SnippetsForksCreate from './pages/snippets/forks/create'
+import LoginGithubCallback from './pages/login/github/callback'
 import LoginCreate from './pages/login/create'
 import RegisterCreate from './pages/register/create'
 import Tags from './pages/tags/index'
@@ -56,6 +57,19 @@ export default {
             name: 'snippets.forks.create',
             beforeEnter: (to, from, next) => {
                 if (Auth.guest()) {
+                    next({ name: 'snippets.index' })
+                }
+                else {
+                    next()
+                }
+            }
+        },
+        {
+            path: '/login/github/callback',
+            component: LoginGithubCallback,
+            name: 'login.github.callback',
+            beforeEnter: (to, from, next) => {
+                if (Auth.check()) {
                     next({ name: 'snippets.index' })
                 }
                 else {

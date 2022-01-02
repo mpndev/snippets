@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Cache;
 
+Route::get('/login/github/redirect', 'API\GithubLoginController@redirectToProvider')->name('api.github.redirect');
+Route::get('/login/github/callback', 'API\GithubLoginController@handleProviderCallback')->name('api.github.callback');
+
 Route::post('/login', 'API\LoginController@store')->name('api.login.store');
 Route::delete('/logout', 'API\LoginController@destroy')->name('api.login.destroy');
 Route::post('/register', 'API\RegisterController@store')->name('api.register.store');

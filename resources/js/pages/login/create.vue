@@ -16,6 +16,13 @@
         <div class="control">
             <button class="button is-link" @click="login">{{ $t('Login') }}</button>
         </div>
+        <div class="control mt-5 is-flex is-align-items-center box">
+            <span><b>{{ $t('Do not have account? Try simple') }}</b></span>
+            <a class="button is-primary ml-1 mr-1" href="/register">{{ $t('Register') }}</a>
+            <span><b>{{ $t('with username and password') }}</b></span>
+            <span class="ml-1"><b>{{ $t('or') }}</b></span>
+            <button class="button is-dark ml-1 mr-1" @click="loginWithGithub">{{ $t('Login with github') }}<span class="fab fa-github ml-2"></span></button>
+        </div>
     </div>
 </template>
 
@@ -59,6 +66,13 @@
                     }
                     this.errors.name.push(parsed_errors)
                 })
+            },
+            loginWithGithub() {
+                this.resetErrors()
+
+                axios.get('/api/login/github/redirect').then(response => {
+                    window.location = response.data.redirect_url
+                }).catch(error => {})
             }
         },
         notifications: require('../../GlobalNotifications')
