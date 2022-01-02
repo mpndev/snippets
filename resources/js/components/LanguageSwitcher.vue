@@ -1,7 +1,15 @@
 <style>
+    @font-face {
+        font-family: NotoColorEmojiLimited;
+        unicode-range: U+1F1E6-1F1FF;
+        src: url("/assets/fonts/NotoColorEmoji.ttf") format('truetype'),
+        url("/assets/fonts/NotoEmoji-Regular.ttf") format('truetype'),
+        url("/assets/fonts/NotoColorEmoji_WindowsCompatible.ttf") format('truetype');
+    }
     .language-swicher-icon {
         font-size: 150%;
         position: relative;
+        font-family: 'NotoColorEmojiLimited', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
     }
     .modal-languages {
         width: 100%;
@@ -31,7 +39,7 @@
         data() {
             return {
                 languages: {
-                    en: '🇺🇲',
+                    en: '🇺🇸',
                     bg: '🇧🇬',
                 },
                 currentLangcode: null,
