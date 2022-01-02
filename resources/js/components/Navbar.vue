@@ -26,8 +26,7 @@
                     <router-link class="navbar-item has-text-white" :to="{ name: 'tags.index' }">{{ $t('Tags') }}</router-link>
                     <language-switcher class="navbar-item has-text-white" />
                     <a v-if="Auth.check()" class="navbar-item has-text-white" @click="logout">{{ $t('Logout') }}</a>
-                    <router-link v-if="Auth.guest()" :to="{ name: 'login.create' }" class="navbar-item has-text-white" @click="burger_is_on = false">{{ $t('Login') }}</router-link>
-                    <router-link v-if="Auth.guest()" :to="{ name: 'register.create' }" class="navbar-item has-text-white" @click="burger_is_on = false">{{ $t('Register') }}</router-link>
+                    <router-link v-if="Auth.guest()" :to="{ name: 'login.create' }" class="navbar-item has-text-white glowing-text" @click="burger_is_on = false">{{ $t('Login') }}</router-link>
                 </div>
             </div>
         </div>
