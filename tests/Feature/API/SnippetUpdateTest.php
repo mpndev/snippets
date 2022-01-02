@@ -201,7 +201,7 @@ class SnippetUpdateTest extends TestCase
         // Assert
         $response
             ->assertStatus(200)
-            ->assertSee('"public":false');
+            ->assertSee('"public":false', false);
         $this->assertDatabaseHas('snippets', ['id' => $snippet->id]);
     }
 
@@ -230,7 +230,7 @@ class SnippetUpdateTest extends TestCase
         // Assert
         $response
             ->assertStatus(200)
-            ->assertSee('"public":false');
+            ->assertSee('"public":false', false);
         $this->assertDatabaseHas('snippets', ['id' => $snippet->id]);
     }
 
@@ -259,7 +259,7 @@ class SnippetUpdateTest extends TestCase
         // Assert
         $response
             ->assertStatus(200)
-            ->assertSee('"public":false');
+            ->assertSee('"public":false', false);
         $this->assertDatabaseHas('snippets', ['id' => $snippet->id]);
     }
 
@@ -288,7 +288,7 @@ class SnippetUpdateTest extends TestCase
         // Assert
         $response
             ->assertStatus(200)
-            ->assertSee('"public":true');
+            ->assertSee('"public":true', false);
         $this->assertDatabaseHas('snippets', ['id' => $snippet->id]);
     }
 
@@ -317,7 +317,7 @@ class SnippetUpdateTest extends TestCase
         // Assert
         $response
             ->assertStatus(200)
-            ->assertSee('"public":true');
+            ->assertSee('"public":true', false);
         $this->assertDatabaseHas('snippets', ['id' => $snippet->id]);
     }
 
@@ -346,7 +346,7 @@ class SnippetUpdateTest extends TestCase
         // Assert
         $response
             ->assertStatus(200)
-            ->assertSee('"public":true');
+            ->assertSee('"public":true', false);
         $this->assertDatabaseHas('snippets', ['id' => $snippet->id]);
     }
 

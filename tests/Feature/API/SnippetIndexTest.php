@@ -116,7 +116,7 @@ class SnippetIndexTest extends TestCase
         // Assert
         $response
             ->assertStatus(206)
-            ->assertSee('"data":[]');
+            ->assertSee('"data":[]', false);
     }
 
     /** @test */
@@ -168,7 +168,7 @@ class SnippetIndexTest extends TestCase
         // Assert
         $response
             ->assertStatus(206)
-            ->assertSee('"data":[]');
+            ->assertSee('"data":[]', false);
     }
 
 }
