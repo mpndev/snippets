@@ -161,22 +161,28 @@
                     }).then(response => {
                         return response
                     }).catch(error => {
+                        if (error.response.status == 400 && error.response.data.title) {
+                            this.errors.title.push(this.$t('Title has already been taken'))
+                            return
+                        }
                         this.error({message: error.toString()})
                     })
                     response.then(response => {
-                        this.$router.push({ name: 'snippets.show', params: {snippet_id_or_slug: response.data.slug} })
-                        this.success({message: this.$t('Snippet was created successful.')})
-                        if (this.tags.length) {
-                            this.tags.map(tag => {
-                                axios.post(`/api/tags?api_token=` + this.Auth.getApiToken(), {
-                                    name: tag,
-                                    snippet_id_or_slug: response.data.slug
-                                }).then(inner_response => {
-                                    this.success({message: `"${inner_response.data.name}" ${this.$t('tag was added to the snippet.')}`})
-                                }).catch(inner_error => {
-                                    this.error({message: inner_error.toString()})
+                        if (response && response.status == 201) {
+                            this.$router.push({ name: 'snippets.show', params: {snippet_id_or_slug: response.data.slug} })
+                            this.success({message: this.$t('Snippet was created successful.')})
+                            if (this.tags.length) {
+                                this.tags.map(tag => {
+                                    axios.post(`/api/tags?api_token=` + this.Auth.getApiToken(), {
+                                        name: tag,
+                                        snippet_id_or_slug: response.data.slug
+                                    }).then(inner_response => {
+                                        this.success({message: `"${inner_response.data.name}" ${this.$t('tag was added to the snippet.')}`})
+                                    }).catch(inner_error => {
+                                        this.error({message: inner_error.toString()})
+                                    })
                                 })
-                            })
+                            }
                         }
                     })
                 }

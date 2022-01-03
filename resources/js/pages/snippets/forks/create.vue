@@ -185,17 +185,23 @@
                     }).then(response => {
                         return response
                     }).catch(error => {
+                        if (error.response.status == 400 && error.response.data.title) {
+                            this.errors.title.push(this.$t('Title has already been taken'))
+                            return
+                        }
                         this.error({message: error.toString()})
                     })
                     response.then(response => {
-                        this.success({message: this.$t('Fork was created successful.')})
-                        const slug = response.data.slug
-                        if (response.data.tags.length) {
-                            this._deleteTags(response)
-                        } else if (this.tags.length) {
-                            this._createTags(response)
-                        } else {
-                            this.$router.push({ name: 'snippets.show', params: {snippet_id_or_slug: slug} })
+                        if (response && response.status == 201) {
+                            this.success({message: this.$t('Fork was created successful.')})
+                            const slug = response.data.slug
+                            if (response.data.tags.length) {
+                                this._deleteTags(response)
+                            } else if (this.tags.length) {
+                                this._createTags(response)
+                            } else {
+                                this.$router.push({ name: 'snippets.show', params: {snippet_id_or_slug: slug} })
+                            }
                         }
                     })
                 }

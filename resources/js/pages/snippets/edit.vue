@@ -31,12 +31,13 @@
                     <hr>
                     <div>
                         <div class="field">
-                            <div class="control">
+                            <div v-if="snippet.id" class="control">
                                 <label for="title">{{ $t('Title') }}:</label>
                                 <input class="input" id="title" type="text" :placeholder="$t('min symbols 1, max symbols 255')" v-model="snippet_copy.title">
-                                <span class="tag is-info is-light is-small is-rounded is-pulled-right">{{ max_title_length - snippet.title.length }}</span>
+                                <span class="tag is-info is-light is-small is-rounded is-pulled-right">{{ max_title_length - snippet_copy.title.length }}</span>
                                 <span v-for="error in errors.title" class="title is-6 has-text-danger">{{ error }}</span>
                             </div>
+                            <ring-loader v-else class="is-narrow"></ring-loader>
                         </div>
                     </div>
                     <hr>
@@ -135,6 +136,7 @@
                 snippet: {},
                 snippet_copy: null,
                 errors: {
+                    title: [],
                     description: [],
                     body: [],
                 },
@@ -218,17 +220,23 @@
                     }).then(response => {
                         return response
                     }).catch(error => {
+                        if (error.response.data.title) {
+                            this.errors.title.push(this.$t('Title has already been taken'))
+                            return
+                        }
                         this.error({message: error.toString()})
                     })
                     response.then(response => {
-                        const slug = response.data.slug
-                        this.success({message: this.$t('Snippet was updated successful.')})
-                        if (response.data.tags.length) {
-                            this._deleteTags(response)
-                        } else if (this.tags.length) {
-                            this._createTags(response)
-                        } else {
-                            this.$router.push({ name: 'snippets.show', params: {snippet_id_or_slug: slug} })
+                        if (response && response.status == 200) {
+                            const slug = response.data.slug
+                            this.success({message: this.$t('Snippet was updated successful.')})
+                            if (response.data.tags.length) {
+                                this._deleteTags(response)
+                            } else if (this.tags.length) {
+                                this._createTags(response)
+                            } else {
+                                this.$router.push({ name: 'snippets.show', params: {snippet_id_or_slug: slug} })
+                            }
                         }
                     })
                 }
