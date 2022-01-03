@@ -2,14 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Cache;
-use App\Http\Controllers\API\TagsController;
-use App\Http\Controllers\API\LoginController;
-use App\Http\Controllers\API\SnippetsController;
-use App\Http\Controllers\API\RegisterController;
-use App\Http\Controllers\API\GithubLoginController;
-use App\Http\Controllers\API\UserSettingsController;
-use App\Http\Controllers\API\FavoriteSnippetsController;
-use App\Http\Controllers\API\SnippetsActionsCopyController;
+use \App\Http\Controllers\API\TagsController;
+use \App\Http\Controllers\API\LoginController;
+use \App\Http\Controllers\API\SnippetsController;
+use \App\Http\Controllers\API\RegisterController;
+use \App\Http\Controllers\API\GithubLoginController;
+use \App\Http\Controllers\API\UserSettingsController;
+use \App\Http\Controllers\API\FavoriteSnippetsController;
+use \App\Http\Controllers\API\SnippetsActionsCopyController;
 
 Route::get('/login/github/redirect', [GithubLoginController::class, 'redirectToProvider'])->name('api.github.redirect');
 Route::get('/login/github/callback', [GithubLoginController::class, 'handleProviderCallback'])->name('api.github.callback');
