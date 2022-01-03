@@ -19,18 +19,18 @@ class MostLikedSnippetsTest extends TestCase
     public function guest_can_see_top_5_most_liked_snippets()
     {
         // Arrange
-        $user1 = factory(User::class)->create(['api_token' => str_repeat('A', 60)]);
-        $user2 = factory(User::class)->create(['api_token' => str_repeat('B', 60)]);
-        $user3 = factory(User::class)->create(['api_token' => str_repeat('C', 60)]);
-        $user4 = factory(User::class)->create(['api_token' => str_repeat('D', 60)]);
-        $user5 = factory(User::class)->create(['api_token' => str_repeat('E', 60)]);
-        $user6 = factory(User::class)->create(['api_token' => str_repeat('F', 60)]);
-        $user7 = factory(User::class)->create(['api_token' => str_repeat('G', 60)]);
-        $user8 = factory(User::class)->create(['api_token' => str_repeat('K', 60)]);
-        $user9 = factory(User::class)->create(['api_token' => str_repeat('L', 60)]);
-        $user10 = factory(User::class)->create(['api_token' => str_repeat('M', 60)]);
+        $user1 = User::factory()->create(['api_token' => str_repeat('A', 60)]);
+        $user2 = User::factory()->create(['api_token' => str_repeat('B', 60)]);
+        $user3 = User::factory()->create(['api_token' => str_repeat('C', 60)]);
+        $user4 = User::factory()->create(['api_token' => str_repeat('D', 60)]);
+        $user5 = User::factory()->create(['api_token' => str_repeat('E', 60)]);
+        $user6 = User::factory()->create(['api_token' => str_repeat('F', 60)]);
+        $user7 = User::factory()->create(['api_token' => str_repeat('G', 60)]);
+        $user8 = User::factory()->create(['api_token' => str_repeat('K', 60)]);
+        $user9 = User::factory()->create(['api_token' => str_repeat('L', 60)]);
+        $user10 = User::factory()->create(['api_token' => str_repeat('M', 60)]);
         for ($i = 1; $i <= 10; $i++) {
-            $user1->addSnippet(factory(Snippet::class)->make(['title' => "dummy title $i"]));
+            $user1->addSnippet(Snippet::factory()->make(['title' => "dummy title $i"]));
         }
         $snippets_of_first_user = $user1->snippets;
 

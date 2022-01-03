@@ -18,7 +18,7 @@ class LoginStoreTest extends TestCase
     public function guest_can_log_in()
     {
         // Arrange
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'remember_token' => null,
             'api_token' => null,
         ]);
@@ -44,7 +44,7 @@ class LoginStoreTest extends TestCase
     public function user_cannot_log_in()
     {
         // Arrange
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'remember_token' => null,
         ]);
 
@@ -88,7 +88,7 @@ class LoginStoreTest extends TestCase
     public function password_is_required()
     {
         // Arrange
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'remember_token' => null,
             'api_token' => null,
         ]);
@@ -111,7 +111,7 @@ class LoginStoreTest extends TestCase
     public function user_cannot_log_in_with_wrong_password()
     {
         // Arrange
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'remember_token' => null,
             'api_token' => null,
         ]);

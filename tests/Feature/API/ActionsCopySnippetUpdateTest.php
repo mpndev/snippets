@@ -3,7 +3,6 @@
 namespace Tests\Feature\API;
 
 use App\Snippet;
-use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -19,7 +18,7 @@ class ActionsCopySnippetTest extends TestCase
     public function snippet_can_be_copied()
     {
         // Arrange
-        $snippet = factory(Snippet::class)->create();
+        $snippet = Snippet::factory()->create();
 
         // Act
         $response = $this->apiRequest([

@@ -20,8 +20,8 @@ class APITagsCanBeAddedToSnippetsTest extends TestCase
     public function snippet_can_add_tag_to_himself()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make();
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make();
         $user->addSnippet($snippet);
 
         // Act
@@ -44,9 +44,9 @@ class APITagsCanBeAddedToSnippetsTest extends TestCase
     public function snippet_cannot_add_tag_to_himself_if_already_tag_exist()
     {
         // Arrange
-        $existing_tag = factory(Tag::class)->create(['name' => 'foo']);
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make();
+        $existing_tag = Tag::factory()->create(['name' => 'foo']);
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make();
         $user->addSnippet($snippet);
         $user->snippets[0]->addTag($existing_tag);
 
@@ -70,7 +70,7 @@ class APITagsCanBeAddedToSnippetsTest extends TestCase
     public function tag_cannot_be_added_not_existing_snippet()
     {
         // Arrange
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         // Act
         $response = $this->apiRequest([
@@ -94,7 +94,7 @@ class APITagsCanBeAddedToSnippetsTest extends TestCase
     public function guest_cannot_add_tags_to_snippets()
     {
         // Arrange
-        $snippet = factory(Snippet::class)->create();
+        $snippet = Snippet::factory()->create();
 
         // Act
         $response = $this->apiRequest([

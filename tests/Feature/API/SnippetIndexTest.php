@@ -19,8 +19,8 @@ class SnippetIndexTest extends TestCase
     public function see_minimum_text()
     {
         // Arrange
-        factory(User::class)->create();
-        $snippet = factory(Snippet::class)->create();
+        User::factory()->create();
+        $snippet = Snippet::factory()->create();
 
         // Act
         $response = $this->apiRequest();
@@ -35,12 +35,12 @@ class SnippetIndexTest extends TestCase
     public function if_snippet_have_forks_user_can_see_them()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $parent_snippet = factory(Snippet::class)->make();
-        $first_fork = factory(Snippet::class)->make([
+        $user = User::factory()->create();
+        $parent_snippet = Snippet::factory()->make();
+        $first_fork = Snippet::factory()->make([
             'title' => 'Title-1',
         ]);
-        $second_fork = factory(Snippet::class)->make([
+        $second_fork = Snippet::factory()->make([
             'title' => 'Title-2',
         ]);
         $user->snippets()->save($parent_snippet);
@@ -62,13 +62,13 @@ class SnippetIndexTest extends TestCase
     public function if_snippet_have_parent_user_can_see_him()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $parent_snippet = factory(Snippet::class)->make([
+        $user = User::factory()->create();
+        $parent_snippet = Snippet::factory()->make([
             'title' => 'Title-1',
             'description' => 'foo',
             'body' => 'bar',
         ]);
-        $child_fork = factory(Snippet::class)->make(['fork_id' => $parent_snippet->id]);
+        $child_fork = Snippet::factory()->make(['fork_id' => $parent_snippet->id]);
         $user->snippets()->save($parent_snippet);
         $parent_snippet->addFork($child_fork);
 
@@ -85,8 +85,8 @@ class SnippetIndexTest extends TestCase
     /** @test */
     public function guest_can_see_public_snippets()
     {
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make([
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make([
             'public' => true,
         ]);
         $user->addSnippet($snippet);
@@ -104,8 +104,8 @@ class SnippetIndexTest extends TestCase
     /** @test */
     public function guest_can_not_see_private_snippets()
     {
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make([
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make([
             'public' => false,
         ]);
         $user->addSnippet($snippet);
@@ -122,8 +122,8 @@ class SnippetIndexTest extends TestCase
     /** @test */
     public function author_can_see_his_private_snippets()
     {
-        $user = factory(User::class)->create(['api_token' => str_repeat('A', 60)]);
-        $snippet = factory(Snippet::class)->make([
+        $user = User::factory()->create(['api_token' => str_repeat('A', 60)]);
+        $snippet = Snippet::factory()->make([
             'public' => false,
         ]);
         $user->addSnippet($snippet);
@@ -143,18 +143,18 @@ class SnippetIndexTest extends TestCase
     /** @test */
     public function user_can_not_see_private_snippets_from_other_users()
     {
-        $user = factory(User::class)->create(['api_token' => str_repeat('A', 60)]);
-        $other_user_1 = factory(User::class)->create(['api_token' => str_repeat('B', 60)]);
-        $other_user_2 = factory(User::class)->create(['api_token' => str_repeat('C', 60)]);
-        $snippet_1 = factory(Snippet::class)->make([
+        $user = User::factory()->create(['api_token' => str_repeat('A', 60)]);
+        $other_user_1 = User::factory()->create(['api_token' => str_repeat('B', 60)]);
+        $other_user_2 = User::factory()->create(['api_token' => str_repeat('C', 60)]);
+        $snippet_1 = Snippet::factory()->make([
             'public' => false,
         ]);
         $other_user_1->addSnippet($snippet_1);
 
-        $snippet_2 = factory(Snippet::class)->make([
+        $snippet_2 = Snippet::factory()->make([
             'public' => false,
         ]);
-        $snippet_3 = factory(Snippet::class)->make([
+        $snippet_3 = Snippet::factory()->make([
             'public' => false,
         ]);
         $other_user_2->addSnippet($snippet_2);

@@ -20,7 +20,7 @@ class SnippetStoreTest extends TestCase
     public function user_can_submit_new_snippet()
     {
         // Arrange
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         // Act
         $response = $this->apiRequest([], [
@@ -43,10 +43,10 @@ class SnippetStoreTest extends TestCase
     public function user_can_not_submit_new_snippet_with_existing_title()
     {
         // Arrange
-        $user = factory(User::class)->create(['api_token' => str_repeat('A', 60)]);
+        $user = User::factory()->create(['api_token' => str_repeat('A', 60)]);
 
-        $another_user = factory(User::class)->create(['api_token' => str_repeat('B', 60)]);
-        $another_user->addSnippet(factory(Snippet::class)->make([
+        $another_user = User::factory()->create(['api_token' => str_repeat('B', 60)]);
+        $another_user->addSnippet(Snippet::factory()->make([
             'title' => 'Foo',
             'slug' => 'foo',
             'description' => 'Bar',
@@ -96,7 +96,7 @@ class SnippetStoreTest extends TestCase
     public function title_and_body_fields_are_required()
     {
         // Arrange
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         // Act
         $response = $this->apiRequest([], [
@@ -123,7 +123,7 @@ class SnippetStoreTest extends TestCase
     public function title_description_and_body_fields_have_limitations()
     {
         // Arrange
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         // Act
         $response = $this->apiRequest([], [
@@ -154,8 +154,8 @@ class SnippetStoreTest extends TestCase
     {
         // Arrange
         $this->withoutMiddleware(VerifyCsrfToken::class);
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make();
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make();
         $user->addSnippet($snippet);
 
         // Act
@@ -181,7 +181,7 @@ class SnippetStoreTest extends TestCase
     public function empty_description_will_be_converted_to_empty_string()
     {
         // Arrange
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         // Act
         $this->apiRequest([], [
@@ -202,7 +202,7 @@ class SnippetStoreTest extends TestCase
     public function when_user_submit_new_snippet_slug_is_created()
     {
         // Arrange
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         // Act
         $response = $this->apiRequest([], [

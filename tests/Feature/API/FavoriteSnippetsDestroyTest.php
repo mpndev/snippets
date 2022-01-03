@@ -19,8 +19,8 @@ class FavoriteSnippetsDestroyTest extends TestCase
     public function user_can_remove_snippet_from_favorite_snippets()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->create();
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->create();
         $user->addToFavoriteSnippets($snippet);
 
         // Act
@@ -38,7 +38,7 @@ class FavoriteSnippetsDestroyTest extends TestCase
     public function guest_cannot_remove_snippet_from_favorite_snippets()
     {
         // Arrange
-        $snippet = factory(Snippet::class)->create();
+        $snippet = Snippet::factory()->create();
 
         // Act
         $response = $this->apiRequest([

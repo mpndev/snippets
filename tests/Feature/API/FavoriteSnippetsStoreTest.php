@@ -19,8 +19,8 @@ class FavoriteSnippetsStoreTest extends TestCase
     public function user_can_add_snippet_to_favorite()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->create();
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->create();
 
         // Act
         $response = $this->apiRequest([
@@ -39,8 +39,8 @@ class FavoriteSnippetsStoreTest extends TestCase
     public function user_can_add_snippet_to_favorite_with_slug()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->create();
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->create();
 
         // Act
         $response = $this->apiRequest([
@@ -59,7 +59,7 @@ class FavoriteSnippetsStoreTest extends TestCase
     public function guest_cannot_add_snippets_to_favorite()
     {
         // Arrange
-        $snippet = factory(Snippet::class)->create();
+        $snippet = Snippet::factory()->create();
 
         // Act
         $response = $this->apiRequest([

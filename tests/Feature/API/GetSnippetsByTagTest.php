@@ -20,16 +20,16 @@ class GetSnippetsByTagsTest extends TestCase
     public function see_only_snippets_for_specific_tags()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet1 = factory(Snippet::class)->make(['title' => 'fuzz']);
-        $snippet2 = factory(Snippet::class)->make(['title' => 'buzz']);
-        $snippet3 = factory(Snippet::class)->make(['title' => 'braz']);
-        $snippet4 = factory(Snippet::class)->make(['title' => 'fraz']);
-        $snippet5 = factory(Snippet::class)->make(['title' => 'farz']);
-        $tag1 = factory(Tag::class)->make(['name' => 'foo']);
-        $tag2 = factory(Tag::class)->make(['name' => 'faz']);
-        $tag3 = factory(Tag::class)->make(['name' => 'bar']);
-        $tag4 = factory(Tag::class)->make(['name' => 'baz']);
+        $user = User::factory()->create();
+        $snippet1 = Snippet::factory()->make(['title' => 'fuzz']);
+        $snippet2 = Snippet::factory()->make(['title' => 'buzz']);
+        $snippet3 = Snippet::factory()->make(['title' => 'braz']);
+        $snippet4 = Snippet::factory()->make(['title' => 'fraz']);
+        $snippet5 = Snippet::factory()->make(['title' => 'farz']);
+        $tag1 = Tag::factory()->make(['name' => 'foo']);
+        $tag2 = Tag::factory()->make(['name' => 'faz']);
+        $tag3 = Tag::factory()->make(['name' => 'bar']);
+        $tag4 = Tag::factory()->make(['name' => 'baz']);
         $user->addSnippet($snippet1);
         $user->addSnippet($snippet2);
         $user->addSnippet($snippet3);

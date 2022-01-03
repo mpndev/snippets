@@ -22,10 +22,10 @@ class APISearchSnippetsTest extends TestCase
         $snippets_data = $this->getSnippetsData();
         $garbage_titles_array = $this->getGarbageTitles();
         foreach($garbage_titles_array as $garbage_title) {
-            factory(Snippet::class)->create($garbage_title);
+            Snippet::factory()->create($garbage_title);
         }
         foreach($snippets_data as $snippet_data) {
-            factory(Snippet::class)->create($snippet_data);
+            Snippet::factory()->create($snippet_data);
         }
 
         // Act

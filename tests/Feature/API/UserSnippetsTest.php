@@ -19,15 +19,15 @@ class UserSnippetsTest extends TestCase
     public function user_can_see_hes_snippets()
     {
         // Arrange
-        $user = factory(User::class)->create(['api_token' => str_repeat('A', 60)]);
-        $user->addSnippet(factory(Snippet::class)->make(['title' => '1foo']));
-        $user->addSnippet(factory(Snippet::class)->make(['title' => '2foo']));
-        $user->addSnippet(factory(Snippet::class)->make(['title' => '3foo']));
-        $other_user = factory(User::class)->create(['api_token' => str_repeat('B', 60)]);
-        $other_user->addSnippet(factory(Snippet::class)->make(['title' => '1bar']));
-        $other_user->addSnippet(factory(Snippet::class)->make(['title' => '2bar']));
-        $other_user->addSnippet(factory(Snippet::class)->make(['title' => '3bar']));
-        $other_user->addSnippet(factory(Snippet::class)->make(['title' => '4bar']));
+        $user = User::factory()->create(['api_token' => str_repeat('A', 60)]);
+        $user->addSnippet(Snippet::factory()->make(['title' => '1foo']));
+        $user->addSnippet(Snippet::factory()->make(['title' => '2foo']));
+        $user->addSnippet(Snippet::factory()->make(['title' => '3foo']));
+        $other_user = User::factory()->create(['api_token' => str_repeat('B', 60)]);
+        $other_user->addSnippet(Snippet::factory()->make(['title' => '1bar']));
+        $other_user->addSnippet(Snippet::factory()->make(['title' => '2bar']));
+        $other_user->addSnippet(Snippet::factory()->make(['title' => '3bar']));
+        $other_user->addSnippet(Snippet::factory()->make(['title' => '4bar']));
 
         // Act
         $response = $this->apiRequest([

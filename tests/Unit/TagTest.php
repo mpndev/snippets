@@ -15,10 +15,10 @@ class TagTest extends TestCase
     public function it_can_have_many_snippets()
     {
         // Arrange
-        $snippet1 = factory(Snippet::class)->make(['title' => 'foo']);
-        $snippet2 = factory(Snippet::class)->make(['title' => 'bar']);
-        $snippet3 = factory(Snippet::class)->make(['title' => 'baz']);
-        $tag = factory(Tag::class)->create();
+        $snippet1 = Snippet::factory()->make(['title' => 'foo']);
+        $snippet2 = Snippet::factory()->make(['title' => 'bar']);
+        $snippet3 = Snippet::factory()->make(['title' => 'baz']);
+        $tag = Tag::factory()->create();
         $tag->addSnippet($snippet1);
         $tag->addSnippet($snippet2);
         $tag->addSnippet($snippet3);

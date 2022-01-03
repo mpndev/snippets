@@ -18,10 +18,10 @@ class SnippetTest extends TestCase
         // Arrange
         $expected_forks_amount = 7;
         $expected_total_snippets_amount = $expected_forks_amount + 1;
-        $parent_snippet = factory(Snippet::class)->create();
+        $parent_snippet = Snippet::factory()->create();
         $children = [];
         foreach (range(1, $expected_forks_amount) as $item) {
-            $children[] = factory(Snippet::class)->create(['fork_id' => $parent_snippet->id]);
+            $children[] = Snippet::factory()->create(['fork_id' => $parent_snippet->id]);
         }
 
         // Act
@@ -39,8 +39,8 @@ class SnippetTest extends TestCase
     public function it_can_get_his_parent()
     {
         // Arrange
-        $snippet = factory(Snippet::class)->create();
-        $fork = factory(Snippet::class)->create(['fork_id' => $snippet->id]);
+        $snippet = Snippet::factory()->create();
+        $fork = Snippet::factory()->create(['fork_id' => $snippet->id]);
 
         // Act
         $parent = $fork->parent;
@@ -55,7 +55,7 @@ class SnippetTest extends TestCase
         // Arrange
         $code = '<p>lorem ipsum</p>';
         $expected = e($code);
-        $snippet = factory(Snippet::class)->create(['body' => $code]);
+        $snippet = Snippet::factory()->create(['body' => $code]);
 
         // Act
         $body = $snippet->body;
@@ -68,8 +68,8 @@ class SnippetTest extends TestCase
     public function it_can_check_is_a_fork_or_not()
     {
         // Arrange
-        $snippet = factory(Snippet::class)->create();
-        $fork = factory(Snippet::class)->make();
+        $snippet = Snippet::factory()->create();
+        $fork = Snippet::factory()->make();
         $snippet->addFork($fork);
 
         // Act
@@ -85,8 +85,8 @@ class SnippetTest extends TestCase
     public function it_can_check_is_have_children()
     {
         // Arrange
-        $snippet = factory(Snippet::class)->create();
-        $fork = factory(Snippet::class)->make();
+        $snippet = Snippet::factory()->create();
+        $fork = Snippet::factory()->make();
         $snippet->addFork($fork);
 
         // Act
@@ -102,8 +102,8 @@ class SnippetTest extends TestCase
     public function it_can_check_is_a_parent()
     {
         // Arrange
-        $snippet = factory(Snippet::class)->create();
-        $fork = factory(Snippet::class)->make();
+        $snippet = Snippet::factory()->create();
+        $fork = Snippet::factory()->make();
         $snippet->addFork($fork);
 
         // Act
@@ -119,8 +119,8 @@ class SnippetTest extends TestCase
     public function it_can_get_creator()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->create();
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->create();
         $user->addSnippet($snippet);
 
         // Act
@@ -136,12 +136,12 @@ class SnippetTest extends TestCase
         // Arrange
         $fans_amount = 2;
         $total_users_amount = 4;
-        $users = factory(User::class, $total_users_amount)->make();
+        $users = User::factory()->count($total_users_amount)->make();
         $users->each(function ($user) {
             $user->save();
             $user->generateToken();
         });
-        $snippet = factory(Snippet::class)->create();
+        $snippet = Snippet::factory()->create();
         $users->take($fans_amount)->each(function($user) use ($snippet) {
             $user->addToFavoriteSnippets($snippet);
         });
@@ -159,12 +159,12 @@ class SnippetTest extends TestCase
         // Arrange
         $total_users_amount = 10;
         $fans_amount = 7;
-        $users = factory(User::class, $total_users_amount)->make();
+        $users = User::factory()->count($total_users_amount)->make();
         $users->each(function($user) {
             $user->save();
             $user->generateToken();
         });
-        $snippet = factory(Snippet::class)->create();
+        $snippet = Snippet::factory()->create();
         $users->take($fans_amount)->each(function($user) use ($snippet) {
             $user->addToFavoriteSnippets($snippet);
         });
@@ -181,9 +181,9 @@ class SnippetTest extends TestCase
     {
         // Arrange
         $expected_forks_amount = 7;
-        $parent_snippet = factory(Snippet::class)->create();
+        $parent_snippet = Snippet::factory()->create();
         foreach(range(1, $expected_forks_amount) as $step) {
-            factory(Snippet::class)->create(['fork_id' => $parent_snippet]);
+            Snippet::factory()->create(['fork_id' => $parent_snippet]);
         }
 
         // Act
@@ -197,8 +197,8 @@ class SnippetTest extends TestCase
     public function it_can_add_fork()
     {
         // Arrange
-        $snippet = factory(Snippet::class)->create();
-        $fork = factory(Snippet::class)->make();
+        $snippet = Snippet::factory()->create();
+        $fork = Snippet::factory()->make();
 
         // Act
         $snippet->addFork($fork);
@@ -211,8 +211,8 @@ class SnippetTest extends TestCase
     public function it_can_remove_fork()
     {
         // Arrange
-        $snippet = factory(Snippet::class)->create();
-        $fork = factory(Snippet::class)->make();
+        $snippet = Snippet::factory()->create();
+        $fork = Snippet::factory()->make();
         $snippet->addFork($fork);
         $this->assertEquals(1, $snippet->forks_quantity);
 
@@ -229,9 +229,9 @@ class SnippetTest extends TestCase
         // Arrange
         $forks_amount = 3;
         $expected_forks_amount_after_deletion = $forks_amount - 1;
-        $grandpa_snippet = factory(Snippet::class)->create();
-        $father_snippet = factory(Snippet::class)->make();
-        $child_snippet = factory(Snippet::class)->make();
+        $grandpa_snippet = Snippet::factory()->create();
+        $father_snippet = Snippet::factory()->make();
+        $child_snippet = Snippet::factory()->make();
         $grandpa_snippet->addFork($father_snippet);
         $father_snippet->addFork($child_snippet);
         $this->assertCount($forks_amount, Snippet::all());
@@ -248,10 +248,10 @@ class SnippetTest extends TestCase
     public function snippet_can_have_many_tags()
     {
         // Arrange
-        $snippet = factory(Snippet::class)->create();
-        $tag1 = factory(Tag::class)->make(['name' => 'foo']);
-        $tag2 = factory(Tag::class)->make(['name' => 'bar']);
-        $tag3 = factory(Tag::class)->make(['name' => 'baz']);
+        $snippet = Snippet::factory()->create();
+        $tag1 = Tag::factory()->make(['name' => 'foo']);
+        $tag2 = Tag::factory()->make(['name' => 'bar']);
+        $tag3 = Tag::factory()->make(['name' => 'baz']);
         $snippet->addTag($tag1);
         $snippet->addTag($tag2);
         $snippet->addTag($tag3);
@@ -269,7 +269,7 @@ class SnippetTest extends TestCase
     public function it_can_get_forks_with_nested_forks()
     {
         // Arrange
-        [$snippet1, $snippet2, $snippet3, $snippet4, $snippet5, $snippet6, $snippet7, $snippet8, $snippet9, $snippet10] = factory(Snippet::class, 10)->create();
+        [$snippet1, $snippet2, $snippet3, $snippet4, $snippet5, $snippet6, $snippet7, $snippet8, $snippet9, $snippet10] = Snippet::factory()->count(10)->create();
         $snippet1
             ->addFork($snippet2)
             ->forks()->first()->addFork($snippet3)
@@ -309,7 +309,7 @@ class SnippetTest extends TestCase
     public function it_can_register_and_store_copy_actions()
     {
         // Arrange
-        $snippet = factory(Snippet::class)->create();
+        $snippet = Snippet::factory()->create();
 
         // Act
         $snippet
@@ -325,7 +325,7 @@ class SnippetTest extends TestCase
     public function it_can_access_times_copied_directly()
     {
         // Arrange
-        $snippet = factory(Snippet::class)->create();
+        $snippet = Snippet::factory()->create();
         $snippet
             ->copy()
             ->copy()
@@ -342,7 +342,7 @@ class SnippetTest extends TestCase
     public function it_can_get_his_settings()
     {
         // Arrange
-        $snippet = factory(Snippet::class)->create();
+        $snippet = Snippet::factory()->create();
         $snippet->settings = '{"theme":"darcula"}';
         $snippet->save();
 

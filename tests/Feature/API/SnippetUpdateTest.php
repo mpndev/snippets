@@ -19,8 +19,8 @@ class SnippetUpdateTest extends TestCase
     public function user_can_update_snippet()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make([
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make([
             'title' => 'foo',
             'description' => 'foo',
             'body' => 'foo'
@@ -49,9 +49,9 @@ class SnippetUpdateTest extends TestCase
     public function user_cannot_update_other_users_snippets()
     {
         // Arrange
-        $user1 = factory(User::class)->create(['api_token' => str_repeat('A', 60)]);
-        $user2 = factory(User::class)->create(['api_token' => str_repeat('B', 60)]);
-        $snippet = factory(Snippet::class)->make([
+        $user1 = User::factory()->create(['api_token' => str_repeat('A', 60)]);
+        $user2 = User::factory()->create(['api_token' => str_repeat('B', 60)]);
+        $snippet = Snippet::factory()->make([
             'title' => 'foo',
             'description' => 'foo',
             'body' => 'foo'
@@ -83,8 +83,8 @@ class SnippetUpdateTest extends TestCase
     public function guest_cannot_update_snippet()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make([
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make([
             'title' => 'foo',
             'description' => 'foo',
             'body' => 'foo'
@@ -117,8 +117,8 @@ class SnippetUpdateTest extends TestCase
     public function validation_rules_on_update_snippet_are_active()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make();
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make();
         $user->addSnippet($snippet);
         $new_data = [
             'title' => str_repeat('A', 255) . 'A',
@@ -152,8 +152,8 @@ class SnippetUpdateTest extends TestCase
     public function empty_description_will_be_converted_to_empty_string()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make([
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make([
             'title' => 'foo',
             'description' => 'foo',
             'body' => 'foo'
@@ -180,8 +180,8 @@ class SnippetUpdateTest extends TestCase
     public function user_can_mark_snippet_as_private_with_0()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make([
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make([
             'public' => true,
         ]);
         $user->addSnippet($snippet);
@@ -209,8 +209,8 @@ class SnippetUpdateTest extends TestCase
     public function user_can_mark_snippet_as_private_with_0_surrounded_by_commas()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make([
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make([
             'public' => true,
         ]);
         $user->addSnippet($snippet);
@@ -238,8 +238,8 @@ class SnippetUpdateTest extends TestCase
     public function user_can_mark_snippet_as_private_with_boolean_false()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make([
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make([
             'public' => true,
         ]);
         $user->addSnippet($snippet);
@@ -267,8 +267,8 @@ class SnippetUpdateTest extends TestCase
     public function user_can_mark_snippet_as_public_with_1()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make([
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make([
             'public' => false,
         ]);
         $user->addSnippet($snippet);
@@ -296,8 +296,8 @@ class SnippetUpdateTest extends TestCase
     public function user_can_mark_snippet_as_public_with_1_surrounded_by_commas()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make([
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make([
             'public' => false,
         ]);
         $user->addSnippet($snippet);
@@ -325,8 +325,8 @@ class SnippetUpdateTest extends TestCase
     public function user_can_mark_snippet_as_public_with_boolean_true()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make([
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make([
             'public' => false,
         ]);
         $user->addSnippet($snippet);
@@ -354,8 +354,8 @@ class SnippetUpdateTest extends TestCase
     public function user_can_update_snippet_title_and_the_slug_get_updated_as_well()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make([
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make([
             'title' => 'foo',
             'slug' => 'bar',
             'description' => 'bar',
@@ -385,8 +385,8 @@ class SnippetUpdateTest extends TestCase
     public function user_can_not_update_the_snippet_title_if_another_snippet_have_the_title()
     {
         // Arrange
-        $another_user = factory(User::class)->create(['api_token' => str_repeat('B', 60)]);
-        $another_user_snippet = factory(Snippet::class)->make([
+        $another_user = User::factory()->create(['api_token' => str_repeat('B', 60)]);
+        $another_user_snippet = Snippet::factory()->make([
             'title' => 'Bar',
             'slug' => 'bar',
             'description' => 'Bar',
@@ -395,8 +395,8 @@ class SnippetUpdateTest extends TestCase
         ]);
         $another_user->addSnippet($another_user_snippet);
 
-        $user = factory(User::class)->create(['api_token' => str_repeat('A', 60)]);
-        $user_snippet = factory(Snippet::class)->make([
+        $user = User::factory()->create(['api_token' => str_repeat('A', 60)]);
+        $user_snippet = Snippet::factory()->make([
             'title' => 'faz',
             'slug' => 'faz',
             'description' => 'faz',
@@ -433,8 +433,8 @@ class SnippetUpdateTest extends TestCase
     public function user_can_not_update_the_snippet_title_if_another_snippet_have_the_title_and_the_validation_is_case_insensitive()
     {
         // Arrange
-        $another_user = factory(User::class)->create(['api_token' => str_repeat('B', 60)]);
-        $another_user_snippet = factory(Snippet::class)->make([
+        $another_user = User::factory()->create(['api_token' => str_repeat('B', 60)]);
+        $another_user_snippet = Snippet::factory()->make([
             'title' => 'Bar',
             'slug' => 'bar',
             'description' => 'Bar',
@@ -443,8 +443,8 @@ class SnippetUpdateTest extends TestCase
         ]);
         $another_user->addSnippet($another_user_snippet);
 
-        $user = factory(User::class)->create(['api_token' => str_repeat('A', 60)]);
-        $user_snippet = factory(Snippet::class)->make([
+        $user = User::factory()->create(['api_token' => str_repeat('A', 60)]);
+        $user_snippet = Snippet::factory()->make([
             'title' => 'faz',
             'slug' => 'faz',
             'description' => 'faz',

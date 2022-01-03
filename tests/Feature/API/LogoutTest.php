@@ -18,7 +18,7 @@ class LogoutTest extends TestCase
     public function user_can_log_out()
     {
         // Arrange
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         // Act
         $response = $this->apiRequest([], [

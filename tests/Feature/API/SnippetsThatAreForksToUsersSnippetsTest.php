@@ -19,16 +19,16 @@ class SnippetsThatAreForksToUsersSnippetsTest extends TestCase
     public function users_can_see_snippets_that_forks_his_snippets()
     {
         // Arrange
-        $user = factory(User::class)->create(['api_token' => str_repeat('A', 60)]);
-        $other_user = factory(User::class)->create(['api_token' => str_repeat('B', 60)]);
-        $snippet1 = factory(Snippet::class)->make(['description' => 'foo']);
-        $snippet2 = factory(Snippet::class)->make(['description' => 'bar']);
-        $snippet3 = factory(Snippet::class)->make(['description' => 'baz']);
+        $user = User::factory()->create(['api_token' => str_repeat('A', 60)]);
+        $other_user = User::factory()->create(['api_token' => str_repeat('B', 60)]);
+        $snippet1 = Snippet::factory()->make(['description' => 'foo']);
+        $snippet2 = Snippet::factory()->make(['description' => 'bar']);
+        $snippet3 = Snippet::factory()->make(['description' => 'baz']);
         $user->addSnippet($snippet1);
         $user->addSnippet($snippet2);
         $user->addSnippet($snippet3);
-        $fork1 = factory(Snippet::class)->make(['description' => 'fazz']);
-        $fork2 = factory(Snippet::class)->make(['description' => 'fuzz']);
+        $fork1 = Snippet::factory()->make(['description' => 'fazz']);
+        $fork2 = Snippet::factory()->make(['description' => 'fuzz']);
         $other_user->addSnippet($fork1);
         $other_user->addSnippet($fork2);
         $user->snippets[0]->addFork($fork1);

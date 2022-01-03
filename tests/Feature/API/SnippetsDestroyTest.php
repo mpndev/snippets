@@ -19,8 +19,8 @@ class SnippetDestroyTest extends TestCase
     public function user_can_delete_snippet()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make();
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make();
         $user->addSnippet($snippet);
 
         // Act
@@ -39,9 +39,9 @@ class SnippetDestroyTest extends TestCase
     public function user_cannot_delete_other_users_snippets()
     {
         // Arrange
-        $user1 = factory(User::class)->create(['api_token' => str_repeat('A', 60)]);
-        $user2 = factory(User::class)->create(['api_token' => str_repeat('B', 60)]);
-        $snippet = factory(Snippet::class)->make();
+        $user1 = User::factory()->create(['api_token' => str_repeat('A', 60)]);
+        $user2 = User::factory()->create(['api_token' => str_repeat('B', 60)]);
+        $snippet = Snippet::factory()->make();
         $user1->addSnippet($snippet);
 
         // Act
@@ -66,10 +66,10 @@ class SnippetDestroyTest extends TestCase
     public function when_is_deleted_children_snippets_become_parents()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $parent_snippet = factory(Snippet::class)->make();
-        $child_snippet_1 = factory(Snippet::class)->make();
-        $child_snippet_2 = factory(Snippet::class)->make();
+        $user = User::factory()->create();
+        $parent_snippet = Snippet::factory()->make();
+        $child_snippet_1 = Snippet::factory()->make();
+        $child_snippet_2 = Snippet::factory()->make();
         $user->addSnippet($parent_snippet);
         $parent_snippet->addFork($child_snippet_1);
         $parent_snippet->addFork($child_snippet_2);
@@ -93,9 +93,9 @@ class SnippetDestroyTest extends TestCase
         // Arrange
         $snippets_starting_quantity = 7;
         $expected_favorite_snippets_quantity = 6;
-        $fan = factory(User::class)->create(['api_token' => str_repeat('A', 60)]);
-        $user = factory(User::class)->create(['api_token' => str_repeat('B', 60)]);
-        $snippets = factory(Snippet::class, $snippets_starting_quantity)->make();
+        $fan = User::factory()->create(['api_token' => str_repeat('A', 60)]);
+        $user = User::factory()->create(['api_token' => str_repeat('B', 60)]);
+        $snippets = Snippet::factory()->count($snippets_starting_quantity)->make();
         foreach($snippets as $snippet) {
             $user->addSnippet($snippet);
             $fan->addTofavoriteSnippets($snippet);
@@ -117,8 +117,8 @@ class SnippetDestroyTest extends TestCase
     public function guest_cannot_delete_snippets()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make();
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make();
         $user->addSnippet($snippet);
 
         // Act

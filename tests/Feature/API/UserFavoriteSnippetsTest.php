@@ -19,15 +19,15 @@ class UserFavoriteSnippetsTest extends TestCase
     public function user_can_see_hes_favorite_snippets()
     {
         // Arrange
-        $user = factory(User::class)->create(['api_token' => str_repeat('A', 60)]);
-        $other_user = factory(User::class)->create(['api_token' => str_repeat('B', 60)]);
-        $other_user->addSnippet(factory(Snippet::class)->make(['title' => '1foo']));
-        $other_user->addSnippet(factory(Snippet::class)->make(['title' => '2foo']));
-        $other_user->addSnippet(factory(Snippet::class)->make(['title' => '3bar']));
-        $other_user->addSnippet(factory(Snippet::class)->make(['title' => '1fuzz']));
-        $other_user->addSnippet(factory(Snippet::class)->make(['title' => '2foob']));
-        $other_user->addSnippet(factory(Snippet::class)->make(['title' => '3barf']));
-        $other_user->addSnippet(factory(Snippet::class)->make(['title' => '4barf']));
+        $user = User::factory()->create(['api_token' => str_repeat('A', 60)]);
+        $other_user = User::factory()->create(['api_token' => str_repeat('B', 60)]);
+        $other_user->addSnippet(Snippet::factory()->make(['title' => '1foo']));
+        $other_user->addSnippet(Snippet::factory()->make(['title' => '2foo']));
+        $other_user->addSnippet(Snippet::factory()->make(['title' => '3bar']));
+        $other_user->addSnippet(Snippet::factory()->make(['title' => '1fuzz']));
+        $other_user->addSnippet(Snippet::factory()->make(['title' => '2foob']));
+        $other_user->addSnippet(Snippet::factory()->make(['title' => '3barf']));
+        $other_user->addSnippet(Snippet::factory()->make(['title' => '4barf']));
         $snippets = $other_user->snippets()->get();
         $user->addToFavoriteSnippets($snippets[0]);
         $user->addToFavoriteSnippets($snippets[1]);

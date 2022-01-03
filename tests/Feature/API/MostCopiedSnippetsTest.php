@@ -19,7 +19,7 @@ class MostCopiedSnippetsTest extends TestCase
     public function guest_can_see_top_5_most_copied_snippets()
     {
         // Arrange
-        $snippets = factory(Snippet::class, 10)->create(['user_id' => 99]);
+        $snippets = Snippet::factory()->count(10)->create(['user_id' => 99]);
         $this->repeat(function($i) use($snippets) {
             $snippets[$i]->copy();
             $snippets[$i] = $snippets[$i]->fresh();

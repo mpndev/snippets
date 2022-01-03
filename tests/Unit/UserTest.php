@@ -15,8 +15,8 @@ class UserTest extends TestCase
     public function it_can_get_snippets()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = $user->snippets()->save(factory(Snippet::class)->make());
+        $user = User::factory()->create();
+        $snippet = $user->snippets()->save(Snippet::factory()->make());
 
         // Act
         $user_snippets = $user->snippets;
@@ -31,8 +31,8 @@ class UserTest extends TestCase
     public function it_can_check_is_snippet_favorite()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = $user->snippets()->save(factory(Snippet::class)->make());
+        $user = User::factory()->create();
+        $snippet = $user->snippets()->save(Snippet::factory()->make());
         $this->assertFalse($user->isSnippetFavorite($snippet));
 
         // Act
@@ -46,8 +46,8 @@ class UserTest extends TestCase
     public function it_can_add_snippet_to_favorite_snippets()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = $user->snippets()->save(factory(Snippet::class)->make());
+        $user = User::factory()->create();
+        $snippet = $user->snippets()->save(Snippet::factory()->make());
 
         // Act
         $user->addToFavoriteSnippets($snippet);
@@ -60,8 +60,8 @@ class UserTest extends TestCase
     public function it_can_create_snippet()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make();
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make();
 
         // Act
         $user->addSnippet($snippet);
@@ -74,8 +74,8 @@ class UserTest extends TestCase
     public function it_can_remove_snippet_from_favorite_snippets()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippets = $user->snippets()->saveMany(factory(Snippet::class, 2)->make());
+        $user = User::factory()->create();
+        $snippets = $user->snippets()->saveMany(Snippet::factory()->count(2)->make());
 
         // Act
         $user->removeFromFavoriteSnippets($snippets[0]);
@@ -88,8 +88,8 @@ class UserTest extends TestCase
     public function it_can_get_hes_snippets_quantity()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $user->snippets()->saveMany(factory(Snippet::class, 10)->make());
+        $user = User::factory()->create();
+        $user->snippets()->saveMany(Snippet::factory()->count(10)->make());
 
         // Act
         $quantity = $user->snippets_quantity;
@@ -104,8 +104,8 @@ class UserTest extends TestCase
         // Arrange
         $snippets_amount = 10;
         $expected_favorite_snippets_amount = 5;
-        $user = factory(User::class)->create();
-        $snippets = $user->snippets()->saveMany(factory(Snippet::class, $snippets_amount)->make());
+        $user = User::factory()->create();
+        $snippets = $user->snippets()->saveMany(Snippet::factory()->count($snippets_amount)->make());
         $snippets->take($expected_favorite_snippets_amount)->each(function($snippet) use ($user){
             $user->addToFavoriteSnippets($snippet);
         });
@@ -121,9 +121,9 @@ class UserTest extends TestCase
     public function it_remove_snippet_from_favorite_snippets_when_snippet_is_deleted()
     {
         // Arrange
-        $user = factory(User::class)->create(['api_token' => str_repeat('A', 60)]);
-        $some_user = factory(User::class)->create(['api_token' => str_repeat('B', 60)]);
-        $snippet = factory(Snippet::class)->make();
+        $user = User::factory()->create(['api_token' => str_repeat('A', 60)]);
+        $some_user = User::factory()->create(['api_token' => str_repeat('B', 60)]);
+        $snippet = Snippet::factory()->make();
         $some_user->addSnippet($snippet);
         $user->addToFavoriteSnippets($snippet);
 
@@ -138,8 +138,8 @@ class UserTest extends TestCase
     public function it_delete_his_snippet()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make();
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make();
         $user->addSnippet($snippet);
         $this->assertEquals(1, $user->snippets_quantity);
 
@@ -154,8 +154,8 @@ class UserTest extends TestCase
     public function it_can_register_and_store_copy_actions_on_snippet()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->create();
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->create();
         $snippet->actions()->create();
 
         // Act
@@ -171,7 +171,7 @@ class UserTest extends TestCase
     public function it_can_get_his_settings()
     {
         // Arrange
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         // Act
         $settings = $user->settings;

@@ -20,9 +20,9 @@ class TagCanBeDeletedForSnippetTest extends TestCase
     public function tag_can_be_removed_from_target_snippet()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make();
-        $tag = factory(Tag::class)->make(['name' => 'foo']);
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make();
+        $tag = Tag::factory()->make(['name' => 'foo']);
         $user->addSnippet($snippet);
         $snippet->addTag($tag);
 
@@ -43,9 +43,9 @@ class TagCanBeDeletedForSnippetTest extends TestCase
     public function guest_cannot_remove_tag_for_any_snippet()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make();
-        $tag = factory(Tag::class)->make(['name' => 'foo']);
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make();
+        $tag = Tag::factory()->make(['name' => 'foo']);
         $user->addSnippet($snippet);
         $snippet->addTag($tag);
 
@@ -70,9 +70,9 @@ class TagCanBeDeletedForSnippetTest extends TestCase
     public function tag_cannot_be_deleted_for_unexisting_snippet()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make();
-        $tag = factory(Tag::class)->make(['name' => 'foo']);
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make();
+        $tag = Tag::factory()->make(['name' => 'foo']);
         $user->addSnippet($snippet);
         $snippet->addTag($tag);
 
@@ -98,8 +98,8 @@ class TagCanBeDeletedForSnippetTest extends TestCase
     public function unexisting_tag_cannot_be_removed_from_target_snippet()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make();
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make();
         $user->addSnippet($snippet);
 
         // Act
@@ -124,10 +124,10 @@ class TagCanBeDeletedForSnippetTest extends TestCase
     public function tag_will_not_be_deleted_if_target_snippet_remove_it_and_no_one_use_it()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet1 = factory(Snippet::class)->make();
-        $snippet2 = factory(Snippet::class)->make();
-        $tag = factory(Tag::class)->make(['name' => 'foo']);
+        $user = User::factory()->create();
+        $snippet1 = Snippet::factory()->make();
+        $snippet2 = Snippet::factory()->make();
+        $tag = Tag::factory()->make(['name' => 'foo']);
         $user->addSnippet($snippet1);
         $user->addSnippet($snippet2);
         $snippet1->addTag($tag);
@@ -150,10 +150,10 @@ class TagCanBeDeletedForSnippetTest extends TestCase
     public function tag_will_be_deleted_if_every_snippet_remove_it()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet1 = factory(Snippet::class)->make();
-        $snippet2 = factory(Snippet::class)->make();
-        $tag = factory(Tag::class)->make(['name' => 'foo']);
+        $user = User::factory()->create();
+        $snippet1 = Snippet::factory()->make();
+        $snippet2 = Snippet::factory()->make();
+        $tag = Tag::factory()->make(['name' => 'foo']);
         $user->addSnippet($snippet1);
         $user->addSnippet($snippet2);
         $snippet1->addTag($tag);

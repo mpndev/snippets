@@ -139,7 +139,7 @@ class RegisterStoreTest extends TestCase
     public function user_cannot_register()
     {
         // Arrange
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         // Act
         $response = $this->apiRequest([

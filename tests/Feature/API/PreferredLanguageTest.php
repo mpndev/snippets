@@ -18,7 +18,7 @@ class PreferredLanguageTest extends TestCase
     public function can_see_bulgarian_translation_on_created_at_for_humans_field()
     {
         // Arrange
-        factory(Snippet::class)->create();
+        Snippet::factory()->create();
 
         // Act
         $response = $this->withHeader('Langcode', 'bg')->apiRequest();

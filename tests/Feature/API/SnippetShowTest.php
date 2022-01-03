@@ -19,8 +19,8 @@ class SnippetShowTest extends TestCase
     public function guest_can_see_single_snippet_with_all_useful_fields()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make();
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make();
         $user->addSnippet($snippet);
 
         // Act
@@ -37,8 +37,8 @@ class SnippetShowTest extends TestCase
     /** @test */
     public function guest_can_see_public_snippets()
     {
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make([
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make([
             'public' => true,
         ]);
         $user->addSnippet($snippet);
@@ -58,8 +58,8 @@ class SnippetShowTest extends TestCase
     /** @test */
     public function guest_can_not_see_private_snippets()
     {
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make([
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make([
             'public' => false,
         ]);
         $user->addSnippet($snippet);
@@ -82,8 +82,8 @@ class SnippetShowTest extends TestCase
     /** @test */
     public function author_can_see_his_private_snippets()
     {
-        $user = factory(User::class)->create(['api_token' => str_repeat('A', 60)]);
-        $snippet = factory(Snippet::class)->make([
+        $user = User::factory()->create(['api_token' => str_repeat('A', 60)]);
+        $snippet = Snippet::factory()->make([
             'public' => false,
         ]);
         $user->addSnippet($snippet);
@@ -104,9 +104,9 @@ class SnippetShowTest extends TestCase
     /** @test */
     public function user_can_not_see_private_snippets_from_other_users()
     {
-        $user = factory(User::class)->create(['api_token' => str_repeat('A', 60)]);
-        $other_user = factory(User::class)->create(['api_token' => str_repeat('B', 60)]);
-        $snippet = factory(Snippet::class)->make([
+        $user = User::factory()->create(['api_token' => str_repeat('A', 60)]);
+        $other_user = User::factory()->create(['api_token' => str_repeat('B', 60)]);
+        $snippet = Snippet::factory()->make([
             'public' => false,
         ]);
         $other_user->addSnippet($snippet);
@@ -131,8 +131,8 @@ class SnippetShowTest extends TestCase
     public function guest_can_see_single_snippet_by_the_slug_of_the_snippet()
     {
         // Arrange
-        $user = factory(User::class)->create();
-        $snippet = factory(Snippet::class)->make();
+        $user = User::factory()->create();
+        $snippet = Snippet::factory()->make();
         $user->addSnippet($snippet);
 
         // Act

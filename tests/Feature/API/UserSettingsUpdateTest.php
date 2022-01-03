@@ -18,7 +18,7 @@ class UserSettingsUpdateTest extends TestCase
     public function user_can_update_his_settings()
     {
         // Arrange
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         // Act
         $response = $this->apiRequest([
@@ -39,7 +39,7 @@ class UserSettingsUpdateTest extends TestCase
     public function guest_can_not_update_user_settings()
     {
         // Arrange
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         // Act
         $response = $this->apiRequest([

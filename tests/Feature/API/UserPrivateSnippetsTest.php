@@ -19,10 +19,10 @@ class UserPrivateSnippetsTest extends TestCase
     public function user_can_see_his_private_snippets()
     {
         // Arrange
-        $user = factory(User::class)->create(['api_token' => str_repeat('A', 60)]);
-        $user->addSnippet(factory(Snippet::class)->make(['title' => '1foo', 'public' => true]));
-        $user->addSnippet(factory(Snippet::class)->make(['title' => '2foo', 'public' => false]));
-        $user->addSnippet(factory(Snippet::class)->make(['title' => '3bar', 'public' => true]));
+        $user = User::factory()->create(['api_token' => str_repeat('A', 60)]);
+        $user->addSnippet(Snippet::factory()->make(['title' => '1foo', 'public' => true]));
+        $user->addSnippet(Snippet::factory()->make(['title' => '2foo', 'public' => false]));
+        $user->addSnippet(Snippet::factory()->make(['title' => '3bar', 'public' => true]));
 
         // Act
         $response = $this->apiRequest([

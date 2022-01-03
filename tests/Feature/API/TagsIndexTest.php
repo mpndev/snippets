@@ -20,8 +20,8 @@ class TagsIndexTest extends TestCase
     public function user_can_get_all_tags()
     {
         // Arrange
-        $snippet = factory(Snippet::class)->create();
-        $tags = factory(Tag::class, 3)->create();
+        $snippet = Snippet::factory()->create();
+        $tags = Tag::factory()->count(3)->create();
         $snippet->addTag($tags[0]);
         $snippet->addTag($tags[1]);
         $snippet->addTag($tags[2]);
@@ -40,19 +40,19 @@ class TagsIndexTest extends TestCase
     public function guest_can_not_see_private_snippets_tags()
     {
         // Arrange
-        $tag1 = factory(Tag::class)->create(['name' => 'foo']);
-        $tag2 = factory(Tag::class)->create(['name' => 'bar']);
-        $tag3 = factory(Tag::class)->create(['name' => 'foo bar']);
+        $tag1 = Tag::factory()->create(['name' => 'foo']);
+        $tag2 = Tag::factory()->create(['name' => 'bar']);
+        $tag3 = Tag::factory()->create(['name' => 'foo bar']);
 
-        $user = factory(User::class)->create(['api_token' => str_repeat('A', 60)]);
-        $snippet1 = factory(Snippet::class)->create(['public' => false]);
+        $user = User::factory()->create(['api_token' => str_repeat('A', 60)]);
+        $snippet1 = Snippet::factory()->create(['public' => false]);
         $snippet1->addTag($tag1);
         $user->addSnippet($snippet1);
 
-        $another_user = factory(User::class)->create(['api_token' => str_repeat('B', 60)]);
-        $snippet2 = factory(Snippet::class)->create(['public' => false]);
+        $another_user = User::factory()->create(['api_token' => str_repeat('B', 60)]);
+        $snippet2 = Snippet::factory()->create(['public' => false]);
         $snippet2->addTag($tag2);
-        $snippet3 = factory(Snippet::class)->create();
+        $snippet3 = Snippet::factory()->create();
         $snippet3->addTag($tag3);
         $another_user->addSnippet($snippet2);
         $another_user->addSnippet($snippet3);
@@ -71,19 +71,19 @@ class TagsIndexTest extends TestCase
     public function user_can_not_see_private_snippets_tags_that_do_not_belongs_to_him()
     {
         // Arrange
-        $tag1 = factory(Tag::class)->create(['name' => 'foo']);
-        $tag2 = factory(Tag::class)->create(['name' => 'bar']);
-        $tag3 = factory(Tag::class)->create(['name' => 'foo bar']);
+        $tag1 = Tag::factory()->create(['name' => 'foo']);
+        $tag2 = Tag::factory()->create(['name' => 'bar']);
+        $tag3 = Tag::factory()->create(['name' => 'foo bar']);
 
-        $user = factory(User::class)->create(['api_token' => str_repeat('A', 60)]);
-        $snippet1 = factory(Snippet::class)->create(['public' => false]);
+        $user = User::factory()->create(['api_token' => str_repeat('A', 60)]);
+        $snippet1 = Snippet::factory()->create(['public' => false]);
         $snippet1->addTag($tag1);
         $user->addSnippet($snippet1);
 
-        $another_user = factory(User::class)->create(['api_token' => str_repeat('B', 60)]);
-        $snippet2 = factory(Snippet::class)->create(['public' => false]);
+        $another_user = User::factory()->create(['api_token' => str_repeat('B', 60)]);
+        $snippet2 = Snippet::factory()->create(['public' => false]);
         $snippet2->addTag($tag2);
-        $snippet3 = factory(Snippet::class)->create();
+        $snippet3 = Snippet::factory()->create();
         $snippet3->addTag($tag3);
         $another_user->addSnippet($snippet2);
         $another_user->addSnippet($snippet3);
@@ -104,19 +104,19 @@ class TagsIndexTest extends TestCase
     public function user_can_see_his_private_snippets_tags()
     {
         // Arrange
-        $tag1 = factory(Tag::class)->create(['name' => 'foo']);
-        $tag2 = factory(Tag::class)->create(['name' => 'bar']);
-        $tag3 = factory(Tag::class)->create(['name' => 'foo bar']);
+        $tag1 = Tag::factory()->create(['name' => 'foo']);
+        $tag2 = Tag::factory()->create(['name' => 'bar']);
+        $tag3 = Tag::factory()->create(['name' => 'foo bar']);
 
-        $user = factory(User::class)->create(['api_token' => str_repeat('A', 60)]);
-        $snippet1 = factory(Snippet::class)->create(['public' => false]);
+        $user = User::factory()->create(['api_token' => str_repeat('A', 60)]);
+        $snippet1 = Snippet::factory()->create(['public' => false]);
         $snippet1->addTag($tag1);
         $user->addSnippet($snippet1);
 
-        $another_user = factory(User::class)->create(['api_token' => str_repeat('B', 60)]);
-        $snippet2 = factory(Snippet::class)->create(['public' => false]);
+        $another_user = User::factory()->create(['api_token' => str_repeat('B', 60)]);
+        $snippet2 = Snippet::factory()->create(['public' => false]);
         $snippet2->addTag($tag2);
-        $snippet3 = factory(Snippet::class)->create();
+        $snippet3 = Snippet::factory()->create();
         $snippet3->addTag($tag3);
         $another_user->addSnippet($snippet2);
         $another_user->addSnippet($snippet3);
