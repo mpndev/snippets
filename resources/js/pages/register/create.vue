@@ -102,6 +102,10 @@
                     this.Auth.update(response.data)
                     this.$router.push({ name: 'snippets.index' })
                 }).catch(error => {
+                    if (error.response.data.email) {
+                        this.errors.email.push(this.$t('Email has already been taken.'))
+                        return
+                    }
                     let parsed_errors = ''
 
                     if (error.response && error.response.data) {
