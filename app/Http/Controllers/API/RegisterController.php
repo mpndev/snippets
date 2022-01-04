@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\User;
 use Illuminate\Http\Request;
+use App\Jobs\WelcomeEmailJob;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\Registered;
@@ -54,6 +55,9 @@ class RegisterController extends Controller
     protected function registered(Request $request, $user)
     {
         $user->generateToken();
+
+        WelcomeEmailJob::dispatch(request('email'));
+
         return response()->json($user->with(['snippets', 'favoriteSnippets'])->find($user->id)->toArray(), 201);
     }
 
