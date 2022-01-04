@@ -12,7 +12,8 @@
 
 <template>
     <div>
-        <div class="columns">
+        <not-found v-if="not_found"></not-found>
+        <div v-if="!not_found" class="columns">
             <div class="column is-3">
                 <div class="box">
                     <div v-if="snippet.id">
@@ -90,7 +91,7 @@
                 <Editor v-if="snippet.id" :snippet="snippet" :options="snippet.settings"></Editor>
             </div>
         </div>
-        <div class="columns">
+        <div v-if="!not_found" class="columns">
             <div v-if="urls && urls.length" class="column is-3">
                 <div class="box">
                     <p><b>{{ $t('Detected URLs in the snippet:') }}</b></p>
@@ -100,7 +101,7 @@
                 </div>
             </div>
         </div>
-        <div class="columns">
+        <div v-if="!not_found" class="columns">
             <div v-if="snippet.public" class="column is-3">
                 <div class="box">
                     <share-it :url="current_domain + '/snippets/' + snippet.slug" :targets="['facebook', 'linkedin', 'twitter']" :shareConfig="share_it_settings" />
@@ -112,6 +113,7 @@
 
 <script>
     import Editor from '../../components/Editor'
+    import NotFound from '../../pages/NotFound'
 
     const share_it_settings = {
         facebook: {
@@ -141,10 +143,12 @@
     }
     export default {
         components: {
-            Editor: Editor
+            Editor: Editor,
+            NotFound: NotFound
         },
         data: () => {
             return {
+                not_found: false,
                 share_it_settings: share_it_settings,
                 snippet: {},
                 Auth: Auth,
@@ -165,6 +169,10 @@
                 let urls_pattern = /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/ig
                 this.urls = [...new Set(this.snippet.body.match(urls_pattern))]
             }).catch(error => {
+                if (error.response.status == 404) {
+                    this.not_found = true
+                    return
+                }
                 this.$router.push({ name: 'snippets.index' })
                 this.error({message: error.toString()})
             })
