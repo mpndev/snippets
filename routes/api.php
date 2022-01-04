@@ -8,6 +8,8 @@ use \App\Http\Controllers\API\SnippetsController;
 use \App\Http\Controllers\API\RegisterController;
 use \App\Http\Controllers\API\GithubLoginController;
 use \App\Http\Controllers\API\UserSettingsController;
+use App\Http\Controllers\API\PasswordResetController;
+use App\Http\Controllers\API\PasswordForgetController;
 use \App\Http\Controllers\API\FavoriteSnippetsController;
 use \App\Http\Controllers\API\SnippetsActionsCopyController;
 
@@ -17,6 +19,10 @@ Route::get('/login/github/callback', [GithubLoginController::class, 'handleProvi
 Route::post('/login', [LoginController::class, 'store'])->name('api.login.store');
 Route::delete('/logout', [LoginController::class, 'destroy'])->name('api.login.destroy');
 Route::post('/register', [RegisterController::class, 'store'])->name('api.register.store');
+
+Route::post('/password-forget', [PasswordForgetController::class, 'store'])->name('password.forget');
+
+Route::post('/password-reset', [PasswordResetController::class, 'store'])->name('password.reset');
 
 Route::get('/snippets', [SnippetsController::class, 'index'])->name('api.snippets.index');
 Route::post('/snippets', [SnippetsController::class, 'store'])->name('api.snippets.store');

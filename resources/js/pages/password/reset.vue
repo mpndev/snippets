@@ -1,21 +1,14 @@
 <template>
     <div>
         <div class="field">
-            <label class="label">{{ $t('Name') }}</label>
-            <div class="control">
-                <input class="input" type="text" v-model="name" :placeholder="$t('minimum 2 symbols')" @focusin="resetErrors">
-                <p class="has-text-danger" v-for="error in errors.name">{{ error }}</p>
-            </div>
-        </div>
-        <div class="field">
-            <label class="label">{{ $t('Password') }}</label>
+            <label class="label">{{ $t('New Password') }}</label>
             <div class="control">
                 <input class="input" type="password" v-model="password" :placeholder="$t('minumum 8 symbols')" @focusin="resetErrors">
                 <p class="has-text-danger" v-for="error in errors.password">{{ error }}</p>
             </div>
         </div>
         <div class="field">
-            <label class="label">{{ $t('Password Confirmation') }}</label>
+            <label class="label">{{ $t('New Password Confirmation') }}</label>
             <div class="control">
                 <input class="input" type="password" v-model="password_confirmation" :placeholder="$t('repeat password')" @focusin="resetErrors">
                 <p class="has-text-danger" v-for="error in errors.password_confirmation">{{ error }}</p>
@@ -29,7 +22,7 @@
             </div>
         </div>
         <div class="control">
-            <button class="button is-link" @click="register">{{ $t('Register') }}</button>
+            <button class="button is-link" @click="reset">{{ $t('Reset') }}</button>
         </div>
     </div>
 </template>
@@ -39,35 +32,30 @@
         data: () => {
             return {
                 Auth: Auth,
-                name: '',
+                token: '',
                 password: '',
                 password_confirmation: '',
                 email: '',
                 errors: {
-                    name: [],
                     password: [],
                     password_confirmation: [],
                     email: [],
                 }
             }
         },
+        created() {
+            this.token = this.$route.query.token
+        },
         mounted() {
-            document.querySelector('title').innerHTML = this.$t('registration')
+            document.querySelector('title').innerHTML = this.$t('Reset password')
         },
         methods: {
             resetErrors() {
-                this.errors.name = []
                 this.errors.password = []
                 this.errors.password_confirmation = []
                 this.errors.email = []
             },
             validateFields() {
-                if (this.name.length < 2) {
-                    this.errors.name.push(this.$t('Name must be more then 1 symbols.'));
-                }
-                if (this.name.length > 255) {
-                    this.errors.name.push(this.$t('Name must be less then 256 symbols.'));
-                }
                 if (this.password.length < 8) {
                     this.errors.password.push(this.$t('Password must be more then 7 symbols.'));
                 }
@@ -81,26 +69,25 @@
                     this.errors.email.push(this.$t('Please provide valid email.'));
                 }
             },
-            register() {
+            reset() {
                 this.resetErrors()
 
                 this.validateFields()
 
-                if (this.errors.name.length || this.errors.password.length || this.errors.password_confirmation.length || this.errors.email.length) {
+                if (this.errors.password.length || this.errors.password_confirmation.length || this.errors.email.length) {
                     return;
                 }
 
-                axios.post('/api/register', {
-                    name: this.name,
+                axios.post('/api/password-reset', {
+                    token: this.token,
                     password: this.password,
                     password_confirmation: this.password_confirmation,
                     email: this.email
                 }).then(response => {
                     this.success({
-                        message: "Welcome " + response.data.name,
+                        message: this.$t('Password was reset successfully.'),
                     })
-                    this.Auth.update(response.data)
-                    this.$router.push({ name: 'snippets.index' })
+                    this.$router.push({ name: 'login.create' })
                 }).catch(error => {
                     let parsed_errors = ''
 

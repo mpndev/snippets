@@ -13,8 +13,9 @@
                 <input class="input" type="password" v-model="password" @focusin="resetErrors">
             </div>
         </div>
-        <div class="control">
+        <div class="control is-flex is-align-items-center">
             <button class="button is-link" @click="login">{{ $t('Login') }}</button>
+            <a class="is-size-6 ml-3" @click.prevent="forgetPassword">{{ $t('Forget password?') }}</a>
         </div>
         <div class="control mt-5 is-flex is-align-items-center box">
             <span><b>{{ $t('Do not have account? Try simple') }}</b></span>
@@ -73,6 +74,9 @@
                 axios.get('/api/login/github/redirect').then(response => {
                     window.location = response.data.redirect_url
                 }).catch(error => {})
+            },
+            forgetPassword() {
+                this.$router.push({ name: 'password.forget' })
             }
         },
         notifications: require('../../GlobalNotifications')

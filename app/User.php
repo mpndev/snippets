@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Notifications\ResetpasswordNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -29,6 +30,11 @@ class User extends Authenticatable
     public function getRouteKeyName()
     {
         return 'name';
+    }
+
+    public function sendPasswordResetNotification($token) {
+        $url = request()->getSchemeAndHttpHost() . '/password-reset?token=' . $token;
+        $this->notify(new ResetpasswordNotification($url));
     }
 
     public function snippets()

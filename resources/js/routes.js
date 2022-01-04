@@ -5,6 +5,8 @@ import SnippetsShow from './pages/snippets/show'
 import SnippetsForksCreate from './pages/snippets/forks/create'
 import LoginGithubCallback from './pages/login/github/callback'
 import LoginCreate from './pages/login/create'
+import PasswordReset from './pages/password/reset'
+import PasswordForget from './pages/password/forget'
 import RegisterCreate from './pages/register/create'
 import Tags from './pages/tags/index'
 import NotFound from './pages/NotFound'
@@ -94,6 +96,32 @@ export default {
             path: '/register',
             component: RegisterCreate,
             name: 'register.create',
+            beforeEnter: (to, from, next) => {
+                if (Auth.check()) {
+                    next({ name: 'snippets.index' })
+                }
+                else {
+                    next()
+                }
+            }
+        },
+        {
+            path: '/password-reset',
+            component: PasswordReset,
+            name: 'password.reset',
+            beforeEnter: (to, from, next) => {
+                if (Auth.check()) {
+                    next({ name: 'snippets.index' })
+                }
+                else {
+                    next()
+                }
+            }
+        },
+        {
+            path: '/password-forget',
+            component: PasswordForget,
+            name: 'password.forget',
             beforeEnter: (to, from, next) => {
                 if (Auth.check()) {
                     next({ name: 'snippets.index' })

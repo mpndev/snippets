@@ -24,6 +24,7 @@ class RegisterStoreTest extends TestCase
             'name' => 'John Doe',
             'password' => 'password',
             'password_confirmation' => 'password',
+            'email' => 'foo@example.com',
         ]);
 
         // Assert
@@ -65,6 +66,12 @@ class RegisterStoreTest extends TestCase
             'name' => 'John Doe',
             'password' => 'password',
             'password_confirmation' => 'different_password',
+        ]);
+        $response9 = $this->apiRequest([
+            'name' => 'John Doe',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'email' => 'fooNotAtexample.com',
         ]);
 
         // Assert
@@ -131,6 +138,13 @@ class RegisterStoreTest extends TestCase
             ->assertJson([
                 'password' => [
                     'The password confirmation does not match.',
+                ],
+            ]);
+        $response9
+            ->assertStatus(400)
+            ->assertJson([
+                'email' => [
+                    'The email must be a valid email address.',
                 ],
             ]);
     }

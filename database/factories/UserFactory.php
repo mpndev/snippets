@@ -18,6 +18,7 @@ class UserFactory extends Factory {
             'remember_token' => Str::random(10),
             'settings' => '{"theme":"default"}',
             'api_token' => str_repeat('A', 60),
+            'email' => $this->faker->email,
         ];
     }
 
