@@ -58,11 +58,6 @@
                 this.currentLangcode = language
                 localStorage.setItem('language', language)
                 this.showLanguages = !this.showLanguages
-                axios.post('/api/cache', {
-                    _method: 'DELETE'
-                }).then(() => {
-                    location.reload()
-                })
             }
         }
     }
