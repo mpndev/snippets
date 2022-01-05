@@ -10,6 +10,7 @@
         position: relative;
         margin: 1rem 1rem 10rem 1rem;
         width: 20vw;
+        transition: opacity .5s;
     }
     .pill-wrapper > div {
         position: absolute;
@@ -27,6 +28,7 @@
     }
     .pill-top {
         border-radius: 8px 8px 0 0;
+        box-shadow: inset 0 0 0 1px #fff;
     }
     .is-tag {
         margin: 0!important;
@@ -36,6 +38,7 @@
     }
     .pill-bottom {
         border-radius: 0 0 8px 8px;
+        box-shadow: inset 0 0 0 1px #fff;
     }
     .is-tag:hover {
         background-color: #00d1b2!important;
