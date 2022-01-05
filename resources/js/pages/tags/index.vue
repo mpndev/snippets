@@ -1,26 +1,56 @@
 <style>
-    .has-columns {
-        padding: 1rem;
-        column-count: 4;
-        column-gap: 40px;
+    .pills-wrapper {
+        text-align: center;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: baseline;
+    }
+    .pill-wrapper {
+        position: relative;
+        margin: 1rem 1rem 10rem 1rem;
+        width: 20vw;
+    }
+    .pill-wrapper > div {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 20vw;
+    }
+    .pill {
+        height: 4.5rem;
+        text-transform: uppercase;
+        font-size: 3rem;
         text-align: center;
     }
-    .letter-group {
-        margin-bottom: 3rem;
-        border-radius: 8px;
+    .pill-top {
+        border-radius: 8px 8px 0 0;
     }
-    .letter {
-        border-top-left-radius: 8px;
-        border-top-right-radius: 8px;
-        margin-top: 0;
-        font-size: 46px;
-        text-transform: uppercase;
+    .is-tag {
+        margin: 0!important;
+        padding: 0;
+        font-size: 0;
+        transition: padding .5s, font-size .5s;
     }
-    .letter.second {
+    .pill-bottom {
         border-radius: 0 0 8px 8px;
     }
     .is-tag:hover {
-        background-color: #00d1b2;
+        background-color: #00d1b2!important;
+    }
+    .expand-me {
+        padding: 1rem;
+        font-size: 1.2rem;
+    }
+    .blur-me {
+        opacity: .5;
+    }
+    @media (max-width: 640px) {
+        .pill-wrapper, .pill-wrapper > div {
+            width: 80vw;
+        }
     }
 </style>
 
@@ -32,16 +62,12 @@
                 <h2 class="box title is-2 has-text-centered has-text-primary">{{ $t('All available tags') }}</h2>
             </div>
         </div>
-        <div class="section">
-            <div class="container">
-                <div class="has-columns">
-                    <div v-for="tags in tagsCollection" class="letter-group has-background-white">
-                        <ul>
-                            <p class="has-text-centered has-background-dark has-text-primary letter">{{tags[0].name.substr(0, 1)}}</p>
-                            <li v-for="tag in tags" class="is-tag title is-6 has-text-info has-cursor-pointer has-padding-10 is-marginless" @click="goToSnippetsWithThisTag(tag)">{{tag.name}}</li>
-                            <p class="second has-text-centered has-background-dark has-text-primary letter">{{tags[0].name.substr(0, 1)}}</p>
-                        </ul>
-                    </div>
+        <div class="pills-wrapper">
+            <div v-for="tags in tagsCollection" class="pill-wrapper has-background-white">
+                <div>
+                    <div tabindex="0" @focus="expandThePill" @focusout="shrinkThePill" class="has-background-dark has-text-primary pill pill-top">{{tags[0].name.substr(0, 1)}}</div>
+                    <div v-for="tag in tags" class="is-tag has-background-white has-text-info has-cursor-pointer" @click="goToSnippetsWithThisTag(tag)">{{tag.name}}</div>
+                    <div tabindex="0" @focus="expandThePill" @focusout="shrinkThePill" class="has-background-dark has-text-primary pill pill-bottom">&nbsp;</div>
                 </div>
             </div>
         </div>
@@ -79,6 +105,38 @@ export default {
     methods: {
         goToSnippetsWithThisTag(tag) {
             this.$router.push({name: 'snippets.index', query: {'with-tags': tag.name}})
+        },
+        expandThePill(e) {
+            const target = e.target
+            target.parentElement.style.zIndex = '20'
+            Array.from(target.parentElement.children).filter(el => {
+                if (el.classList.contains('is-tag')) {
+                    el.classList.add('expand-me')
+                    el.style.zIndex = '20'
+                }
+            })
+            const siblings = Array.from(document.getElementsByClassName('pill-wrapper')).filter(el => el !== target.parentElement.parentElement)
+            siblings.forEach(function(el) {
+                if (!el.classList.contains('blur-me')) {
+                    el.classList.add('blur-me')
+                }
+            })
+        },
+        shrinkThePill(e) {
+            const target = e.target
+            target.parentElement.style.zIndex = '0'
+            Array.from(target.parentElement.children).filter(el => {
+                if (el.classList.contains('is-tag')) {
+                    el.classList.remove('expand-me')
+                    el.style.zIndex = '0'
+                }
+            })
+            const siblings = Array.from(document.getElementsByClassName('pill-wrapper')).filter(el => el !== target.parentElement.parentElement)
+            siblings.forEach(function(el) {
+                if (el.classList.contains('blur-me')) {
+                    el.classList.remove('blur-me')
+                }
+            })
         }
     },
     metaInfo() {

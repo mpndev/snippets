@@ -1,4 +1,7 @@
 <style>
+    .navbar {
+        z-index: 30;
+    }
     .navbar-menu {
         padding: 0;
     }

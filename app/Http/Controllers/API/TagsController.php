@@ -26,7 +26,7 @@ class TagsController extends Controller
         })->collapse();
         $tags = $tags->unique('name')->groupBy(function($tag) {
             return substr($tag->name, 0, 1);
-        });
+        })->sortKeys();
         return response()->json($tags, 200);
     }
 

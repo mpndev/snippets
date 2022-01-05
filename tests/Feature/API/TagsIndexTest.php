@@ -37,6 +37,34 @@ class TagsIndexTest extends TestCase
     }
 
     /** @test */
+    public function user_can_get_all_tags_sorted_alphabetically()
+    {
+        // Arrange
+        $snippet = Snippet::factory()->create();
+        $tags = [
+            Tag::factory()->create(['name' => 'Ffff']),
+            Tag::factory()->create(['name' => 'Cccc']),
+            Tag::factory()->create(['name' => 'Bbbb']),
+            Tag::factory()->create(['name' => 'Eeee']),
+            Tag::factory()->create(['name' => 'Aaaa']),
+            Tag::factory()->create(['name' => 'Dddd']),
+        ];
+        $snippet->addTag($tags[0]);
+        $snippet->addTag($tags[1]);
+        $snippet->addTag($tags[2]);
+        $snippet->addTag($tags[3]);
+        $snippet->addTag($tags[4]);
+        $snippet->addTag($tags[5]);
+
+        // Act
+        $response = $this->apiRequest();
+
+        // Assert
+        $response->assertStatus(200)
+            ->assertSeeInOrder(['"A":', '"B":', '"C":', '"D":', '"E":', '"F":'], false);
+    }
+
+    /** @test */
     public function guest_can_not_see_private_snippets_tags()
     {
         // Arrange
