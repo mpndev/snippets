@@ -6,6 +6,8 @@ import SnippetsForksCreate from './pages/snippets/forks/create'
 import LoginGithubCallback from './pages/login/github/callback'
 import LoginGoogleCallback from './pages/login/google/callback'
 import LoginFacebookCallback from './pages/login/facebook/callback'
+import FacebookPrivacyPolicy from './pages/login/facebook/privacy-policy'
+import FacebookDeleteUserData from './pages/login/facebook/delete-user-data'
 import LoginCreate from './pages/login/create'
 import PasswordReset from './pages/password/reset'
 import PasswordForget from './pages/password/forget'
@@ -106,6 +108,16 @@ export default {
                     next()
                 }
             }
+        },
+        {
+            path: '/login/facebook/privacy-policy',
+            component: FacebookPrivacyPolicy,
+            name: 'login.facebook.privacy-policy'
+        },
+        {
+            path: '/login/facebook/delete-user-data',
+            component: FacebookDeleteUserData,
+            name: 'login.facebook.delete-user-data'
         },
         {
             path: '/login',
