@@ -6,6 +6,7 @@ use \App\Http\Controllers\API\TagsController;
 use \App\Http\Controllers\API\LoginController;
 use \App\Http\Controllers\API\SnippetsController;
 use \App\Http\Controllers\API\RegisterController;
+use App\Http\Controllers\API\GoogleLoginController;
 use \App\Http\Controllers\API\GithubLoginController;
 use \App\Http\Controllers\API\UserSettingsController;
 use App\Http\Controllers\API\PasswordResetController;
@@ -15,6 +16,9 @@ use \App\Http\Controllers\API\SnippetsActionsCopyController;
 
 Route::get('/login/github/redirect', [GithubLoginController::class, 'redirectToProvider'])->name('api.github.redirect');
 Route::get('/login/github/callback', [GithubLoginController::class, 'handleProviderCallback'])->name('api.github.callback');
+
+Route::get('/login/google/redirect', [GoogleLoginController::class, 'redirectToProvider'])->name('api.google.redirect');
+Route::get('/login/google/callback', [GoogleLoginController::class, 'handleProviderCallback'])->name('api.google.callback');
 
 Route::post('/login', [LoginController::class, 'store'])->name('api.login.store');
 Route::delete('/logout', [LoginController::class, 'destroy'])->name('api.login.destroy');

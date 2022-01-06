@@ -17,6 +17,7 @@ class UpdateUsersTable extends Migration
             $table->unique('name');
             $table->string('password')->nullable()->change();
             $table->bigInteger('github_id')->nullable()->unique();
+            $table->bigInteger('google_id')->nullable()->unique();
             $table->string('email')->nullable()->unique();
         });
     }
@@ -32,6 +33,7 @@ class UpdateUsersTable extends Migration
             $table->string('name')->change();
             $table->string('password')->nullable(false)->change();
             $table->dropColumn('github_id');
+            $table->dropColumn('google_id');
             $table->dropColumn('email');
         });
     }

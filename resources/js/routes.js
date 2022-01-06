@@ -4,6 +4,7 @@ import SnippetsEdit from './pages/snippets/edit'
 import SnippetsShow from './pages/snippets/show'
 import SnippetsForksCreate from './pages/snippets/forks/create'
 import LoginGithubCallback from './pages/login/github/callback'
+import LoginGoogleCallback from './pages/login/google/callback'
 import LoginCreate from './pages/login/create'
 import PasswordReset from './pages/password/reset'
 import PasswordForget from './pages/password/forget'
@@ -70,6 +71,19 @@ export default {
             path: '/login/github/callback',
             component: LoginGithubCallback,
             name: 'login.github.callback',
+            beforeEnter: (to, from, next) => {
+                if (Auth.check()) {
+                    next({ name: 'snippets.index' })
+                }
+                else {
+                    next()
+                }
+            }
+        },
+        {
+            path: '/login/google/callback',
+            component: LoginGoogleCallback,
+            name: 'login.google.callback',
             beforeEnter: (to, from, next) => {
                 if (Auth.check()) {
                     next({ name: 'snippets.index' })

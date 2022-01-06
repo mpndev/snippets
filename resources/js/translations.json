@@ -1,10 +1,12 @@
 {
     "bg": {
         "Login into github, please wait...": "Влизане в github, моля изчакайте...",
+        "Login into google, please wait...": "Влизане в google, моля изчакайте...",
         "Do not have account? Try simple": "Нямате акаунт? Може да пробвате ",
         "with username and password": "с потребителско име и парола",
         "or": "или",
         "Login with github": "Влез с github",
+        "Login with github": "Влез с google",
         "No results found.": "Няма намерени резултати.",
         "Author": "Автор",
         "Title": "Заглавие",
@@ -149,10 +151,12 @@
     },
     "en": {
         "Login into github, please wait...": "Login into github, please wait...",
+        "Login into google, please wait...": "Login into google, please wait...",
         "Do not have account? Try simple": "Do not have account? Try simple",
         "with username and password": "with username and password",
         "or": "or",
         "Login with github": "Login with github",
+        "Login with github": "Login with google",
         "No results found.":  "No results found.",
         "Author": "Author",
         "Title":  "Title",
