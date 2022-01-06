@@ -7,7 +7,7 @@
 <template>
     <div v-if="joke.single.length || joke.double.first.length">
         <p class="menu-label title is-6">
-            {{ $t('Joke of the day') }}:
+            {{ $t('Joke of the request') }}:
         </p>
         <ul class="menu-list has-background-grey-lighter has-padding-10">
             <li><p class="has-text-info">{{joke.single}}</p></li>

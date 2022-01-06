@@ -5,10 +5,10 @@
     .paginator-ring {
         height: 64px;
     }
-    .most-liked-snippets, .most-copied-snippets, .joke-of-the-day {
+    .most-liked-snippets, .most-copied-snippets, .joke-of-the-request {
         min-height: 276px;
     }
-    .joke-of-the-day {
+    .joke-of-the-request {
         overflow: scroll;
     }
 </style>
@@ -32,8 +32,8 @@
                 <div class="box most-copied-snippets">
                     <most-copied-snippets :most_copied_snippets="most_copied_snippets"></most-copied-snippets>
                 </div>
-                <div class="box joke-of-the-day">
-                    <joke-of-the-day :joke="joke"></joke-of-the-day>
+                <div class="box joke-of-the-request">
+                    <joke-of-the-request :joke="joke"></joke-of-the-request>
                 </div>
             </div>
             <div class="column">
@@ -71,8 +71,8 @@
                 <div class="box most-copied-snippets">
                     <most-copied-snippets :most_copied_snippets="most_copied_snippets"></most-copied-snippets>
                 </div>
-                <div class="box joke-of-the-day">
-                    <joke-of-the-day :joke="joke"></joke-of-the-day>
+                <div class="box joke-of-the-request">
+                    <joke-of-the-request :joke="joke"></joke-of-the-request>
                 </div>
             </div>
         </div>
@@ -85,7 +85,7 @@
     import Search from "./../../components/Search"
     import MostLikedSnippets from "./../../components/MostLikedSnippets"
     import MostCopiedSnippets from "./../../components/MostCopiedSnippets"
-    import JokeOfTheDay from "./../../components/JokeOfTheDay"
+    import JokeOfTheRequest from "./../../components/JokeOfTheRequest"
 
     export default {
         components: {
@@ -94,7 +94,7 @@
             search: Search,
             MostLikedSnippets: MostLikedSnippets,
             MostCopiedSnippets: MostCopiedSnippets,
-            JokeOfTheDay: JokeOfTheDay
+            JokeOfTheRequest: JokeOfTheRequest
         },
         data: () => {
             return {
