@@ -25,6 +25,8 @@
             <button class="button is-dark ml-1 mr-1" @click="loginWithGithub">{{ $t('Login with github') }}<span class="fab fa-github ml-2"></span></button>
             <span class="ml-1 mr-1"><b>, {{ $t('or') }}</b></span>
             <button class="button is-danger ml-1 mr-1" @click="loginWithGoogle">{{ $t('Login with google') }}<span class="fab fa-google ml-2"></span></button>
+            <span class="ml-1 mr-1"><b>, {{ $t('or') }}</b></span>
+            <button class="button is-info ml-1 mr-1" @click="loginWithFacebook">{{ $t('Login with facebook') }}<span class="fab fa-facebook ml-2"></span></button>
         </div>
     </div>
 </template>
@@ -81,6 +83,13 @@
                 this.resetErrors()
 
                 axios.get('/api/login/google/redirect').then(response => {
+                    window.location = response.data.redirect_url
+                }).catch(error => {})
+            },
+            loginWithFacebook() {
+                this.resetErrors()
+
+                axios.get('/api/login/facebook/redirect').then(response => {
                     window.location = response.data.redirect_url
                 }).catch(error => {})
             },

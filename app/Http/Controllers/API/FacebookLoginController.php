@@ -9,31 +9,31 @@ use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
-class GoogleLoginController extends Controller
+class FacebookLoginController extends Controller
 {
     use AuthenticatesUsers;
 
     public function redirectToProvider()
     {
-        $redirect_url = Socialite::driver('google')->stateless()->redirect()->getTargetUrl();
+        $redirect_url = Socialite::driver('facebook')->stateless()->redirect()->getTargetUrl();
         return response()->json(['redirect_url' => $redirect_url], 200);
     }
 
     public function handleProviderCallback()
     {
-        $google_user = Socialite::driver('google')->stateless()->user();
-        if (!$google_user || !$google_user->name || !$google_user->id) {
+        $facebook_user = Socialite::driver('facebook')->stateless()->user();
+        if (!$facebook_user || !$facebook_user->name || !$facebook_user->id) {
             throw ValidationException::withMessages([
                 $this->username() => [trans('auth.failed')],
             ]);
         }
 
-        $user = User::where('name', $google_user->name)->first();
+        $user = User::where('name', $facebook_user->name)->first();
         if (!$user) {
-            $user = $this->createUserFromGoogle($google_user);
+            $user = $this->createUserFromFacebook($facebook_user);
         }
-        else if ($user->google_id == null) {
-            $user->google_id = $google_user->id;
+        else if ($user->facebook_id == null) {
+            $user->facebook_id = $facebook_user->id;
             $user->save();
         }
 
@@ -44,11 +44,11 @@ class GoogleLoginController extends Controller
         return response()->json($user->with(['snippets', 'favoriteSnippets'])->find($user->id)->toArray(), 200);
     }
 
-    private function createUserFromGoogle($google_user)
+    private function createUserFromFacebook($facebook_user)
     {
         return User::create([
-            'name' => $google_user->name,
-            'google_id' => $google_user->id,
+            'name' => $facebook_user->name,
+            'facebook_id' => $facebook_user->id,
         ]);
     }
 
