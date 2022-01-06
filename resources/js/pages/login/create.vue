@@ -24,7 +24,7 @@
             <span class="ml-1"><b>{{ $t('or') }}</b></span>
             <button class="button is-dark ml-1 mr-1" @click="loginWithGithub">{{ $t('Login with github') }}<span class="fab fa-github ml-2"></span></button>
             <span class="ml-1 mr-1"><b>, {{ $t('or') }}</b></span>
-            <button class="button is-danger ml-1 mr-1" @click="loginWithGoogle">{{ $t('Login with gogle') }}<span class="fab fa-google ml-2"></span></button>
+            <button class="button is-danger ml-1 mr-1" @click="loginWithGoogle">{{ $t('Login with google') }}<span class="fab fa-google ml-2"></span></button>
         </div>
     </div>
 </template>
