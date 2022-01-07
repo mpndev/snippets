@@ -28,7 +28,12 @@
                     <router-link v-if="Auth.check()" :to="{ name: 'snippets.create' }" class="navbar-item has-text-white glowing-text">{{ $t('Create Snippet') }}</router-link>
                     <router-link class="navbar-item has-text-white" :to="{ name: 'tags.index' }">{{ $t('Tags') }}</router-link>
                     <language-switcher class="navbar-item has-text-white" />
-                    <a v-if="Auth.check()" class="navbar-item has-text-white" @click="logout">{{ $t('Logout') }}</a>
+                    <router-link v-if="Auth.check()" class="navbar-item has-text-white" :to="{ name: 'profile.show' }">
+                        {{ Auth.user.name }}
+                        <span v-if="Auth.user.facebook_id" class="fab fa-facebook has-text-info ml-2"></span>
+                        <span v-if="Auth.user.github_id" class="fab fa-github has-text-dark ml-2"></span>
+                        <span v-if="Auth.user.google_id" class="fab fa-google has-text-danger ml-2"></span>
+                    </router-link>
                     <router-link v-if="Auth.guest()" :to="{ name: 'login.create' }" class="navbar-item has-text-white glowing-text" @click="burger_is_on = false">{{ $t('Login') }}</router-link>
                 </div>
             </div>
@@ -51,18 +56,9 @@
             }
         },
         methods: {
-            logout() {
+            profile() {
                 this.burger_is_on = false
-                axios.post('/api/logout', {
-                    api_token: this.Auth.getApiToken(),
-                    _method: 'DELETE'
-                }).then(response => {
-                    this.success({message: `${this.$t('See ya later')} ${this.Auth.getName()}!`})
-                    this.Auth.logout()
-                    this.$router.push({ name: 'login.create' })
-                }).catch(error => {
-                    this.error({message: error.response.data.user[0]})
-                })
+                this.$router.push({ name: 'profile.show' })
             }
         },
         notifications: require('../GlobalNotifications')

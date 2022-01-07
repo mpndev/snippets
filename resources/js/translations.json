@@ -1,5 +1,6 @@
 {
     "bg": {
+        "My snippets": "Моите снипети",
         "Login into github, please wait...": "Влизане в github, моля изчакайте...",
         "Login into google, please wait...": "Влизане в google, моля изчакайте...",
         "Login into facebook, please wait...": "Влизане в facebook, моля изчакайте...",
@@ -154,6 +155,7 @@
         "feed me": "нахрани ме"
     },
     "en": {
+        "My snippets": "My snippets",
         "Login into github, please wait...": "Login into github, please wait...",
         "Login into google, please wait...": "Login into google, please wait...",
         "Login into facebook, please wait...": "Login into facebook, please wait...",
