@@ -15,14 +15,14 @@ use App\Http\Controllers\API\PasswordForgetController;
 use \App\Http\Controllers\API\FavoriteSnippetsController;
 use \App\Http\Controllers\API\SnippetsActionsCopyController;
 
-Route::get('/login/github/redirect', [GithubLoginController::class, 'redirectToProvider'])->name('api.github.redirect');
-Route::get('/login/github/callback', [GithubLoginController::class, 'handleProviderCallback'])->name('api.github.callback');
+Route::get('/login/github/create', [GithubLoginController::class, 'create'])->name('api.github.create');
+Route::post('/login/github/store', [GithubLoginController::class, 'store'])->name('api.github.store');
 
-Route::get('/login/google/redirect', [GoogleLoginController::class, 'redirectToProvider'])->name('api.google.redirect');
-Route::get('/login/google/callback', [GoogleLoginController::class, 'handleProviderCallback'])->name('api.google.callback');
+Route::get('/login/google/create', [GoogleLoginController::class, 'create'])->name('api.google.create');
+Route::post('/login/google/store', [GoogleLoginController::class, 'store'])->name('api.google.store');
 
-Route::get('/login/facebook/redirect', [FacebookLoginController::class, 'redirectToProvider'])->name('api.facebook.redirect');
-Route::get('/login/facebook/callback', [FacebookLoginController::class, 'handleProviderCallback'])->name('api.facebook.callback');
+Route::get('/login/facebook/create', [FacebookLoginController::class, 'create'])->name('api.facebook.create');
+Route::post('/login/facebook/store', [FacebookLoginController::class, 'store'])->name('api.facebook.store');
 
 Route::post('/login', [LoginController::class, 'store'])->name('api.login.store');
 Route::delete('/logout', [LoginController::class, 'destroy'])->name('api.login.destroy');

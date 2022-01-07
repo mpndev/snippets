@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Request;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -13,22 +12,30 @@ class GithubLoginController extends Controller
 {
     use AuthenticatesUsers;
 
-    public function redirectToProvider()
+    public function __construct()
+    {
+        $this->middleware('guest')->only([
+            'create',
+            'store',
+        ]);
+    }
+
+    public function create()
     {
         $redirect_url = Socialite::driver('github')->stateless()->redirect()->getTargetUrl();
         return response()->json(['redirect_url' => $redirect_url], 200);
     }
 
-    public function handleProviderCallback()
+    public function store()
     {
         $github_user = Socialite::driver('github')->stateless()->user();
-        if (!$github_user || !$github_user->nickname || !$github_user->id) {
+        if (!$github_user || !$github_user->email || !$github_user->id) {
             throw ValidationException::withMessages([
                 $this->username() => [trans('auth.failed')],
             ]);
         }
 
-        $user = User::where('name', $github_user->nickname)->first();
+        $user = User::where('email', $github_user->email)->first();
         if (!$user) {
             $user = $this->createUserFromGithub($github_user);
         }
@@ -49,6 +56,7 @@ class GithubLoginController extends Controller
         return User::create([
             'name' => $github_user->nickname,
             'github_id' => $github_user->id,
+            'email' => $github_user->email,
         ]);
     }
 

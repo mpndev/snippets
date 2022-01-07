@@ -14,7 +14,7 @@
         },
         methods: {
             loginGithubCallback() {
-                axios.get('/api/login/github/callback', {
+                axios.post('/api/login/github/store', {
                     params: {
                         code: this.$route.query.code
                     },

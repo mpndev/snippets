@@ -150,7 +150,7 @@ class RegisterStoreTest extends TestCase
     }
 
     /** @test */
-    public function user_cannot_register()
+    public function guest_cannot_register_with_same_email()
     {
         // Arrange
         $user = User::factory()->create();
@@ -160,6 +160,7 @@ class RegisterStoreTest extends TestCase
             'name' => $user->name,
             'password' => 'password', // $2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi,
             'password_confirmation' => 'password',
+            'email' => $user->email,
             'api_token' => $user->api_token,
         ]);
 
@@ -167,8 +168,8 @@ class RegisterStoreTest extends TestCase
         $response
             ->assertStatus(400)
             ->assertJson([
-                'name' => [
-                    'The name has already been taken.',
+                'email' => [
+                    'The email has already been taken.',
                 ],
             ]);
     }

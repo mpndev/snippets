@@ -14,7 +14,7 @@
         },
         methods: {
             loginFacebookCallback() {
-                axios.get('/api/login/facebook/callback', {
+                axios.post('/api/login/facebook/store', {
                     params: {
                         code: this.$route.query.code
                     },

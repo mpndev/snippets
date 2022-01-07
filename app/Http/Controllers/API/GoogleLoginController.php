@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Request;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -13,22 +12,30 @@ class GoogleLoginController extends Controller
 {
     use AuthenticatesUsers;
 
-    public function redirectToProvider()
+    public function __construct()
+    {
+        $this->middleware('guest')->only([
+            'create',
+            'store',
+        ]);
+    }
+
+    public function create()
     {
         $redirect_url = Socialite::driver('google')->stateless()->redirect()->getTargetUrl();
         return response()->json(['redirect_url' => $redirect_url], 200);
     }
 
-    public function handleProviderCallback()
+    public function store()
     {
         $google_user = Socialite::driver('google')->stateless()->user();
-        if (!$google_user || !$google_user->name || !$google_user->id) {
+        if (!$google_user || !$google_user->email || !$google_user->id) {
             throw ValidationException::withMessages([
                 $this->username() => [trans('auth.failed')],
             ]);
         }
 
-        $user = User::where('name', $google_user->name)->first();
+        $user = User::where('email', $google_user->email)->first();
         if (!$user) {
             $user = $this->createUserFromGoogle($google_user);
         }
@@ -49,6 +56,7 @@ class GoogleLoginController extends Controller
         return User::create([
             'name' => $google_user->name,
             'google_id' => $google_user->id,
+            'email' => $google_user->email,
         ]);
     }
 

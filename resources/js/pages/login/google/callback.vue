@@ -14,7 +14,7 @@
         },
         methods: {
             loginGoogleCallback() {
-                axios.get('/api/login/google/callback', {
+                axios.post('/api/login/google/store', {
                     params: {
                         code: this.$route.query.code
                     },

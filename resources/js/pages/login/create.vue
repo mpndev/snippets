@@ -75,21 +75,21 @@
             loginWithGithub() {
                 this.resetErrors()
 
-                axios.get('/api/login/github/redirect').then(response => {
+                axios.get('/api/login/github/create').then(response => {
                     window.location = response.data.redirect_url
                 }).catch(error => {})
             },
             loginWithGoogle() {
                 this.resetErrors()
 
-                axios.get('/api/login/google/redirect').then(response => {
+                axios.get('/api/login/google/create').then(response => {
                     window.location = response.data.redirect_url
                 }).catch(error => {})
             },
             loginWithFacebook() {
                 this.resetErrors()
 
-                axios.get('/api/login/facebook/redirect').then(response => {
+                axios.get('/api/login/facebook/create').then(response => {
                     window.location = response.data.redirect_url
                 }).catch(error => {})
             },

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Request;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -13,22 +12,30 @@ class FacebookLoginController extends Controller
 {
     use AuthenticatesUsers;
 
-    public function redirectToProvider()
+    public function __construct()
+    {
+        $this->middleware('guest')->only([
+            'create',
+            'store',
+        ]);
+    }
+
+    public function create()
     {
         $redirect_url = Socialite::driver('facebook')->stateless()->redirect()->getTargetUrl();
         return response()->json(['redirect_url' => $redirect_url], 200);
     }
 
-    public function handleProviderCallback()
+    public function store()
     {
         $facebook_user = Socialite::driver('facebook')->stateless()->user();
-        if (!$facebook_user || !$facebook_user->name || !$facebook_user->id) {
+        if (!$facebook_user || !$facebook_user->email || !$facebook_user->id) {
             throw ValidationException::withMessages([
                 $this->username() => [trans('auth.failed')],
             ]);
         }
 
-        $user = User::where('name', $facebook_user->name)->first();
+        $user = User::where('email', $facebook_user->email)->first();
         if (!$user) {
             $user = $this->createUserFromFacebook($facebook_user);
         }
@@ -49,6 +56,7 @@ class FacebookLoginController extends Controller
         return User::create([
             'name' => $facebook_user->name,
             'facebook_id' => $facebook_user->id,
+            'email' => $facebook_user->email,
         ]);
     }
 
