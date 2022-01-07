@@ -15,9 +15,7 @@
         methods: {
             loginGithubCallback() {
                 axios.post('/api/login/github/store', {
-                    params: {
-                        code: this.$route.query.code
-                    },
+                    code: this.$route.query.code
                 }).then(response => {
                     this.Auth.update(response.data)
                     this.success({message: `${this.$t('Welcome')} ${response.data.name}!`})

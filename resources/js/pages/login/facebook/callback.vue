@@ -15,9 +15,7 @@
         methods: {
             loginFacebookCallback() {
                 axios.post('/api/login/facebook/store', {
-                    params: {
-                        code: this.$route.query.code
-                    },
+                    code: this.$route.query.code
                 }).then(response => {
                     this.Auth.update(response.data)
                     this.success({message: `${this.$t('Welcome')} ${response.data.name}!`})
