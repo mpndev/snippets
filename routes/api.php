@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Cache;
 use \App\Http\Controllers\API\TagsController;
+use App\Http\Controllers\API\UsersController;
 use \App\Http\Controllers\API\LoginController;
 use \App\Http\Controllers\API\SnippetsController;
 use \App\Http\Controllers\API\RegisterController;
@@ -48,6 +49,11 @@ Route::delete('/snippets/favorite/{snippet_id_or_slug}', [FavoriteSnippetsContro
 Route::put('/snippets/actions/copy/{snippet_id_or_slug}', [SnippetsActionsCopyController::class, 'update'])->name('api.snippets.actions.copy.update');
 
 Route::put('/users/{user}/settings', [UserSettingsController::class, 'update'])->name('api.users.settings.update');
+
+Route::get('/users', [UsersController::class, 'index'])->name('api.users.index');
+Route::get('/users/{user}', [UsersController::class, 'show'])->name('api.users.show');
+Route::put('/users/{user}', [UsersController::class, 'update'])->name('api.users.update');
+Route::delete('/users/{user}', [UsersController::class, 'destroy'])->name('api.users.destroy');
 
 Route::delete('/cache', function() {
     Cache::flush();

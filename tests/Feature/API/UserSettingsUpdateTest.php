@@ -22,7 +22,7 @@ class UserSettingsUpdateTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'user' => $user->name,
+            'user' => $user->id,
         ], [
             'api_token' => $user->api_token,
             'settings' => json_encode(['theme' => 'darcula']),
@@ -43,7 +43,7 @@ class UserSettingsUpdateTest extends TestCase
 
         // Act
         $response = $this->apiRequest([
-            'user' => $user->name,
+            'user' => $user->id,
         ], [
             'settings' => json_encode(['theme' => 'darcula']),
             '_method' => 'PUT',

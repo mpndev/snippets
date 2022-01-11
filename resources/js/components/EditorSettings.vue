@@ -247,7 +247,7 @@
             setSettings() {
                 if (this.Auth.check()) {
                     this.Auth.setStringifiedSettings(this.options)
-                    axios.post(`/api/users/${this.Auth.getName()}/settings`, {
+                    axios.post(`/api/users/${this.Auth.user.id}/settings`, {
                         '_method': 'PUT',
                         'settings': this.Auth.getStringifiedSettings(),
                         'api_token': this.Auth.getApiToken()

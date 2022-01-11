@@ -17,10 +17,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        User::factory()->create([
+        $me = User::factory()->create([
             'name' => 'mpndev',
             'password' => Hash::make('Smpndev89!'),
         ]);
+        $me->addRole('admin');
+        $me->getRole('admin')->addAbilityTo('manage_users');
         $users = User::factory()->count(3)->make();
         $tags = collect([
             Tag::factory()->create(['name' => 'foo']),

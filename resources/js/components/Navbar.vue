@@ -28,7 +28,7 @@
                     <router-link v-if="Auth.check()" :to="{ name: 'snippets.create' }" class="navbar-item has-text-white glowing-text">{{ $t('Create Snippet') }}</router-link>
                     <router-link class="navbar-item has-text-white" :to="{ name: 'tags.index' }">{{ $t('Tags') }}</router-link>
                     <language-switcher class="navbar-item has-text-white" />
-                    <router-link v-if="Auth.check()" class="navbar-item has-text-white" :to="{ name: 'profile.show' }">
+                    <router-link v-if="Auth.check()" class="navbar-item has-text-white" :to="{ name: 'users.show', params: { user: Auth.user.id } }">
                         {{ Auth.user.name }}
                         <span v-if="Auth.user.facebook_id" class="fab fa-facebook has-text-info ml-2"></span>
                         <span v-if="Auth.user.github_id" class="fab fa-github has-text-dark ml-2"></span>

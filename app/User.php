@@ -27,14 +27,32 @@ class User extends Authenticatable
         'id' => 'int',
     ];
 
-    public function getRouteKeyName()
-    {
-        return 'name';
-    }
-
     public function sendPasswordResetNotification($token) {
         $url = request()->getSchemeAndHttpHost() . '/password-reset?token=' . $token;
         $this->notify(new ResetpasswordNotification($url));
+    }
+
+    public function delete()
+    {
+        if (is_null($this->getKeyName())) {
+            throw new \Exception('No primary key defined on model.');
+        }
+        if (! $this->exists) {
+            return;
+        }
+        if ($this->fireModelEvent('deleting') === false) {
+            return false;
+        }
+
+        foreach($this->snippets as $snippet) {
+            $snippet->delete();
+        }
+
+        $this->touchOwners();
+        $this->performDeleteOnModel();
+        $this->fireModelEvent('deleted', false);
+
+        return true;
     }
 
     public function snippets()
@@ -108,6 +126,66 @@ class User extends Authenticatable
     {
         $snippet->copy();
         return $this;
+    }
+
+    public function roles() {
+        return $this->belongsToMany(Role::class)->withTimestamps();
+    }
+
+    public function getRole($role) {
+        return $this->roles()->whereIn('name', [$role])->first();
+    }
+
+    public function getAbility($ability) {
+        return Ability::where('name', $ability)->first();
+    }
+
+    public function addRole($role) {
+        if (is_string($role)) {
+            if (strpos($role, ' ') !== false) {
+                throw new \Exception("Role name cannot use spaces. Use underscores instead!");
+            }
+            $role = Role::firstOrNew([
+                'name' => $role,
+            ]);
+            if (!$role->label) {
+                $role->label = implode(' ', array_map(function ($word) {
+                    return ucfirst($word);
+                }, (explode('_', $role->name))));
+                $role->save();
+            }
+        }
+        $this->roles()->sync($role, false);
+        return $this;
+    }
+
+    public function getRoles() {
+        return $this->roles->toArray();
+    }
+
+    public function abilities() {
+        if ($this->roles) {
+            return $this->roles->map->abilities->flatten()->pluck('name')->unique()->toArray();
+        }
+        return [];
+    }
+
+    public function hasRole($looking_for_role = '') {
+        foreach ($this->getRoles() as $role) {
+            if ($role['name'] == $looking_for_role) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function hasAbility($looking_for_ability = '') {
+        foreach ($this->abilities() as $ability) {
+            if ($ability == $looking_for_ability) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

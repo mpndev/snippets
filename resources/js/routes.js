@@ -8,7 +8,7 @@ import LoginGoogleCallback from './pages/login/google/callback'
 import LoginFacebookCallback from './pages/login/facebook/callback'
 import FacebookPrivacyPolicy from './pages/login/facebook/privacy-policy'
 import FacebookDeleteUserData from './pages/login/facebook/delete-user-data'
-import ProfileShow from './pages/profile/show'
+import UsersShow from './pages/users/show'
 import LoginCreate from './pages/login/create'
 import PasswordReset from './pages/password/reset'
 import PasswordForget from './pages/password/forget'
@@ -25,9 +25,9 @@ export default {
             name: 'snippets.index'
         },
         {
-            path: '/profile',
-            component: ProfileShow,
-            name: 'profile.show',
+            path: '/users/:user',
+            component: UsersShow,
+            name: 'users.show',
             beforeEnter: (to, from, next) => {
                 if (Auth.guest()) {
                     next({ name: 'login.create' })

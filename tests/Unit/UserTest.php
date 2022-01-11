@@ -3,7 +3,9 @@
 namespace Tests\Unit;
 
 use App\User;
+use App\Role;
 use App\Snippet;
+use App\Ability;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -178,5 +180,187 @@ class UserTest extends TestCase
 
         // Assert
         $this->assertEquals('{"theme":"default"}', $settings);
+    }
+
+    /** @test */
+    public function it_can_add_role_dummy()
+    {
+        // Arrange
+        $user = User::factory()->create();
+        $dummy_role = Role::factory()->create([
+            'name' => 'dummy',
+            'label' => 'Dummy role for testing',
+        ]);
+
+        // Act
+        $user->addRole($dummy_role);
+
+        // Assert
+        $roles = $user->getRoles();
+        $this->assertArrayContainsRecursive('dummy', $roles);
+        $this->assertArrayContainsRecursive('Dummy role for testing', $roles);
+    }
+
+    /** @test */
+    public function it_can_add_role_dummy_role_as_string()
+    {
+        // Arrange
+        $user = User::factory()->create();
+
+        // Act
+        $user->addRole('dummy_role');
+
+        // Assert
+        $roles = $user->getRoles();
+        $this->assertArrayContainsRecursive('dummy_role', $roles);
+        $this->assertArrayContainsRecursive('Dummy Role', $roles);
+    }
+
+    /** @test */
+    public function it_can_not_add_role_dummy_role_as_string_if_no_underscore()
+    {
+        try {
+            // Arrange
+            $user = User::factory()->create();
+
+            // Act
+            $user->addRole('dummy role');
+
+        } catch (\Exception $e) {
+            // Assert
+            $this->assertSame("Role name cannot use spaces. Use underscores instead!", $e->getMessage());
+        }
+    }
+
+    /** @test */
+    public function it_can_add_ability_to_manage_users()
+    {
+        // Arrange
+        $user = User::factory()->create();
+        $admin_role = Role::factory()->create([
+            'name' => 'admin',
+            'label' => 'Administrator',
+        ]);
+        $manage_users = Ability::factory()->create([
+            'name' => 'manage_users',
+            'label' => 'Manage users',
+        ]);
+
+        // Act
+        $admin_role->addAbilityTo($manage_users);
+        $user->addRole($admin_role);
+
+        // Assert
+        $abilities = $user->abilities();
+        $this->assertSame('manage_users', $abilities[0]);
+    }
+
+    /** @test */
+    public function it_can_get_role_by_name()
+    {
+        // Arrange
+        $user = User::factory()->create();
+        $admin_role = Role::factory()->create([
+            'name' => 'admin',
+            'label' => 'Administrator',
+        ]);
+        $user->addRole($admin_role);
+
+        // Act
+        $role = $user->getRole('admin');
+
+        // Assert
+        $this->assertSame('admin', $role->name);
+    }
+
+    /** @test */
+    public function it_can_get_role_by_name_and_attach_ability_to_it()
+    {
+        // Arrange
+        $user = User::factory()->create();
+        $admin_role = Role::factory()->create([
+            'name' => 'admin',
+            'label' => 'Administrator',
+        ]);
+        $user->addRole($admin_role);
+        $user->getRole('admin')->addAbilityTo('manage_users');
+
+        // Act
+        $ability = $user->getAbility('manage_users');
+
+        // Assert
+        $this->assertSame('manage_users', $ability->name);
+    }
+
+    /** @test */
+    public function it_gets_no_ability_if_no_role_was_added()
+    {
+        // Arrange
+        $user = User::factory()->create();
+        $admin_role = Role::factory()->create([
+            'name' => 'admin',
+            'label' => 'Administrator',
+        ]);
+        $manage_users = Ability::factory()->create([
+            'name' => 'manage_users',
+            'label' => 'Manage users',
+        ]);
+
+        // Act
+        $admin_role->addAbilityTo($manage_users);
+
+        // Assert
+        $abilities = $user->abilities();
+        $this->assertSame([], $abilities);
+        $this->assertSameSize([], $abilities);
+    }
+
+    /** @test */
+    public function it_can_check_if_has_role()
+    {
+        // Arrange
+        $user = User::factory()->create();
+        $admin_role = Role::factory()->create([
+            'name' => 'dummy',
+            'label' => 'Dummy role for testing',
+        ]);
+        $user->addRole($admin_role);
+
+        // Act
+        $have_dummy_role = $user->hasRole('dummy');
+        $do_not_have_dummy_role = $user->hasRole('smarty');
+        $get_false_for_no_role = $user->hasRole();
+
+        // Assert
+        $this->assertTrue($have_dummy_role);
+        $this->assertFalse($do_not_have_dummy_role);
+        $this->assertFalse($get_false_for_no_role);
+    }
+
+    /** @test */
+    public function it_can_check_if_has_ability()
+    {
+        // Arrange
+        $user = User::factory()->create();
+        $dummy_role = Role::factory()->create([
+            'name' => 'dummy',
+            'label' => 'Dummy role for testing',
+        ]);
+        $manage_users = Ability::factory()->create([
+            'name' => 'manage_users',
+            'label' => 'Manage users',
+        ]);
+        $dummy_role->addAbilityTo($manage_users);
+        $user->addRole($dummy_role);
+
+        // Act
+        $have_manage_users_ability = $user->hasAbility('manage_users');
+        $do_not_have_delete_users_ability = $user->hasAbility('smarty');
+        $get_false_for_no_ability = $user->hasAbility();
+
+        // Assert
+        $this->assertTrue($have_manage_users_ability);
+        $this->assertFalse($do_not_have_delete_users_ability);
+        $this->assertFalse($get_false_for_no_ability);
     }
 }

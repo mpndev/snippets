@@ -9,50 +9,54 @@
 <template>
     <div class="columns mt-5">
         <div class="column is-6 is-offset-3">
-            <table class="table is-fullwidth is-bordered has-text-centered">
+            <table v-if="user" class="table is-fullwidth is-bordered has-text-centered">
                 <tbody>
                 <tr>
                     <th>{{ $t('Name') }}</th>
-                    <td>{{ Auth.user.name }}</td>
+                    <td>{{ user.name }}</td>
                 </tr>
                 <tr>
                     <th>{{ $t('Email') }}</th>
-                    <td>{{ Auth.user.email }}</td>
+                    <td>{{ user.email }}</td>
                 </tr>
                 <tr>
                     <th><logo class="default-login-logo"></logo></th>
                     <td>
-                        <span v-if="Auth.user.github_id || Auth.user.google_id || Auth.user.facebook_id">—</span>
+                        <span v-if="user.id != Auth.user.id || user.github_id || user.google_id || user.facebook_id">—</span>
                         <button v-else class="button is-danger is-small" @click="logout">{{ $t('Logout') }}</button>
                     </td>
                 </tr>
                 <tr>
                     <th><span class="fab fa-github has-text-dark"></span></th>
                     <td>
-                        <span v-if="!Auth.user.github_id">—</span>
+                        <span v-if="user.id != Auth.user.id || !user.github_id">—</span>
                         <button v-else class="button is-danger is-small" @click="logout">{{ $t('Logout') }}</button>
                     </td>
                 </tr>
                 <tr>
                     <th><span class="fab fa-google has-text-danger"></span></th>
                     <td>
-                        <span v-if="!Auth.user.google_id">—</span>
+                        <span v-if="user.id != Auth.user.id || !user.google_id">—</span>
                         <button v-else class="button is-danger is-small" @click="logout">{{ $t('Logout') }}</button>
                     </td>
                 </tr>
                 <tr>
                     <th><span class="fab fa-facebook has-text-info"></span></th>
                     <td>
-                        <span v-if="!Auth.user.facebook_id">—</span>
+                        <span v-if="user.id != Auth.user.id || !user.facebook_id">—</span>
                         <button v-else class="button is-danger is-small" @click="logout">{{ $t('Logout') }}</button>
                     </td>
                 </tr>
                 <tr>
-                    <th>{{ $t('My snippets') }}</th>
-                    <td>{{Auth.user.snippets.length}}</td>
+                    <th v-if="Auth.user.id == user.id">{{ $t('My snippets') }}</th>
+                    <th v-else>{{ $t('Snippets') }}</th>
+                    <td>{{ user.snippets.length }}</td>
                 </tr>
                 </tbody>
             </table>
+            <div v-else class="columns is-centered">
+                <ring-loader class="column is-narrow snippet-summary-ring"></ring-loader>
+            </div>
         </div>
     </div>
 </template>
@@ -63,8 +67,16 @@
     export default {
         data: () => {
             return {
-                Auth: Auth
+                Auth: Auth,
+                user: null
             }
+        },
+        created() {
+            axios.get('/api/users/' + this.$route.params.user + '?api_token=' + this.Auth.getApiToken()).then(response => {
+                this.user = response.data
+            }).catch(error => {
+                this.error({message: error.response.data.user[0]})
+            })
         },
         components: {
           Logo: Logo
