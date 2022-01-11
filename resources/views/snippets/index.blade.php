@@ -14,7 +14,7 @@
 
         <navbar></navbar>
 
-        <div class="section has-margin-top-30">
+        <div class="section has-margin-top-45">
             <div>
                 <router-view :key="$route.fullPath"></router-view>
             </div>

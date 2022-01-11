@@ -7,7 +7,7 @@
 </style>
 
 <template>
-    <div class="columns mt-5">
+    <div class="columns">
         <div class="column is-6 is-offset-3">
             <table v-if="user" class="table is-fullwidth is-bordered has-text-centered">
                 <tbody>
