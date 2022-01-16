@@ -304,7 +304,7 @@
                 stylesheet.setAttribute("data-current-theme", name)
                 stylesheet.setAttribute("rel", "stylesheet")
                 stylesheet.setAttribute("type", "text/css")
-                stylesheet.setAttribute("href", `/css/themes/${name}.css`)
+                stylesheet.setAttribute("href", `/css/themes/${name}.css?id=${new Date().getTime()}`)
                 document.getElementsByTagName("head")[0].appendChild(stylesheet);
             },
             codeWasUpdated(code) {

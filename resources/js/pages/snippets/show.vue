@@ -11,6 +11,9 @@
     a.darkmod:hover {
         background-color: #b9b9b9;
     }
+    .tags {
+        align-items: normal !important;
+    }
 </style>
 
 <template>
@@ -59,7 +62,7 @@
                     <div>
                         <div v-if="snippet.tags" class="tags">
                             <span><b>{{ $t('Tags') }}:</b></span>
-                            <span v-if="snippet.tags.length > 0" v-for="tag in snippet.tags" class="tag is-success is-unselectable" @click="findByTag(tag)">
+                            <span v-if="snippet.tags.length > 0" v-for="(tag, tagKey) in snippet.tags" :class="{'ml-1': tagKey === 0}" class="tag is-success is-unselectable" @click="findByTag(tag)">
                                 {{ tag.name }}
                             </span>
                             <span v-if="snippet.tags.length == 0">0</span>

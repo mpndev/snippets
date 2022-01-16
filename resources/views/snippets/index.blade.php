@@ -6,13 +6,13 @@
     <link rel="canonical" href="{{url('/')}}"/>
     <title></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
-    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
 </head>
 <body>
     <div id="app">
         <wrapper />
     </div>
 
-    <script src="/js/app.js"></script>
+    <script src="{{ mix('/js/app.js') }}"></script>
 </body>
 </html>
