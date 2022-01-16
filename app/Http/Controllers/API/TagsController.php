@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Tag;
-use App\Snippet;
+use App\Models\Tag;
+use App\Models\Snippet;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;

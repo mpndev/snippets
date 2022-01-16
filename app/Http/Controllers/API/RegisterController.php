@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Jobs\WelcomeEmailJob;
 use App\Jobs\UserGetRegisteredJob;

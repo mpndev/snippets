@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
-use App\Tag;
-use App\Snippet;
+use App\Models\Tag;
+use App\Models\Snippet;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 

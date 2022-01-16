@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Ability;
+use App\Models\Ability;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class AbilityFactory extends Factory {

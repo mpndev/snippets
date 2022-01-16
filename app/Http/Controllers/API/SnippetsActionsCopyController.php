@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Snippet;
+use App\Models\Snippet;
 
 class SnippetsActionsCopyController extends Controller
 {

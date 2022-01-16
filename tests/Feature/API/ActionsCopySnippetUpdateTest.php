@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\API;
 
-use App\Snippet;
+use App\Models\Snippet;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 

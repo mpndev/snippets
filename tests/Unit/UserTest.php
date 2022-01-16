@@ -2,10 +2,10 @@
 
 namespace Tests\Unit;
 
-use App\User;
-use App\Role;
-use App\Snippet;
-use App\Ability;
+use App\Models\User;
+use App\Models\Role;
+use App\Models\Snippet;
+use App\Models\Ability;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 

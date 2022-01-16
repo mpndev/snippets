@@ -2,9 +2,8 @@
 
 namespace App\Providers;
 
-use App\Snippet;
+use App\Models\Snippet;
 use App\Policies\SnippetPolicy;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider

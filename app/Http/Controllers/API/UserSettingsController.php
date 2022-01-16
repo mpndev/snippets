@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\User;
+use App\Models\User;
 
 class UserSettingsController extends Controller
 {

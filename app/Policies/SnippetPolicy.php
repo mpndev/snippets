@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\User;
-use App\Snippet;
+use App\Models\User;
+use App\Models\Snippet;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class SnippetPolicy
@@ -13,7 +13,7 @@ class SnippetPolicy
     /**
      * Determine whether the user can view any snippets.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      * @return mixed
      */
     public function viewAny(User $user)
@@ -24,8 +24,8 @@ class SnippetPolicy
     /**
      * Determine whether the user can view the snippet.
      *
-     * @param  \App\User  $user
-     * @param  \App\Snippet  $snippet
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Snippet  $snippet
      * @return mixed
      */
     public function view(User $user, Snippet $snippet)
@@ -36,7 +36,7 @@ class SnippetPolicy
     /**
      * Determine whether the user can create snippets.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      * @return mixed
      */
     public function create(User $user)
@@ -47,8 +47,8 @@ class SnippetPolicy
     /**
      * Determine whether the user can update the snippet.
      *
-     * @param  \App\User  $user
-     * @param  \App\Snippet  $snippet
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Snippet  $snippet
      * @return mixed
      */
     public function update(User $user, Snippet $snippet)
@@ -59,8 +59,8 @@ class SnippetPolicy
     /**
      * Determine whether the user can delete the snippet.
      *
-     * @param  \App\User  $user
-     * @param  \App\Snippet  $snippet
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Snippet  $snippet
      * @return mixed
      */
     public function delete(User $user, Snippet $snippet)

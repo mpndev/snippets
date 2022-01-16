@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Snippet;
+use App\Models\Snippet;
 use \Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use App\Repositories\SnippetsRepository;

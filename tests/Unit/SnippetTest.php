@@ -2,10 +2,10 @@
 
 namespace Tests\Unit;
 
-use App\Tag;
-use App\User;
-use App\Snippet;
+use App\Models\Tag;
 use Tests\TestCase;
+use App\Models\User;
+use App\Models\Snippet;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class SnippetTest extends TestCase

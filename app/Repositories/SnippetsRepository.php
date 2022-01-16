@@ -3,8 +3,8 @@
 
 namespace App\Repositories;
 
-use App\Snippet;
-use App\User;
+use App\Models\Snippet;
+use App\Models\User;
 
 class SnippetsRepository
 {

@@ -31,7 +31,7 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         Route::bind('snippet', function ($value) {
-            return \App\Snippet::where('id', $value)->with(['user', 'tags', 'forks', 'parent'])->first() ?? abort(404);
+            return \App\Models\Snippet::where('id', $value)->with(['user', 'tags', 'forks', 'parent'])->first() ?? abort(404);
         });
 
         parent::boot();

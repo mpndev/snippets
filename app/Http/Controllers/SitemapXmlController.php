@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Tag;
-use App\Snippet;
+use App\Models\Tag;
+use App\Models\Snippet;
 
 class SitemapXmlController extends Controller
 {
