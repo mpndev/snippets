@@ -11,7 +11,7 @@
             </div>
         </div>
 
-        <div class="section">
+        <div v-if="$route.name == 'snippets.index'" class="section">
             <faq />
         </div>
     </div>
