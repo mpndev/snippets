@@ -8,6 +8,9 @@
     .brake-url-to-fit:hover {
         background-color: #80808073;
     }
+    a.darkmod:hover {
+        background-color: #b9b9b9;
+    }
 </style>
 
 <template>
@@ -15,16 +18,16 @@
         <not-found v-if="not_found"></not-found>
         <div v-if="!not_found" class="columns">
             <div class="column is-3">
-                <div class="box">
+                <div :class="{ 'darkmod': Auth.isDarkMod() }" class="box background-is-white text-is-grey-dark">
                     <div v-if="snippet.id">
                         <button v-if="!snippet.public && Auth.check() && Auth.user.id === snippet.user_id" class="button is-danger fa fa-lock" :title="$t('This snippet is visible only to you!')"></button>
                         <button v-if="snippet.public && Auth.check() && Auth.user.id === snippet.user_id" class="button is-warning fa fa-lock" :title="$t('This snippet is visible to everyone!')"></button>
                         <button class="button is-success fa fa-clipboard" :title="$t('copy code to the clipboard')" @click="copy"></button>
                         <button v-if="Auth.check() && Auth.user.id == snippet.user_id" class="button is-warning fa fa-edit" :title="$t('edit the snippet')" @click="edit(snippet)"></button>
                         <button v-if="Auth.check() && Auth.user.id == snippet.user_id" class="button is-danger fa fa-trash-alt" :title="$t('delete the snippet')" @click="destroy(snippet)"></button>
-                        <button v-if="Auth.check()" class="button is-dark fas fa-code-branch" :title="$t('fork the snippet')" @click="createFork(snippet)"></button>
+                        <button v-if="Auth.check()" :class="{ 'darkmod': Auth.isDarkMod() }" class="button is-dark fas fa-code-branch" :title="$t('fork the snippet')" @click="createFork(snippet)"></button>
                         <button v-if="Auth.check() && Auth.isFavoriteSnippet(snippet)" class="button is-danger fas fa-heart is-outlined" :title="$t('remove from favorite')" @click="removeFromFavoriteSnippets(snippet)"></button>
-                        <button v-if="Auth.check() && Auth.isNotFavoriteSnippet(snippet)" class="button is-dark fas fa-heart-broken is-outlined" :title="$t('add to favorite')" @click="addToFavoriteSnippets(snippet)"></button>
+                        <button v-if="Auth.check() && Auth.isNotFavoriteSnippet(snippet)" :class="{ 'darkmod': Auth.isDarkMod() }" class="button is-dark fas fa-heart-broken is-outlined" :title="$t('add to favorite')" @click="addToFavoriteSnippets(snippet)"></button>
                     </div>
                     <ring-loader v-else class="is-narrow"></ring-loader>
                     <hr>
@@ -67,7 +70,7 @@
                     <div>
                         <div v-if="snippet.id">
                             <p v-if="snippet.forks_quantity > 0" v-for="fork in snippet.forks">
-                                <span v-if="(fork.public) || (!fork.public && Auth.check() && Auth.user.id === fork.user_id)"><b>{{ $t('Fork') }}:</b> <a :href="'/snippets/' + fork.slug">{{ fork.title }}</a></span>
+                                <span v-if="(fork.public) || (!fork.public && Auth.check() && Auth.user.id === fork.user_id)"><b>{{ $t('Fork') }}:</b> <a :class="{ 'darkmod': Auth.isDarkMod() }" :href="'/snippets/' + fork.slug">{{ fork.title }}</a></span>
                                 <span v-else-if="(!fork.public && Auth.check() && Auth.user.id !== fork.user_id) || (!fork.public && !Auth.check())"><b>{{ $t('Fork') }}:</b> "{{ fork.title }}" <button style="cursor: auto" class="button is-danger fa fa-lock is-small"></button></span>
                             </p>
                             <p v-if="snippet.forks_quantity == 0"><b>{{ $t('Forks') }}:</b>0</p>
@@ -78,7 +81,7 @@
                     <div>
                         <div v-if="snippet.id">
                             <p v-if="snippet.parent">
-                                <span v-if="(snippet.parent.public) || (!snippet.parent.public && Auth.check() && Auth.user.id === snippet.parent.user_id)"><b>{{ $t('Forked from') }}:</b> <a :href="'/snippets/' + snippet.parent.slug">{{ snippet.parent.title }}</a></span>
+                                <span v-if="(snippet.parent.public) || (!snippet.parent.public && Auth.check() && Auth.user.id === snippet.parent.user_id)"><b>{{ $t('Forked from') }}:</b> <a :class="{ 'darkmod': Auth.isDarkMod() }" :href="'/snippets/' + snippet.parent.slug">{{ snippet.parent.title }}</a></span>
                                 <span v-else-if="(!snippet.parent.public && Auth.check() && Auth.user.id !== snippet.parent.user_id) || (!snippet.parent.public && !Auth.check())"><b>{{ $t('Forked from') }}:</b> "{{ snippet.parent.title }}" <button style="cursor: auto" class="button is-danger fa fa-lock is-small"></button></span>
                             </p>
                             <p v-if="snippet.parent == undefined"><b>{{ $t('Do not have parent fork') }}</b></p>
@@ -93,17 +96,17 @@
         </div>
         <div v-if="!not_found" class="columns">
             <div v-if="urls && urls.length" class="column is-3">
-                <div class="box">
+                <div :class="{ 'darkmod': Auth.isDarkMod() }" class="box background-is-white text-is-grey-dark">
                     <p><b>{{ $t('Detected URLs in the snippet:') }}</b></p>
                     <ul v-for="url in urls">
-                        <li><a class="brake-url-to-fit" :href="url" target="_blank">{{ url }}</a></li>
+                        <li><a :class="{ 'darkmod': Auth.isDarkMod() }" class="brake-url-to-fit" :href="url" target="_blank">{{ url }}</a></li>
                     </ul>
                 </div>
             </div>
         </div>
         <div v-if="!not_found" class="columns">
             <div v-if="snippet.public" class="column is-3">
-                <div class="box">
+                <div :class="{ 'darkmod': Auth.isDarkMod() }" class="box background-is-white text-is-grey-dark">
                     <share-it :url="current_domain + '/snippets/' + snippet.slug" :targets="['facebook', 'linkedin', 'twitter']" :shareConfig="share_it_settings" />
                 </div>
             </div>

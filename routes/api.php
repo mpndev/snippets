@@ -10,6 +10,7 @@ use \App\Http\Controllers\API\RegisterController;
 use App\Http\Controllers\API\GoogleLoginController;
 use \App\Http\Controllers\API\GithubLoginController;
 use \App\Http\Controllers\API\UserSettingsController;
+use \App\Http\Controllers\API\UserDarkmodController;
 use App\Http\Controllers\API\PasswordResetController;
 use App\Http\Controllers\API\FacebookLoginController;
 use App\Http\Controllers\API\PasswordForgetController;
@@ -49,6 +50,8 @@ Route::delete('/snippets/favorite/{snippet_id_or_slug}', [FavoriteSnippetsContro
 Route::put('/snippets/actions/copy/{snippet_id_or_slug}', [SnippetsActionsCopyController::class, 'update'])->name('api.snippets.actions.copy.update');
 
 Route::put('/users/{user}/settings', [UserSettingsController::class, 'update'])->name('api.users.settings.update');
+
+Route::put('/users/{user}/darkmod', [UserDarkmodController::class, 'update'])->name('api.users.darkmod.update');
 
 Route::get('/users', [UsersController::class, 'index'])->name('api.users.index');
 Route::get('/users/{user}', [UsersController::class, 'show'])->name('api.users.show');

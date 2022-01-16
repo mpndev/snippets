@@ -66,11 +66,11 @@
             </div>
         </div>
         <div class="pills-wrapper">
-            <div v-for="tags in tagsCollection" class="pill-wrapper has-background-white">
+            <div v-for="tags in tagsCollection" class="pill-wrapper background-is-white">
                 <div>
-                    <div tabindex="0" @focus="expandThePill" @focusout="shrinkThePill" class="has-background-dark has-text-primary pill pill-top">{{tags[0].name.substr(0, 1)}}</div>
-                    <div v-for="tag in tags" class="is-tag has-background-white has-text-info has-cursor-pointer" @click="goToSnippetsWithThisTag(tag)">{{tag.name}}</div>
-                    <div tabindex="0" @focus="expandThePill" @focusout="shrinkThePill" class="has-background-dark has-text-primary pill pill-bottom">&nbsp;</div>
+                    <div tabindex="0" @focus="expandThePill" @focusout="shrinkThePill" class="background-is-dark text-is-primary pill pill-top">{{tags[0].name.substr(0, 1)}}</div>
+                    <div v-for="tag in tags" class="is-tag background-is-white has-text-info has-cursor-pointer" @click="goToSnippetsWithThisTag(tag)">{{tag.name}}</div>
+                    <div tabindex="0" @focus="expandThePill" @focusout="shrinkThePill" class="background-is-dark text-is-primary pill pill-bottom">&nbsp;</div>
                 </div>
             </div>
         </div>

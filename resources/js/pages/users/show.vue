@@ -9,15 +9,15 @@
 <template>
     <div class="columns">
         <div class="column is-6 is-offset-3">
-            <table v-if="user" class="table is-fullwidth is-bordered has-text-centered">
+            <table v-if="user" :class="{ 'darkmod': Auth.isDarkMod() }" class="table is-fullwidth is-bordered has-text-centered background-is-white text-is-dark">
                 <tbody>
                 <tr>
-                    <th>{{ $t('Name') }}</th>
-                    <td>{{ user.name }}</td>
+                    <th><span :class="{ 'darkmod': Auth.isDarkMod() }" class="text-is-dark">{{ $t('Name') }}</span></th>
+                    <td><span :class="{ 'darkmod': Auth.isDarkMod() }" class="text-is-dark">{{ user.name }}</span></td>
                 </tr>
                 <tr>
-                    <th>{{ $t('Email') }}</th>
-                    <td>{{ user.email }}</td>
+                    <th><span :class="{ 'darkmod': Auth.isDarkMod() }" class="text-is-dark">{{ $t('Email') }}</span></th>
+                    <td><span :class="{ 'darkmod': Auth.isDarkMod() }" class="text-is-dark">{{ user.email }}</span></td>
                 </tr>
                 <tr>
                     <th><logo class="default-login-logo"></logo></th>
@@ -27,7 +27,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <th><span class="fab fa-github has-text-dark"></span></th>
+                    <th><span :class="{ 'darkmod': Auth.isDarkMod() }" class="fab fa-github text-is-dark"></span></th>
                     <td>
                         <span v-if="user.id != Auth.user.id || !user.github_id">—</span>
                         <button v-else class="button is-danger is-small" @click="logout">{{ $t('Logout') }}</button>
@@ -48,9 +48,17 @@
                     </td>
                 </tr>
                 <tr>
-                    <th v-if="Auth.user.id == user.id">{{ $t('My snippets') }}</th>
-                    <th v-else>{{ $t('Snippets') }}</th>
+                    <th v-if="Auth.user.id == user.id"><span :class="{ 'darkmod': Auth.isDarkMod() }" class="text-is-dark">{{ $t('My snippets') }}</span></th>
+                    <th v-else><span :class="{ 'darkmod': Auth.isDarkMod() }" class="text-is-dark">{{ $t('Snippets') }}</span></th>
                     <td>{{ user.snippets.length }}</td>
+                </tr>
+                <tr>
+                    <th v-if="Auth.user.id == user.id"><span :class="{ 'darkmod': Auth.isDarkMod() }" class="text-is-dark">{{ $t('Site theme mode.') }}</span></th>
+                    <th v-else>—</th>
+                    <td>
+                        <button v-if="Auth.user.id == user.id" class="button is-info is-small" @click="toggleThemeMod()">{{ $t('Switch') }}</button>
+                        <span v-else>—</span>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -92,6 +100,18 @@
                     this.$router.push({ name: 'login.create' })
                 }).catch(error => {
                     this.error({message: error.response.data.user[0]})
+                })
+            },
+            toggleThemeMod() {
+                let darkmod = this.Auth.isDarkMod()
+                axios.post("/api/users/" + this.Auth.user.id + "/darkmod", {
+                    'darkmod': !darkmod,
+                    'api_token': Auth.getApiToken(),
+                    '_method': 'PUT'
+                }).then(response => {
+                    this.Auth.setDarkmod(response.data.darkmod)
+                    this.user = this.Auth.user
+                    this.$forceUpdate()
                 })
             }
         },

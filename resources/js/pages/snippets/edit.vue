@@ -3,7 +3,7 @@
         <editor-settings v-if="snippet_copy" :show_editor_settings="show_editor_settings" @editor-options-was-updated="updateEditorOptions"></editor-settings>
         <div class="columns">
             <div class="column is-3">
-                <div class="box">
+                <div :class="{ 'darkmod': Auth.isDarkMod() }" class="box background-is-white text-is-grey-dark">
                     <div v-if="snippet.id">
                         <div class="columns" >
                             <div class="column is-three-fifths" v-if="Auth.check()">
@@ -23,12 +23,10 @@
                         </div>
                     </div>
                     <ring-loader v-else class="is-narrow"></ring-loader>
-                    <hr>
                     <div>
                         <p v-if="snippet.user"><b>{{ $t('Author') }}:</b> {{ snippet.user.name }}</p>
                         <ring-loader v-else class="is-narrow"></ring-loader>
                     </div>
-                    <hr>
                     <div>
                         <div class="field">
                             <div v-if="snippet.id" class="control">
@@ -40,7 +38,6 @@
                             <ring-loader v-else class="is-narrow"></ring-loader>
                         </div>
                     </div>
-                    <hr>
                     <div class="field">
                         <div v-if="snippet.id" class="control">
                             <label for="description">{{ $t('Description') }}:</label>
@@ -50,17 +47,6 @@
                         </div>
                         <ring-loader v-else class="is-narrow"></ring-loader>
                     </div>
-                    <hr>
-                    <div>
-                        <p v-if="snippet.id"><b>{{ $t('Created') }}: </b> {{ snippet.created_at_for_humans }}</p>
-                        <ring-loader v-else class="is-narrow"></ring-loader>
-                    </div>
-                    <hr>
-                    <div>
-                        <p v-if="snippet.id"><b>{{ $t('Last update') }}: </b> {{ snippet.updated_at_for_humans }}</p>
-                        <ring-loader v-else class="is-narrow"></ring-loader>
-                    </div>
-                    <hr>
                     <div>
                         <div v-if="snippet.id" class="field">
                             <div class="control">
@@ -78,18 +64,26 @@
                         </div>
                         <ring-loader v-if="!snippet.id" class="is-narrow"></ring-loader>
                     </div>
-                    <hr>
+                    <hr :class="{ 'darkmod': Auth.isDarkMod() }" class="background-is-grey-lighter">
+                    <div>
+                        <p v-if="snippet.id"><b>{{ $t('Created') }}: </b> {{ snippet.created_at_for_humans }}</p>
+                        <ring-loader v-else class="is-narrow"></ring-loader>
+                    </div>
+                    <div>
+                        <p v-if="snippet.id"><b>{{ $t('Last update') }}: </b> {{ snippet.updated_at_for_humans }}</p>
+                        <ring-loader v-else class="is-narrow"></ring-loader>
+                    </div>
+                    <hr :class="{ 'darkmod': Auth.isDarkMod() }" class="background-is-grey-lighter">
                     <div>
                         <div v-if="snippet.id">
-                            <p v-if="snippet.forks_quantity > 0" v-for="fork in snippet.forks"><b>{{ $t('Fork') }}:</b> <a :href="'/snippets/' + fork.id">{{ fork.title }}</a></p>
+                            <p v-if="snippet.forks_quantity > 0" v-for="fork in snippet.forks"><b>{{ $t('Fork') }}:</b> <a :class="{ 'darkmod': Auth.isDarkMod() }" :href="'/snippets/' + fork.id">{{ fork.title }}</a></p>
                             <p v-if="snippet.forks_quantity == 0"><b>{{ $t('Forks') }}:</b>0</p>
                         </div>
                         <ring-loader v-if="!snippet.id" class="is-narrow"></ring-loader>
                     </div>
-                    <hr>
                     <div>
                         <div v-if="snippet.id">
-                            <p v-if="snippet.parent"><b>{{ $t('Forked from') }}:</b> <a :href="'/snippets/' + snippet.parent.slug">{{ snippet.parent.title }}</a></p>
+                            <p v-if="snippet.parent"><b>{{ $t('Forked from') }}:</b> <a :class="{ 'darkmod': Auth.isDarkMod() }" :href="'/snippets/' + snippet.parent.slug">{{ snippet.parent.title }}</a></p>
                             <p v-if="snippet.parent == undefined"><b>{{ $t('Do not have parent fork') }}</b></p>
                         </div>
                         <ring-loader v-if="!snippet.id" class="is-narrow"></ring-loader>
@@ -98,7 +92,7 @@
             </div>
             <div v-if="snippet_copy" class="column is-9">
                 <div class="columns">
-                    <div class="column field">
+                    <div class="column field" style="overflow: scroll;">
                         <Editor :snippet="snippet_copy" :options="snippet_copy.settings" @code-was-updated="codeWasUpdated"></Editor>
                         <span v-for="error in errors.body" class="title is-6 has-text-danger">{{ error }}</span>
                     </div>

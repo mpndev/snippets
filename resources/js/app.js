@@ -3,8 +3,8 @@ import axios from 'axios'
 import VueMeta from 'vue-meta'
 import VueRouter from 'vue-router'
 import routes from './routes'
-import Navbar from './components/Navbar'
 import FAQ from './components/FAQ'
+import Wrapper from './components/Wrapper'
 import Message from './components/Message'
 import RingLoader from 'vue-spinner/src/RingLoader'
 import VueClipboard from 'vue-clipboard2'
@@ -17,7 +17,6 @@ import TextHighlight from 'vue-text-highlight'
 import VueI18n from "vue-i18n"
 import translations from "./translations.json"
 import shareIt from 'vue-share-it'
-import CookieNotification from "./components/CookieNotification";
 
 Vue.use(VueI18n)
 const lang = localStorage.getItem('language') || 'en'
@@ -57,6 +56,7 @@ const options = {
 VueNotifications.config.timeout = 8000
 Vue.use(VueNotifications, options)
 
+Vue.component('wrapper', Wrapper)
 Vue.component('faq', FAQ)
 Vue.component('ring-loader', RingLoader)
 Vue.component('message', Message)
@@ -66,10 +66,6 @@ let app = new Vue({
     el: '#app',
     i18n: i18n,
     router: new VueRouter(routes),
-    components: {
-        navbar: Navbar,
-        CookieNotification: CookieNotification
-    },
     data: () => {
         return {
             screen: {

@@ -1,5 +1,5 @@
 <template>
-    <div class="box">
+    <div :class="{ 'darkmod': Auth.isDarkMod() }" class="box background-is-white">
         <div class="columns">
             <div class="column is-4">
                 <div class="tags">

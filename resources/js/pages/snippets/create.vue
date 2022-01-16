@@ -3,8 +3,8 @@
         <editor-settings :show_editor_settings="show_editor_settings"@editor-options-was-updated="updateEditorOptions"></editor-settings>
         <div class="columns">
             <div class="column is-3">
-                <div class="box">
-                    <div class="columns" >
+                <div :class="{ 'darkmod': Auth.isDarkMod() }" class="box background-is-white text-is-grey-dark">
+                    <div class="columns">
                         <div class="column is-three-fifths" v-if="Auth.check()"><b>{{ $t('Author') }}:</b> {{ Auth.getName() }}</div>
                         <ring-loader v-else class="is-narrow"></ring-loader>
                         <div v-if="!snippet.public" class="column">
@@ -17,7 +17,6 @@
                             <button class="button is-info fa fa-cog" @click="show_editor_settings = true"></button>
                         </div>
                     </div>
-                    <hr>
                     <div>
                         <div class="field">
                             <div class="control">
@@ -28,7 +27,6 @@
                             </div>
                         </div>
                     </div>
-                    <hr>
                     <div>
                         <div class="field">
                             <div class="control">
@@ -39,11 +37,10 @@
                             </div>
                         </div>
                     </div>
-                    <hr>
                     <div>
                         <div class="field">
                             <div class="control">
-                                <div><b>{{ $t('Tags') }}:</b></div>
+                                <div>{{ $t('Tags') }}:</div>
                                 <label for="tags"></label>
                                 <input class="input" id="tags" type="text" :placeholder="$t('php, c#, full stack, bash')" v-model="fresh_tags">
                             </div>
@@ -60,7 +57,7 @@
             </div>
             <div class="column is-9">
                 <div class="columns">
-                    <p class="column field">
+                    <p class="column field" style="overflow: scroll;">
                         <Editor :snippet="snippet" :options="editorOptions" @code-was-updated="codeWasUpdated"></Editor>
                         <span v-for="error in errors.body" class="title is-6 has-text-danger">{{ error }}</span>
                     </p>

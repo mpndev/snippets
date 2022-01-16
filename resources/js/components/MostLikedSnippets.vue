@@ -6,12 +6,12 @@
 
 <template>
     <aside v-if="most_liked_snippets.length" class="menu">
-        <p class="menu-label title is-6">
+        <p :class="{ 'darkmod': Auth.isDarkMod() }" class="menu-label title is-6 text-is-dark">
             {{ $t('Top 5 liked snippets') }}:
         </p>
         <ul class="menu-list">
             <li v-for="snippet in most_liked_snippets">
-                <a class="title is-7" :href="`/snippets/${snippet.slug}`">
+                <a :class="{ 'darkmod': Auth.isDarkMod() }" class="title is-7 text-is-dark" :href="`/snippets/${snippet.slug}`">
                     <span class="tag is-success is-inline"><span class="fa fa-heart has-text-danger"></span> X {{ snippet.fans_quantity }}</span>
                     {{ snippet.title }}
                 </a>
@@ -23,6 +23,11 @@
 
 <script>
     export default {
-        props: ['most_liked_snippets']
+        props: ['most_liked_snippets'],
+        data: () => {
+            return {
+                Auth: Auth
+            }
+        }
     }
 </script>

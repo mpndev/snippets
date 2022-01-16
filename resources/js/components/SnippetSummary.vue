@@ -9,12 +9,13 @@
         <div class="column is-9">
             <div>
                 <p>
-                    <a :href="`/snippets/${snippet.slug}`" class="title has-text-dark is-6">
+                    <a :class="{ 'darkmod': Auth.isDarkMod() }" :href="`/snippets/${snippet.slug}`" class="title text-is-dark is-6">
                         <text-highlight :queries="($route.query && $route.query.search) ? [$route.query.search] : []">{{ snippet.title }}</text-highlight>
                     </a>
                 </p>
+                <hr class="is-marginless is-hidden-desktop">
                 <p>
-                    <a :href="`/snippets/${snippet.slug}`" class="title has-text-dark is-7">
+                    <a :class="{ 'darkmod': Auth.isDarkMod() }" :href="`/snippets/${snippet.slug}`" class="title text-is-dark is-7">
                         <text-highlight :queries="($route.query && $route.query.search) ? [$route.query.search] : []">{{ parsed_description }}</text-highlight>
                     </a>
                 </p>
@@ -22,7 +23,7 @@
                     <span v-for="tag in sortedTags" class="tag title is-7 is-success is-unselectable has-cursor-pointer" @click="findByTag(tag)">{{ tag.name }}</span>
                 </p>
                 <p class="is-unselectable">
-                    <span class="tag title is-7 has-background-grey-lighter fa fa-clock">
+                    <span class="tag title is-7 background-is-grey-lighter fa fa-clock">
                         <span class="has-cursor-pointer" @click="findByDay">&nbsp;{{ snippet.created_at_for_humans }}</span>
                         <span class="has-cursor-pointer" @click="findByAuthor">&nbsp;{{ $t('by') }} {{ snippet.user.name }}</span>
                     </span>
@@ -36,9 +37,9 @@
                 <button class="button is-info fa fa-eye is-small ml-1 mt-1" :title="$t('see the snippet')" @click="show(snippet)"></button>
                 <button v-if="Auth.check() && Auth.isOwner(snippet)" class="button is-warning fa fa-edit is-small ml-1 mt-1" :title="$t('edit the snippet')" @click="edit(snippet)"></button>
                 <button v-if="Auth.check() && Auth.isOwner(snippet)" class="button is-danger fa fa-trash-alt is-small ml-1 mt-1" :title="$t('delete the snippet')" @click="destroy(snippet)"></button>
-                <button v-if="Auth.check()" class="button is-dark fas fa-code-branch is-small ml-1 mt-1" :title="$t('fork the snippet')" @click="createFork(snippet)"></button>
+                <button v-if="Auth.check()" :class="{ 'darkmod': Auth.isDarkMod() }" class="button is-dark fas fa-code-branch is-small ml-1 mt-1" :title="$t('fork the snippet')" @click="createFork(snippet)"></button>
                 <button v-if="Auth.check() && Auth.isFavoriteSnippet(snippet)" class="button is-danger fas fa-heart is-outlined is-small ml-1 mt-1" :title="$t('remove from favorite')" @click="removeFromFavoriteSnippets(snippet)"></button>
-                <button v-if="Auth.check() && Auth.isNotFavoriteSnippet(snippet)" class="button is-dark fas fa-heart-broken is-outlined is-small ml-1 mt-1" :title="$t('add to favorite')" @click="addToFavoriteSnippets(snippet)"></button>
+                <button v-if="Auth.check() && Auth.isNotFavoriteSnippet(snippet)" :class="{ 'darkmod': Auth.isDarkMod() }" class="button is-dark fas fa-heart-broken is-outlined is-small ml-1 mt-1" :title="$t('add to favorite')" @click="addToFavoriteSnippets(snippet)"></button>
             </div>
             <div v-if="snippet.public" class="is-full-width is-justify-content-flex-end is-flex mt-5">
                 <share-it :url="current_domain + '/snippets/' + snippet.slug" :targets="['facebook', 'linkedin', 'twitter']" :shareConfig="share_it_settings" />

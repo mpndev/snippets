@@ -1,13 +1,13 @@
 <template>
     <div class="modal" :class="show_editor_settings ? 'is-active' : ''">
-        <div class="modal-background" @click="updateOptions"></div>
-        <div class="modal-content box">
+        <div :class="{ 'darkmod': Auth.isDarkMod() }" class="modal-background" @click="updateOptions"></div>
+        <div :class="{ 'darkmod': Auth.isDarkMod() }" class="modal-content box background-is-white">
             <header class="modal-card-head">
                 <p class="modal-card-title">{{ $t('editor settings') }}</p>
                 <button class="delete" aria-label="close" @click="updateOptions"></button>
             </header>
-            <section class="modal-card-body">
-                <div class="columns level has-background-grey-light is-marginless has-text-link">
+            <section class="modal-card-body is-paddingless">
+                <div :class="{ 'darkmod': Auth.isDarkMod() }" class="columns level background-is-grey-light is-marginless has-text-link">
                     <div class="column is-3">
                         <p>{{ $t('Language') }}</p>
                     </div>
@@ -23,7 +23,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="columns level has-background-grey-lighter is-marginless has-text-link">
+                <div :class="{ 'darkmod': Auth.isDarkMod() }" class="columns level background-is-grey-lighter is-marginless has-text-link">
                     <div class="column is-3">
                         <p>{{ $t('Theme') }}</p>
                     </div>
@@ -39,7 +39,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="columns level has-background-grey-light is-marginless has-text-link">
+                <div :class="{ 'darkmod': Auth.isDarkMod() }" class="columns level background-is-grey-light is-marginless has-text-link">
                     <div class="column is-3">
                         <p>{{ $t('Cursor blink rate') }}</p>
                     </div>
@@ -61,7 +61,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="columns level has-background-grey-lighter is-marginless has-text-link">
+                <div :class="{ 'darkmod': Auth.isDarkMod() }" class="columns level background-is-grey-lighter is-marginless has-text-link">
                     <div class="column is-3">
                         <p>{{ $t('Indent unit') }}</p>
                     </div>
@@ -83,7 +83,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="columns level has-background-grey-light is-marginless has-text-link">
+                <div :class="{ 'darkmod': Auth.isDarkMod() }" class="columns level background-is-grey-light is-marginless has-text-link">
                     <div class="column is-3">
                         <p>{{ $t('Smart Indent') }}</p>
                     </div>
@@ -105,7 +105,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="columns level has-background-grey-lighter is-marginless has-text-link">
+                <div :class="{ 'darkmod': Auth.isDarkMod() }" class="columns level background-is-grey-lighter is-marginless has-text-link">
                     <div class="column is-3">
                         <p>{{ $t('Electric chars') }}</p>
                     </div>
@@ -127,7 +127,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="columns level has-background-grey-light is-marginless has-text-link">
+                <div :class="{ 'darkmod': Auth.isDarkMod() }" class="columns level background-is-grey-light is-marginless has-text-link">
                     <div class="column is-3">
                         <p>{{ $t('Line numbers') }}</p>
                     </div>
@@ -149,7 +149,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="columns level has-background-grey-lighter is-marginless has-text-link">
+                <div :class="{ 'darkmod': Auth.isDarkMod() }" class="columns level background-is-grey-lighter is-marginless has-text-link">
                     <div class="column is-3">
                         <p>{{ $t('Autocorrect') }}</p>
                     </div>
@@ -161,7 +161,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="columns level has-background-grey-light is-marginless has-text-link">
+                <div :class="{ 'darkmod': Auth.isDarkMod() }" class="columns level background-is-grey-light is-marginless has-text-link">
                     <div class="column is-half">
                         <label class="radio">
                             <input type="radio" name="direction" value="ltr" v-model="options.direction">

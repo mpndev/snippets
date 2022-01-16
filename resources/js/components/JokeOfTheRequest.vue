@@ -5,11 +5,11 @@
 </style>
 
 <template>
-    <div v-if="joke.single.length || joke.double.first.length">
-        <p class="menu-label title is-6">
+    <div v-if="joke.single.length || joke.double.first.length" class="menu">
+        <p :class="{ 'darkmod': Auth.isDarkMod() }" class="menu-label title is-6 text-is-dark">
             {{ $t('Joke of the request') }}:
         </p>
-        <ul class="menu-list has-background-grey-lighter has-padding-10">
+        <ul class="menu-list has-padding-10">
             <li><p class="has-text-info">{{joke.single}}</p></li>
             <li><p class="has-text-info">{{joke.double.first}}</p></li>
             <li><p class="has-text-info">{{joke.double.second}}</p></li>
@@ -20,6 +20,11 @@
 
 <script>
     export default {
-        props: ['joke']
+        props: ['joke'],
+        data: () => {
+            return {
+                Auth: Auth
+            }
+        }
     }
 </script>

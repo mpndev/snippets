@@ -1,0 +1,140 @@
+// Text colors.
+.text-is-primary {
+    color: #01d1b2;
+    &.darkmod {
+        color: #4CCF76;
+    }
+}
+
+.text-is-grey-black-bis {
+    color: #121212;
+    &.darkmod {
+        color: #ffffff;
+    }
+}
+.text-is-dark {
+    color: #363636;
+    &.darkmod {
+        color: #f5f5f5;
+    }
+}
+.text-is-grey-dark {
+    color: #4a4a4a;
+    &.darkmod {
+        color: #dbdbdb;
+    }
+}
+.text-is-grey {
+    color: #7a7a7a;
+    &.darkmod {
+        color: #b5b5b5;
+    }
+}
+.text-is-grey-light {
+    color: #b5b5b5;
+    &.darkmod {
+        color: #7a7a7a;
+    }
+}
+.text-is-grey-lighter {
+    color: #dbdbdb;
+    &.darkmod {
+        color: #4a4a4a;
+    }
+}
+.text-is-white-ter {
+    color: #f5f5f5;
+    &.darkmod {
+        color: #363636;
+    }
+}
+.text-is-white {
+    color: #ffffff;
+    &.darkmod {
+        color: #121212;
+    }
+}
+
+// Background colors.
+.background-is-primary {
+    background-color: #01d1b2;
+    &.darkmod {
+        background-color: #359AD1;
+    }
+}
+
+.background-is-grey-black-bis {
+    background-color: #121212;
+    &.darkmod {
+        background-color: #ffffff;
+    }
+}
+.background-is-dark {
+    background-color: #363636;
+    &.darkmod {
+        background-color: #f5f5f5;
+    }
+}
+.background-is-grey-dark {
+    background-color: #4a4a4a;
+    &.darkmod {
+        background-color: #f5f5f5;
+    }
+}
+.background-is-grey {
+    background-color: #7a7a7a;
+    &.darkmod {
+        background-color: #dbdbdb;
+    }
+}
+.background-is-grey-light {
+    background-color: #b5b5b5;
+    &.darkmod {
+        background-color: #b5b5b5;
+    }
+}
+.background-is-grey-lighter {
+    background-color: #dbdbdb;
+    &.darkmod {
+        background-color: #7a7a7a;
+    }
+}
+.background-is-white-ter {
+    background-color: #f5f5f5;
+    &.darkmod {
+        background-color: #363636;
+    }
+}
+.background-is-white {
+    background-color: #ffffff;
+    &.darkmod {
+        background-color: #121212;
+    }
+}
+
+// Pagination.
+span .is-current {
+    background-color: #485fc7;
+}
+
+// Action buttons.
+button {
+    &.is-dark {
+        &.darkmod {
+            color: #ffffff !important;
+            background-color: #121212 !important;
+            border-color: #ffffff !important;
+        }
+        &.darkmod:hover {
+            color: #000000 !important;
+            background-color: #f5f5f5 !important;
+        }
+    }
+}
+
+// Modal for editor settings.
+.modal-background {
+    &.darkmod {
+        background-color: #121212bf;
+    }
+}

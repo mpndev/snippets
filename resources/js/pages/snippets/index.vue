@@ -18,7 +18,7 @@
         <search></search>
 
         <paginator v-if="has_results" :paginated_data="paginated_data"></paginator>
-        <div v-if="show_rings" class="box">
+        <div v-if="show_rings" :class="{ 'darkmod': Auth.isDarkMod() }" class="box background-is-white">
             <div class="columns is-centered paginator-ring">
                 <ring-loader class="column is-narrow"></ring-loader>
             </div>
@@ -26,28 +26,28 @@
 
         <div class="columns">
             <div v-if="is_on_desktop" class="column is-2 is-hidden-mobile">
-                <div class="box most-liked-snippets">
+                <div :class="{ 'darkmod': Auth.isDarkMod() }" class="box most-liked-snippets background-is-white">
                     <most-liked-snippets :most_liked_snippets="most_liked_snippets"></most-liked-snippets>
                 </div>
-                <div class="box most-copied-snippets">
+                <div :class="{ 'darkmod': Auth.isDarkMod() }" class="box most-copied-snippets background-is-white">
                     <most-copied-snippets :most_copied_snippets="most_copied_snippets"></most-copied-snippets>
                 </div>
-                <div class="box joke-of-the-request">
+                <div :class="{ 'darkmod': Auth.isDarkMod() }" class="box joke-of-the-request background-is-white">
                     <joke-of-the-request :joke="joke"></joke-of-the-request>
                 </div>
             </div>
             <div class="column">
                 <div>
-                    <div v-if="has_results" v-for="snippet in paginated_data.data" class="box">
+                    <div v-if="has_results" v-for="snippet in paginated_data.data" :class="{ 'darkmod': Auth.isDarkMod() }" class="box background-is-white text-is-white">
                         <snippet-summary :key="snippet.id" :snippet="snippet" @snippet-was-deleted="snippetWasDeleted" @favorite-was-changed="updateMostLikedSnippets" @snippet-was-copied="updateMostCopiedSnippets"></snippet-summary>
                     </div>
                     <div v-if="!has_results" class="columns is-centered">
                         <div v-if="!show_rings" class="column">
                             <div class="column"></div>
-                            <p class="title has-text-centered is-3">{{ $t('No results found.') }}</p>
+                            <p :class="{ 'darkmod': Auth.isDarkMod() }" class="title has-text-centered is-3 text-is-dark">{{ $t('No results found.') }}</p>
                         </div>
                     </div>
-                    <div v-if="show_rings" v-for="i in 5" class="box">
+                    <div v-if="show_rings" v-for="i in 5" :class="{ 'darkmod': Auth.isDarkMod() }" class="box background-is-white">
                         <div class="columns is-centered">
                             <ring-loader class="column is-narrow snippet-summary-ring"></ring-loader>
                         </div>
@@ -57,7 +57,7 @@
         </div>
 
         <paginator v-if="has_results" :paginated_data="paginated_data"></paginator>
-        <div v-if="show_rings" class="box">
+        <div v-if="show_rings" :class="{ 'darkmod': Auth.isDarkMod() }" class="box background-is-white">
             <div class="columns is-centered paginator-ring">
                 <ring-loader class="column is-narrow"></ring-loader>
             </div>
@@ -65,13 +65,13 @@
 
         <div v-if="!is_on_desktop" class="columns is-hidden-desktop">
             <div class="column">
-                <div class="box most-liked-snippets">
+                <div :class="{ 'darkmod': Auth.isDarkMod() }" class="box most-liked-snippets background-is-white">
                     <most-liked-snippets :most_liked_snippets="most_liked_snippets"></most-liked-snippets>
                 </div>
-                <div class="box most-copied-snippets">
+                <div :class="{ 'darkmod': Auth.isDarkMod() }" class="box most-copied-snippets background-is-white">
                     <most-copied-snippets :most_copied_snippets="most_copied_snippets"></most-copied-snippets>
                 </div>
-                <div class="box joke-of-the-request">
+                <div :class="{ 'darkmod': Auth.isDarkMod() }" class="box joke-of-the-request background-is-white">
                     <joke-of-the-request :joke="joke"></joke-of-the-request>
                 </div>
             </div>

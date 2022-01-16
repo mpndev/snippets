@@ -45,6 +45,16 @@ const Auth = {
     },
     isNotFavoriteSnippet: function(snippet) {
         return this.user.favorite_snippets.every(favorite_snippet => favorite_snippet.id !== snippet.id)
+    },
+    setDarkmod: function(isDarkmod) {
+        this.user.darkmod = isDarkmod
+        this.update(this.user)
+    },
+    isDarkMod: function() {
+        if (!this.user) {
+            return false
+        }
+        return !!this.user.darkmod
     }
 }
 

@@ -3,7 +3,7 @@
         <editor-settings :show_editor_settings="show_editor_settings"@editor-options-was-updated="updateEditorOptions"></editor-settings>
         <div class="columns">
             <div class="column is-3">
-                <div class="box">
+                <div :class="{ 'darkmod': Auth.isDarkMod() }" class="box background-is-white text-is-grey-dark">
                     <div v-if="Auth.check()" class="columns">
                         <div class="column is-three-fifths"><b>{{ $t('Author') }}:</b> {{ Auth.user.name }}</div>
                         <div v-if="!snippet.public" class="column">
@@ -17,7 +17,6 @@
                         </div>
                     </div>
                     <ring-loader v-else class="is-narrow"></ring-loader>
-                    <hr>
                     <div>
                         <div class="field">
                             <div class="control">
@@ -28,7 +27,6 @@
                             </div>
                         </div>
                     </div>
-                    <hr>
                     <div>
                         <div class="field">
                             <div class="control">
@@ -39,7 +37,6 @@
                             </div>
                         </div>
                     </div>
-                    <hr>
                     <div>
                         <div class="field">
                             <div class="control">
@@ -60,7 +57,7 @@
             </div>
             <div class="column is-9">
                 <div class="columns">
-                    <p class="column field">
+                    <p class="column field" style="overflow: scroll;">
                         <Editor v-if="parent.id" :snippet="parent" :options="parent.settings" @code-was-updated="codeWasUpdated"></Editor>
                         <span v-for="error in errors.body" class="title is-6 has-text-danger">{{ error }}</span>
                     </p>

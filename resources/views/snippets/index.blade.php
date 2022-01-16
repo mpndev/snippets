@@ -6,23 +6,11 @@
     <link rel="canonical" href="{{url('/')}}"/>
     <title></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
+    <link rel="stylesheet" href="/css/app.css">
 </head>
-<body class="has-background-grey-lighter" style="min-height: 100vh;">
+<body>
     <div id="app">
-        <cookie-notification></cookie-notification>
-        <message></message>
-
-        <navbar></navbar>
-
-        <div class="section has-margin-top-45">
-            <div>
-                <router-view :key="$route.fullPath"></router-view>
-            </div>
-        </div>
-
-        <div class="section">
-            <faq />
-        </div>
+        <wrapper />
     </div>
 
     <script src="/js/app.js"></script>
