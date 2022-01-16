@@ -1,7 +1,5 @@
-<style></style>
-
 <template>
-    <div class="box has-text-centered">
+    <div :class="{ 'darkmod': Auth.isDarkMod() }" class="box has-text-centered background-is-white">
         <p class="title is-2 has-text-info">{{ $t('What is a fork?') }}</p>
         <p class="title is-4 has-text-info">{{ $t('If you like some snippet, but is not exactly what you need...') }}</p>
         <p class="title is-4 has-text-info">{{ $t('just extend(fork) that snippet and make modified version on your own.') }}</p>
@@ -10,5 +8,11 @@
 </template>
 
 <script>
-    export default {}
+    export default {
+        data: () => {
+            return {
+                Auth: Auth
+            }
+        }
+    }
 </script>
