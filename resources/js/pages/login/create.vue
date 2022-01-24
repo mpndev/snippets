@@ -1,16 +1,16 @@
 <template>
     <div>
         <div class="field">
-            <label class="label">{{ $t('Name') }}</label>
+            <label class="label">{{ $t('Email') }}</label>
             <div class="control">
-                <input class="input" type="text" v-model="name" @focusin="resetErrors">
-                <p class="has-text-danger" v-for="error in errors.name">{{ error }}</p>
+                <input class="input" type="text" v-model="email" @focusin="resetErrors">
+                <p class="has-text-danger" v-for="error in errors.email">{{ error }}</p>
             </div>
         </div>
         <div class="field">
             <label class="label">{{ $t('Password') }}</label>
             <div class="control">
-                <input class="input" type="password" v-model="password" @focusin="resetErrors">
+                <input class="input" type="email" v-model="password" @focusin="resetErrors">
             </div>
         </div>
         <div class="control is-flex is-align-items-center">
@@ -20,7 +20,7 @@
         <div class="control mt-5 is-flex is-align-items-center box">
             <span><b>{{ $t('Do not have account? Try simple') }}</b></span>
             <a class="button is-primary ml-1 mr-1" href="/register">{{ $t('Register') }}</a>
-            <span><b>{{ $t('with username and password') }}</b></span>
+            <span><b>{{ $t('with username, email and password') }}</b></span>
             <span class="ml-1"><b>{{ $t('or') }}</b></span>
             <button class="button is-dark ml-1 mr-1" @click="loginWithGithub">{{ $t('Login with github') }}<span class="fab fa-github ml-2"></span></button>
             <span class="ml-1 mr-1"><b>, {{ $t('or') }}</b></span>
@@ -36,10 +36,10 @@
         data: () => {
             return {
                 Auth: Auth,
-                name: '',
+                email: '',
                 password: '',
                 errors: {
-                    name: []
+                    email: []
                 }
             }
         },
@@ -48,28 +48,28 @@
         },
         methods: {
             resetErrors() {
-                this.errors.name = []
+                this.errors.email = []
             },
             login() {
                 this.resetErrors()
 
                 axios.post('/api/login', {
-                    name: this.name,
+                    email: this.email,
                     password: this.password,
                 }).then(response => {
-                    this.success({message: `${this.$t('Welcome')} ${response.data.name}!`})
+                    this.success({message: `${this.$t('Welcome')} ${response.data.email}!`})
                     this.Auth.update(response.data)
                     this.$router.push({ name: 'snippets.index' })
                 }).catch(error => {
                     let parsed_errors = ''
                     if (error.response && error.response.data) {
-                        if (error.response.data.name) {
-                            for(let sub_error of error.response.data.name) {
+                        if (error.response.data.email) {
+                            for(let sub_error of error.response.data.email) {
                                 parsed_errors += sub_error + "\n"
                             }
                         }
                     }
-                    this.errors.name.push(parsed_errors)
+                    this.errors.email.push(parsed_errors)
                 })
             },
             loginWithGithub() {

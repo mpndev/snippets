@@ -26,7 +26,7 @@ class LoginStoreTest extends TestCase
 
         // Act
         $response = $this->apiRequest([], [
-            'name' => $user->name,
+            'email' => $user->email,
             'password' => 'password', // $2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi,
         ]);
 
@@ -50,7 +50,7 @@ class LoginStoreTest extends TestCase
 
         // Act
         $response = $this->apiRequest([], [
-            'name' => $user->name,
+            'email' => $user->email,
             'password' => 'password', // $2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi,
             'api_token' => $user->api_token
         ]);
@@ -66,7 +66,7 @@ class LoginStoreTest extends TestCase
     }
 
     /** @test */
-    public function name_is_required()
+    public function email_is_required()
     {
         // Arrange
 
@@ -77,11 +77,11 @@ class LoginStoreTest extends TestCase
 
         // Assert
         $response->assertStatus(400)
-        ->assertJson([
-            'name' => [
-                'The name field is required.'
-            ]
-        ]);
+            ->assertJson([
+                'email' => [
+                    'The email field is required.'
+                ]
+            ]);
     }
 
     /** @test */
@@ -95,7 +95,7 @@ class LoginStoreTest extends TestCase
 
         // Act
         $response = $this->apiRequest([], [
-            'name' => $user->name,
+            'email' => $user->email,
         ]);
 
         // Assert
@@ -118,14 +118,14 @@ class LoginStoreTest extends TestCase
 
         // Act
         $response = $this->apiRequest([], [
-            'name' => $user->name,
+            'email' => $user->email,
             'password' => 'wrong_password',
         ]);
 
         // Assert
         $response->assertStatus(400)
             ->assertJson([
-                'name' => [
+                'email' => [
                     'These credentials do not match our records.'
                 ]
             ]);
