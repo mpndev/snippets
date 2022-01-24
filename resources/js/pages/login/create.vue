@@ -3,14 +3,14 @@
         <div class="field">
             <label class="label">{{ $t('Email') }}</label>
             <div class="control">
-                <input class="input" type="text" v-model="email" @focusin="resetErrors">
+                <input class="input" type="email" v-model="email" @focusin="resetErrors">
                 <p class="has-text-danger" v-for="error in errors.email">{{ error }}</p>
             </div>
         </div>
         <div class="field">
             <label class="label">{{ $t('Password') }}</label>
             <div class="control">
-                <input class="input" type="email" v-model="password" @focusin="resetErrors">
+                <input class="input" type="password" v-model="password" @focusin="resetErrors">
             </div>
         </div>
         <div class="control is-flex is-align-items-center">
