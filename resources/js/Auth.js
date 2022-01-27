@@ -14,7 +14,10 @@ const Auth = {
         this.update(null)
     },
     hasAbility: function(ability) {
-      return this.user.abilities.includes(ability);
+        if (!this.user || !this.user.abilities) {
+            return false
+        }
+        return this.user.abilities.includes(ability);
     },
     getParsedSettings: function() {
         return JSON.parse(this.user.settings)
