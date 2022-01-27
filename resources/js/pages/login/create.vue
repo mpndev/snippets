@@ -57,7 +57,7 @@
                     email: this.email,
                     password: this.password,
                 }).then(response => {
-                    this.success({message: `${this.$t('Welcome')} ${response.data.email}!`})
+                    this.success({message: `${this.$t('Welcome')} ${response.data.name}!`})
                     this.Auth.update(response.data)
                     this.$router.push({ name: 'snippets.index' })
                 }).catch(error => {
