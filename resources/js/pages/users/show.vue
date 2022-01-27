@@ -19,28 +19,28 @@
                     <th><span :class="{ 'darkmod': Auth.isDarkMod() }" class="text-is-dark">{{ $t('Email') }}</span></th>
                     <td><span :class="{ 'darkmod': Auth.isDarkMod() }" class="text-is-dark">{{ user.email }}</span></td>
                 </tr>
-                <tr>
+                <tr v-if="Auth.user.id == user.id">
                     <th><logo class="default-login-logo"></logo></th>
                     <td>
                         <span v-if="user.id != Auth.user.id || user.github_id || user.google_id || user.facebook_id">—</span>
                         <button v-else class="button is-danger is-small" @click="logout">{{ $t('Logout') }}</button>
                     </td>
                 </tr>
-                <tr>
+                <tr v-if="Auth.user.id == user.id">
                     <th><span :class="{ 'darkmod': Auth.isDarkMod() }" class="fab fa-github text-is-dark"></span></th>
                     <td>
                         <span v-if="user.id != Auth.user.id || !user.github_id">—</span>
                         <button v-else class="button is-danger is-small" @click="logout">{{ $t('Logout') }}</button>
                     </td>
                 </tr>
-                <tr>
+                <tr v-if="Auth.user.id == user.id">
                     <th><span class="fab fa-google has-text-danger"></span></th>
                     <td>
                         <span v-if="user.id != Auth.user.id || !user.google_id">—</span>
                         <button v-else class="button is-danger is-small" @click="logout">{{ $t('Logout') }}</button>
                     </td>
                 </tr>
-                <tr>
+                <tr v-if="Auth.user.id == user.id">
                     <th><span class="fab fa-facebook has-text-info"></span></th>
                     <td>
                         <span v-if="user.id != Auth.user.id || !user.facebook_id">—</span>
@@ -48,8 +48,8 @@
                     </td>
                 </tr>
                 <tr>
-                    <th v-if="Auth.user.id == user.id"><span :class="{ 'darkmod': Auth.isDarkMod() }" class="text-is-dark">{{ $t('My snippets') }}</span></th>
-                    <th v-else><span :class="{ 'darkmod': Auth.isDarkMod() }" class="text-is-dark">{{ $t('Snippets') }}</span></th>
+                    <th v-if="Auth.user.id == user.id"><span :class="{ 'darkmod': Auth.isDarkMod() }" class="text-is-dark is-clickable" @click="showSnippetsByAuthor(user)">{{ $t('My snippets') }}</span></th>
+                    <th v-else><span :class="{ 'darkmod': Auth.isDarkMod() }" class="text-is-dark is-clickable" @click="showSnippetsByAuthor(user)">{{ $t('Snippets') }}</span></th>
                     <td>{{ user.snippets.length }}</td>
                 </tr>
                 <tr>
@@ -113,6 +113,9 @@
                     this.user = this.Auth.user
                     this.$forceUpdate()
                 })
+            },
+            showSnippetsByAuthor(user) {
+                this.$router.push({ name: 'snippets.index', query: { "snippets-by-author": user.id } })
             }
         },
         notifications: require('../../GlobalNotifications')

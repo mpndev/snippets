@@ -34,6 +34,7 @@
                         <span v-if="Auth.user.github_id" class="fab fa-github has-text-dark ml-2"></span>
                         <span v-if="Auth.user.google_id" class="fab fa-google has-text-danger ml-2"></span>
                     </router-link>
+                    <router-link v-if="Auth.check() && Auth.hasAbility('manage_users')" class="navbar-item has-text-white" :to="{ name: 'users.index' }">{{ $t('Manage Users') }}</router-link>
                     <router-link v-if="Auth.guest()" :to="{ name: 'login.create' }" class="navbar-item has-text-white glowing-text" @click="burger_is_on = false">{{ $t('Login') }}</router-link>
                 </div>
             </div>

@@ -9,6 +9,7 @@ import LoginFacebookCallback from './pages/login/facebook/callback'
 import FacebookPrivacyPolicy from './pages/login/facebook/privacy-policy'
 import FacebookDeleteUserData from './pages/login/facebook/delete-user-data'
 import UsersShow from './pages/users/show'
+import UsersIndex from './pages/users/index'
 import LoginCreate from './pages/login/create'
 import PasswordReset from './pages/password/reset'
 import PasswordForget from './pages/password/forget'
@@ -30,6 +31,19 @@ export default {
             name: 'users.show',
             beforeEnter: (to, from, next) => {
                 if (Auth.guest()) {
+                    next({ name: 'login.create' })
+                }
+                else {
+                    next()
+                }
+            }
+        },
+        {
+            path: '/users',
+            component: UsersIndex,
+            name: 'users.index',
+            beforeEnter: (to, from, next) => {
+                if (Auth.guest() || !Auth.hasAbility('manage_users')) {
                     next({ name: 'login.create' })
                 }
                 else {

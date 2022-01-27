@@ -13,6 +13,9 @@ const Auth = {
     logout: function() {
         this.update(null)
     },
+    hasAbility: function(ability) {
+      return this.user.abilities.includes(ability);
+    },
     getParsedSettings: function() {
         return JSON.parse(this.user.settings)
     },

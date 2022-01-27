@@ -29,7 +29,7 @@ class LoginController extends Controller
                 $user->generateToken();
             }
 
-            return response()->json($user->with(['snippets', 'favoriteSnippets'])->find($user->id)->toArray(), 200);
+            return response()->json($user->with(['snippets', 'favoriteSnippets'])->find($user->id)->toArray() + ['abilities' => $user->abilities()], 200);
         }
 
         return $this->sendFailedLoginResponse($request);

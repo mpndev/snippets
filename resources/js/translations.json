@@ -1,6 +1,8 @@
 {
     "bg": {
+        "Manage Users": "Менажирай Потребители",
         "My snippets": "Моите снипети",
+        "User was successful deleted. Also all of his snippets and snippets related data.": "Потребителя е изтрит успешно, също така всички негови снипети и прилежащата информация свързана с тях.",
         "Site theme mode.": "Тема на сайта",
         "Switch": "Смени",
         "Login into github, please wait...": "Влизане в github, моля изчакайте...",
@@ -157,7 +159,9 @@
         "feed me": "нахрани ме"
     },
     "en": {
+        "Manage Users": "Manage Users",
         "My snippets": "My snippets",
+        "User was successful deleted. Also all of his snippets and snippets related data.": "User was successful deleted. Also all of his snippets and snippets related data.",
         "Site theme mode.": "Site theme mode.",
         "Switch": "Switch",
         "Login into github, please wait...": "Login into github, please wait...",
