@@ -7,7 +7,7 @@
                     <span v-if="Auth.check()" class="tag is-rounded has-cursor-pointer is-unselectable" :class="{'is-info': private_snippets}" @click="toggleFilter('private_snippets')">{{ $t('my private snippets') }}</span>
                     <span v-if="Auth.check()" class="tag is-rounded has-cursor-pointer is-unselectable" :class="{'is-info': favorite_snippets}" @click="toggleFilter('favorite_snippets')">{{ $t('my favorite snippets') }}</span>
                     <span v-if="Auth.check()" class="tag is-rounded has-cursor-pointer is-unselectable" :class="{'is-info': forked_snippets}" @click="toggleFilter('forked_snippets')">{{ $t('my snippets that was extended') }}</span>
-                    <span v-if="Auth.check()" class="tag is-rounded has-cursor-pointer is-unselectable" :class="{'is-info': forks_snippets}" @click="toggleFilter('forks_snippets')">{{ $t('snippets that extends my snippets') }}</span>
+                    <span v-if="Auth.check()" class="tag is-rounded has-cursor-pointer is-unselectable" :class="{'is-info': forks_snippets}" @click="toggleFilter('forks_snippets')">{{ $t('snippets that extend your snippets') }}</span>
                     <span class="tag is-rounded has-cursor-pointer is-unselectable" :class="{'is-info': latest}" @click="toggleFilter('latest')">{{ $t('latest') }}</span>
                     <span v-if="show_reset_filters_button" class="tag is-rounded has-cursor-pointer is-unselectable is-warning" @click="resetFilters">{{ $t('reset filters') }}</span>
                 </div>
@@ -122,27 +122,30 @@
                 let text = ''
                 let is_first = true
                 let options = [
-                    this.my_snippets ? this.$t(' was created from you') : '',
+                    this.my_snippets ? this.$t(' ware created from you') : '',
                     this.private_snippets ? this.$t('are private') : '',
-                    this.favorite_snippets ? this.$t('you like') : '',
+                    this.favorite_snippets ? this.$t('are your favorite') : '',
                     this.forked_snippets ? this.$t('have forks') : '',
-                    this.forks_snippets ? this.$t('extends my snippets') : '',
-                    this.search ? `${this.$t('contains string')} - "${this.search}" ${this.$t('in title, body or description')}` : '',
-                    this.tags ? `${this.$t('have tags')}: "${this.tags}"` : '',
-                    this.latest ? this.$t(' are ordered by creation time') : '',
+                    this.forks_snippets ? this.$t('extend your snippets') : '',
+                    this.search ? `${this.$t('contains the string')} - "${this.search}" ${this.$t('in the title, the body and/or the description')}` : '',
+                    this.tags ? (this.tags.split(',').length > 1 ? `${this.$t('have the tags')} - "${this.tags}"` : `${this.$t('have the tag')} - "${this.tags}"`) : '',
+                    this.latest ? this.$t(' are ordered by the time they ware created (latest)') : '',
                     this.snippets_by_author ? this.$t(' belongs to specific author') : '',
                     this.snippets_by_day ? this.$t(' are created on specific day') : ''
                 ]
                 if (options.some(option => option.length > 0)) {
-                    text += this.$t('Looking for snipiites that ')
+                    text += this.$t('Looking for snipiites that: ')
                     options.map(option => {
                         if (option.length) {
-                            text += (!is_first ? this.$t(' and ') : '')+option
+                            option = option.replace(/,/g, '*_*')
+                            text += (!is_first ? ', ' : '') + option
                             is_first = false
                         }
                     })
                     text += '.'
                 }
+                text = text.replace(/,([^,]*)$/, this.$t(' and ') + '$1')
+                text = text.replace(/\*_\*/g, ',')
 
                 return text
             }
