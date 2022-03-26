@@ -8,7 +8,7 @@ use App\Models\Snippet;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class APITagsCanBeAddedToSnippetsTest extends TestCase
+class TagCanBeAddedToSnippetTest extends TestCase
 {
     use RefreshDatabase;
 

@@ -6,7 +6,7 @@ use App\Models\Snippet;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class ActionsCopySnippetTest extends TestCase
+class ActionsCopySnippetUpdateTest extends TestCase
 {
     use RefreshDatabase;
 

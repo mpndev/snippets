@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class APISearchSnippetsTest extends TestCase
+class SnippetsSearchTest extends TestCase
 {
     use RefreshDatabase;
 
