@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         $me = User::factory()->create([
             'name' => 'mpndev',
             'password' => Hash::make('Smpndev89!'),
+            'email' => 'test@example.com',
         ]);
         $me->addRole('admin');
         $me->getRole('admin')->addAbilityTo('manage_users');
@@ -37,7 +38,9 @@ class DatabaseSeeder extends Seeder
             $snippets->each(function($snippet) use ($user, $tags) {
                 $user->addSnippet($snippet);
                 $tags->each(function($tag) use ($snippet) {
-                    $snippet->addTag($tag);
+                    if (rand(0, 1) === 1) {
+                        $snippet->addTag($tag);
+                    }
                 });
                 $forks = Snippet::factory()->count(rand(1, 5))->make();
                 $forks->each(function($fork) use ($snippet) {
